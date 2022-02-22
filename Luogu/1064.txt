@@ -1,0 +1,53 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 30020
+#define _PI 3.14159265358979323846
+using namespace std;
+int n, m;
+int f = 1;
+int v, w, t;
+struct Pddw
+{
+	int v[3], w[3];
+	int k = 0;
+}a[65];
+int p[65];
+int ff[MAXN];
+int main()
+{
+	cin >> n >> m;
+	for (int i = 1; i <= m; i++)
+	{
+		cin >> v >> w >> t;
+		if (!t)
+		{
+			a[f].v[0] = v;
+			a[f].w[0] = w;
+			p[i] = f;
+			f++;
+		}
+		else
+		{
+			a[p[t]].v[++a[p[t]].k] = v;
+			a[p[t]].w[a[p[t]].k] = w;
+		}
+	}
+	for (int i = 1; i <= f; i++)for (int j = n; j >= 1; j--)
+	{
+		ff[j] = max(ff[j - 1], ff[j]);
+		if (j - a[i].v[0] >= 0)ff[j] = max(ff[j], ff[j - a[i].v[0]] + a[i].v[0] * a[i].w[0]);
+		if (a[i].k < 1)continue;
+		if (j - a[i].v[0] - a[i].v[1] >= 0)ff[j] = max(ff[j], ff[j - a[i].v[0] - a[i].v[1]] + a[i].v[0] * a[i].w[0] + a[i].v[1] * a[i].w[1]);
+		if (j - a[i].v[0] - a[i].v[2] >= 0)ff[j] = max(ff[j], ff[j - a[i].v[0] - a[i].v[2]] + a[i].v[0] * a[i].w[0] + a[i].v[2] * a[i].w[2]);
+		if (a[i].k < 2)continue;
+		if (j - a[i].v[0] - a[i].v[1] - a[i].v[2] >= 0)ff[j] = max(ff[j], ff[j - a[i].v[0] - a[i].v[1] - a[i].v[2]] + a[i].v[0] * a[i].w[0] + a[i].v[1] * a[i].w[1] + a[i].v[2] * a[i].w[2]);
+	}
+	cout << ff[n] << endl;
+}

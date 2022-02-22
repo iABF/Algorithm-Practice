@@ -1,0 +1,36 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 30020
+#define _PI 3.14159265358979323846
+using namespace std;
+int n;
+struct M {
+	string s;
+	int id;
+}p[24];
+bool cmp(const M&a, const M&b) {
+	if (a.s.length() == b.s.length()) {
+		for (int i = 0; i < a.s.length(); i++) {
+			if (a.s[i] != b.s[i])return a.s[i] > b.s[i];
+		}
+		return 0;
+	}
+	return a.s.length() > b.s.length();
+}
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		cin >> p[i].s;
+		p[i].id = i + 1;
+	}
+	sort(p, p + n, cmp);
+	cout << p[0].id << endl << p[0].s << endl;
+}

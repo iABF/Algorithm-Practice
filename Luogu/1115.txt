@@ -1,0 +1,30 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<utility>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 30020
+#define _PI 3.14159265358979323846
+using namespace std;
+int n;
+int a[200005];
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < n; i++)scanf("%d", &a[i]);
+	long long sum = a[0];
+	long long ans = a[0];
+	for (int i = 1; i < n; i++) {
+		sum += a[i];
+		ans = max(sum, ans);
+		if (sum < 0) {
+			sum = 0;
+		}
+	}
+	cout << ans << endl;
+}

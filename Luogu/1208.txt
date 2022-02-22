@@ -1,0 +1,42 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 30020
+#define _PI 3.14159265358979323846
+using namespace std;
+int n, m;
+struct M
+{
+	int pr;
+	int mo;
+}p[5004];
+bool cmp(const M&a, const M&b) {
+	return a.pr < b.pr;
+}
+int main()
+{
+	cin >> n >> m;
+	int sum = 0;
+	int cnt = 0;
+	for (int i = 0; i < m; i++) {
+		cin >> p[i].pr >> p[i].mo;
+	}
+	sort(p, p + m, cmp);
+	for (int i = 0; i < m; i++) {
+		if (cnt + p[i].mo >= n) {
+			sum += (n - cnt)*p[i].pr;
+			break;
+		}
+		else {
+			cnt += p[i].mo;
+			sum += p[i].mo*p[i].pr;
+		}
+	}
+	cout << sum << endl;
+} 

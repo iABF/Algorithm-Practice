@@ -1,0 +1,30 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<utility>
+#include<queue>
+#include<map>
+#define INF 0x7f7f7f7f
+#define MAXN 30020
+#define _PI 3.14159265358979323846
+using namespace std;
+int n, m, a = 0;
+bool mp[105][105];
+int f[105][105][3] = { 0 };
+int main()
+{
+	cin >> n >> m;
+	for (int i = 1; i <= n; i++)for (int j = 1; j <= m; j++) {
+		cin >> mp[i][j];
+		if (mp[i][j]) {
+			f[i][j][0] = f[i][j - 1][0] + 1;
+			f[i][j][1] = f[i - 1][j][1] + 1;
+			f[i][j][2] = min(min(f[i][j][0], f[i][j][1]),f[i-1][j-1][2]+1);
+			a = max(a, f[i][j][2]);
+		}
+	}
+	cout << a << endl;
+}

@@ -1,0 +1,41 @@
+#include<bits/stdc++.h>
+
+#define INF 99999999
+#define _PI 3.14159265358979323846
+using namespace std;
+int n;
+int a[355];
+
+int cmp(int x) {
+    int ans = 0;
+    int cur = x + 1;
+    if (cur >= n)cur -= n;
+    int l = a[x], r = a[cur];
+    while (a[cur] == r || a[cur] == 'w' - 'a') {
+        cur++;
+        if (cur >= n)cur = 0;
+        if (a[cur] != 'w' - 'a' && r == 'w' - 'a')r = a[cur];
+        ans++;
+        if (ans >= n)return n;
+    }
+    cur = x;
+    while (a[cur] == l || a[cur] == 'w' - 'a') {
+        cur--;
+        if (cur < 0)cur = n - 1;
+        if (a[cur] != 'w' - 'a' && l == 'w' - 'a')l = a[cur];
+        ans++;
+        if (ans >= n)return n;
+    }
+    return ans;
+}
+
+int main() {
+    string s;
+    cin >> n >> s;
+    for (int i = 0; i < n; i++) {
+        a[i] = s[i] - 'a';
+    }
+    int ans = 0;
+    for (int i = 0; i < n; i++)ans = max(ans, cmp(i));
+    cout << ans << endl;
+}

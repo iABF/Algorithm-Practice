@@ -1,0 +1,36 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<utility>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 30020
+#define _PI 3.14159265358979323846
+using namespace std;
+int n;
+int r;
+vector<int>a;
+char ch(int d) {
+	if (d < 10)return d + '0';
+	else return d - 10 + 'A';
+}
+int main()
+{
+	cin >> n >> r;
+	cout << n << '=';
+	while (n) {
+		int p = n % r;
+		n /= r;
+		if (p < 0) {
+			p -= r;
+			n++;
+		}
+		a.push_back(p);
+	}
+	for (int i = a.size() - 1; i >= 0; i--)cout << ch(a[i]);
+	printf("(base%d)", r);
+}

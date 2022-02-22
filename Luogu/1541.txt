@@ -1,0 +1,41 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<utility>
+#include<queue>
+#include<map>
+#define INF 0x7f7f7f7f
+#define MAXN 30020
+#define _PI 3.14159265358979323846
+using namespace std;
+int n, m;
+int a[355], b[125];
+int f[45][45][45][45] = { 0 };
+int num[5] = { 0 };
+int main()
+{
+	cin >> n >> m;
+	for (int i = 0; i < n; i++)cin >> a[i];
+	for (int i = 0; i < m; i++) {
+		cin >> b[i];
+		num[b[i]]++;
+	}
+	f[0][0][0][0] = a[0];
+	int ans = 0;
+	for (int i = 0; i <= num[1]; i++)
+		for (int j = 0; j <= num[2]; j++)
+			for (int k = 0; k <= num[3]; k++)
+				for (int w = 0; w <= num[4]; w++) {
+					int cur = i + j * 2 + k * 3 + w * 4;
+					if (cur >= n || cur == 0)continue;
+					if (i)f[i][j][k][w] = max(f[i][j][k][w], f[i - 1][j][k][w] + a[cur]);
+					if (j)f[i][j][k][w] = max(f[i][j][k][w], f[i][j - 1][k][w] + a[cur]);
+					if (k)f[i][j][k][w] = max(f[i][j][k][w], f[i][j][k - 1][w] + a[cur]);
+					if (w)f[i][j][k][w] = max(f[i][j][k][w], f[i][j][k][w - 1] + a[cur]);
+					if (cur == n - 1)ans = max(ans, f[i][j][k][w]);
+	}
+	cout << ans << endl;
+}

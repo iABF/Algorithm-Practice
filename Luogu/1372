@@ -1,0 +1,11 @@
+#include<bits/stdc++.h>
+
+#define INF 99999999
+#define _PI 3.14159265358979323846
+using namespace std;
+int n, k;
+
+int main() {
+    cin >> n >> k;
+    cout << (int) (n / k) << endl;
+}

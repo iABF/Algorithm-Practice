@@ -1,0 +1,44 @@
+#include<bits/stdc++.h>
+
+#define INF 99999999
+#define _PI 3.14159265358979323846
+using namespace std;
+int a, b, c;
+int cs[10];
+bool flag = false;
+
+bool check_single(int x) {
+    if (x > 987)return false;
+    int r = x / 100, s = (x - r * 100) / 10, t = x % 10;
+    if (r == s)return false;
+    if (r == t)return false;
+    if (s == t)return false;
+    cs[r]++;
+    cs[s]++;
+    cs[t]++;
+    return true;
+}
+
+bool check(int x, int y, int z) {
+    memset(cs, 0, sizeof(cs));
+    if (!check_single(x))return false;
+    if (!check_single(y))return false;
+    if (!check_single(z))return false;
+    for (int i = 1; i < 10; i++)if (cs[i] != 1)return false;
+    return true;
+}
+
+void print(int x) {
+    flag = true;
+    printf("%d %d %d\n", x, x / a * b, x / a * c);
+}
+
+int main() {
+    scanf("%d%d%d", &a, &b, &c);
+    int end = (int) ((double) a / (double) c * 987);
+    for (int i = 123; i <= end; i++) {
+        if (i % a)continue;
+        if (check(i, i / a * b, i / a * c))print(i);
+    }
+    if(!flag)printf("No!!!\n");
+}

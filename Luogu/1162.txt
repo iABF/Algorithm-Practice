@@ -1,0 +1,80 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<utility>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 30020
+#define _PI 3.14159265358979323846
+using namespace std;
+int n;
+int mp[35][35] = { 0 };
+int dir[4][2] = { 0,1,0,-1,1,0,-1,0 };
+bool vis[35][35] = { false };
+bool outb(int x, int y) {
+	if (x<1 || x>n)return true;
+	if (y<1 || y>n)return true;
+	return false;
+}
+bool isboard(int xx, int xy) {
+	memset(vis, false, sizeof(vis));
+	queue<pair<int, int>>q;
+	q.push(make_pair(xx, xy));
+	vis[xx][xy] = true;
+	while (!q.empty()) {
+		int x = q.front().first, y = q.front().second;
+		q.pop();
+		for (int i = 0; i < 4; i++) {
+			if (outb(x + dir[i][0], y + dir[i][1]))return true;
+			if (!mp[x + dir[i][0]][y + dir[i][1]] && !vis[x + dir[i][0]][y + dir[i][1]]) {
+				q.push(make_pair(x + dir[i][0], y + dir[i][1]));
+				vis[x + dir[i][0]][y + dir[i][1]] = true;
+			}
+		}
+	}
+	return false;
+}
+void bfs(int xx, int xy) {
+	memset(vis, false, sizeof(vis));
+	queue<pair<int, int>>q;
+	q.push(make_pair(xx, xy));
+	vis[xx][xy] = true;
+	mp[xx][xy] = 2;
+	while (!q.empty()) {
+		int x = q.front().first, y = q.front().second;
+		q.pop();
+		for (int i = 0; i < 4; i++) {
+			if (!mp[x + dir[i][0]][y + dir[i][1]] && !vis[x + dir[i][0]][y + dir[i][1]]) {
+				q.push(make_pair(x + dir[i][0], y + dir[i][1]));
+				mp[x + dir[i][0]][y + dir[i][1]] = 2;
+				vis[x + dir[i][0]][y + dir[i][1]] = true;
+			}
+		}
+	}
+}
+void ans() {
+	for (int i = 1; i <= n; i++)for (int j = 1; j <= n; j++) {
+		if (!mp[i][j]) {
+			if (!isboard(i, j)) {
+				bfs(i, j);
+				for (int i = 1; i <= n; i++) {
+					for (int j = 1; j < n; j++) {
+						cout << mp[i][j] << ' ';
+					}
+					cout << mp[i][n] << endl;
+				}
+				return;
+			}
+		}
+	}
+}
+int main()
+{
+	cin >> n;
+	for (int i = 1; i <= n; i++)for (int j = 1; j <= n; j++)cin >> mp[i][j];
+	ans();
+} 

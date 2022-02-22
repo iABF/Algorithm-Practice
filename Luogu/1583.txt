@@ -1,0 +1,41 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 30020
+#define _PI 3.14159265358979323846
+using namespace std;
+int n, k;
+struct M
+{
+	int w;
+	int id;
+}p[20005];
+bool cmp(const M&a, const M&b) {
+	if (a.w == b.w)return a.id < b.id;
+	return a.w > b.w;
+}
+int e[11];
+int main()
+{
+	cin >> n >> k;
+	for (int i = 1; i <= 10; i++)cin >> e[i];
+	for (int i = 0; i < n; i++) {
+		cin >> p[i].w;
+		p[i].id = i + 1;
+	}
+	sort(p, p + n, cmp);
+	for (int i = 0; i < n; i++) {
+		p[i].w += e[i % 10 + 1];
+	}
+	sort(p, p + n, cmp);
+	for (int i = 0; i < k; i++) {
+		cout << p[i].id << ' ';
+	}
+	cout << endl;
+}

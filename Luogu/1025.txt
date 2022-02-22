@@ -1,0 +1,30 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<utility>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 30020
+#define _PI 3.14159265358979323846
+using namespace std;
+int n, k;
+int solve(int x, int y) {
+	if (x < y)return 0;
+	if (y == 1)return 1;
+	if (y == 0)return 0;
+	int ans = 0;
+	for (int i = 1;; i++) {
+		if (x - 1 - y * (i - 1) < y - 1)break;
+		ans += solve(x - 1 - y * (i - 1), y - 1);
+	}
+	return ans;
+}
+int main()
+{
+	cin >> n >> k;
+	cout << solve(n, k) << endl;
+}

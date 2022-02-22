@@ -1,0 +1,40 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<utility>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 30020
+#define _PI 3.14159265358979323846
+using namespace std;
+int a, b;
+int gcd(int x, int y) {
+	while (y) {
+		int t = x % y;
+		x = y;
+		y = t;
+	}
+	return x;
+}
+int solve() {
+	int ans = 0;
+	if (b%a)return 0;
+	int t = b / a;
+	for (int i = 1; i*i <= t; i++) {
+		if (t%i)continue;
+		int j = t / i;
+		if (gcd(i, j) == 1) {
+			ans += 2;
+		}
+	}
+	return ans;
+}
+int main()
+{
+	cin >> a >> b;
+	cout << solve() << endl;
+}

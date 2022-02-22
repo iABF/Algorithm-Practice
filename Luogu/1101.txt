@@ -1,0 +1,67 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 30020
+#define _PI 3.14159265358979323846
+using namespace std;
+int n;
+char mp[105][105];
+bool shine[105][105] = { false };
+char yizhong[7] = { 'y','i','z','h','o','n','g' };
+int dir[8][2] = { 1,-1,1,0,1,1,0,-1,0,1,-1,-1,-1,0,-1,1 };
+string s;
+char redo(char k) {
+	for (int i = 0; i < 7; i++)if (k == yizhong[i])return k;
+	return '*';
+}
+bool inlimit(int x, int y, int di) {
+	if (x + dir[di][0] * 6 < 1 || x + dir[di][0] * 6 > n)return false;
+	if (y + dir[di][1] * 6 < 1 || y + dir[di][1] * 6 > n)return false;
+	return true;
+}
+bool isok(int x, int y, int di) {
+	for (int i = 1; i <= 6; i++) {
+		if (mp[x + dir[di][0] * i][y + dir[di][1] * i] != yizhong[i])return false;
+	}
+	return true;
+}
+void check(int x, int y) {
+	int orix = x, oriy = y;
+	for (int d = 0; d < 8; d++) {
+		if (inlimit(x, y, d)) {
+			if (isok(x, y, d)) {
+				for (int i = 0; i <= 6; i++) {
+					shine[x + dir[d][0] * i][y + dir[d][1] * i] = true;
+				}
+			}
+		}
+	}
+}
+int main()
+{
+	cin >> n;
+	for (int i = 1; i <= n; i++) {
+		cin >> s;
+		for (int j = 1; j <= n; j++) {
+			mp[i][j] = redo(s[j - 1]);
+		}
+	}
+	for (int i = 1; i <= n; i++)for (int j = 1; j <= n; j++) {
+		if (mp[i][j] == 'y') {
+			check(i, j);
+		}
+	}
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= n; j++) {
+			if (shine[i][j])cout << mp[i][j];
+			else cout << '*';
+		}
+		cout << endl;
+	}
+} 

@@ -1,0 +1,28 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 30020
+#define _PI 3.14159265358979323846
+using namespace std;
+struct
+{
+	int t, v;
+}a[105];
+int T, m;
+int f[1050];
+int main()
+{
+	cin >> T >> m;
+	for (int i = 0; i < m; i++)cin >> a[i].t >> a[i].v;
+	for (int i = 0; i < m; i++)for (int j = T; j >= 1; j--)
+	{
+		if (j - a[i].t >= 0)f[j] = max(f[j], f[j - a[i].t] + a[i].v);
+	}
+	cout << f[T] << endl;
+}

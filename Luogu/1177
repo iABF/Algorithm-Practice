@@ -1,0 +1,32 @@
+#include<bits/stdc++.h>
+
+#define INF 99999999
+#define _PI 3.14159265358979323846
+using namespace std;
+int a[100005];
+int n;
+
+
+void quick_sort(int l, int r) {
+    int pvt = a[(l + r) / 2];
+    int i = l, j = r;
+    do {
+        while (a[i] < pvt)i++;
+        while (a[j] > pvt)j--;
+        if (i <= j) {
+            swap(a[i], a[j]);
+            i++;
+            j--;
+        }
+    } while (i <= j);
+    if (l < j)quick_sort(l, j);
+    if (i < r)quick_sort(i, r);
+}
+
+int main() {
+    scanf("%d", &n);
+    for (int i = 0; i < n; i++)scanf("%d", a + i);
+    quick_sort(0, n - 1);
+    for (int i = 0; i < n; i++)printf("%d ", a[i]);
+    printf("\n");
+}

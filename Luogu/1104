@@ -1,0 +1,29 @@
+
+#include<bits/stdc++.h>
+
+#define INF 99999999
+#define _PI 3.14159265358979323846
+using namespace std;
+int n;
+struct stu {
+    char s[24];
+    int y, m, d;
+} a[105];
+
+bool cmp(const stu &x, const stu &y) {
+    if (x.y != y.y)return x.y < y.y;
+    if (x.m != y.m)return x.m < y.m;
+    if (x.d != y.d)return x.d < y.d;
+    return true;
+}
+
+int main() {
+    scanf("%d", &n);
+    for (int i = 0; i < n; i++) {
+        scanf("%s%d%d%d", a[i].s, &a[i].y, &a[i].m, &a[i].d);
+    }
+    stable_sort(a, a + n, cmp);
+    for (int i = 0; i < n; i++) {
+        printf("%s\n", a[i].s);
+    }
+}

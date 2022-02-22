@@ -1,0 +1,46 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 30020
+#define _PI 3.14159265358979323846
+using namespace std;
+int n, k;
+struct M
+{
+	string name;
+	int x;
+	int y;
+	int z;
+	int id;
+	int sum;
+}p[305];
+int getmoney(M&a) {	
+	return a.x + a.y + a.z;
+}
+bool cmp(const M&a, const M&b) {
+	if (a.sum == b.sum) {
+		if (a.x == b.x)return a.id < b.id;
+		return a.x > b.x;
+	}
+	return a.sum > b.sum;
+}
+int e[11];
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		cin >> p[i].x >> p[i].y >> p[i].z;
+		p[i].sum = getmoney(p[i]);
+		p[i].id = i + 1;
+	}
+	sort(p, p + n, cmp);
+	for (int i = 0; i < 5; i++) {
+		cout << p[i].id << ' ' << p[i].sum << endl;
+	}
+}

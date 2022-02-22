@@ -1,0 +1,45 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<utility>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 30020
+#define _PI 3.14159265358979323846
+using namespace std;
+int n;
+pair<double, double>p[20];
+double dis[20][20];
+double ans = INF;
+bool vis[20] = { false };
+void dfs(int cur, int eaten, double curdis) {
+	if (curdis >= ans)return;
+	if (eaten == n) {
+		ans = min(curdis, ans);
+		return;
+	}
+	for (int i = 1; i <= n; i++) {
+		if (!vis[i]) {
+			vis[i] = true;
+			dfs(i, eaten + 1, curdis + dis[i][cur]);
+			vis[i] = false;
+		}
+	}
+}
+int main()
+{
+	cin >> n;
+	p[0].first = p[0].second = 0;
+	for (int i = 1; i <= n; i++) {
+		cin >> p[i].first >> p[i].second;
+	}
+	for (int i = 0; i <= n; i++)for (int j = 0; j <= n; j++) {
+		dis[i][j] = dis[j][i] = sqrt((p[i].first - p[j].first)*(p[i].first - p[j].first) + (p[i].second - p[j].second)*(p[i].second - p[j].second));
+	}
+	dfs(0, 0, 0);
+	printf("%.2lf\n", ans);
+} 

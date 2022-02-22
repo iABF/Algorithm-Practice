@@ -1,0 +1,41 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<utility>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 30020
+#define _PI 3.14159265358979323846
+using namespace std;
+int n, a, b, k[205];
+bool vis[205] = { false };
+int bfs() {
+	queue<pair<int, int>>q;
+	q.push(make_pair(a, 0));
+	vis[a] = false;
+	while (!q.empty()) {
+		int s = q.front().first;
+		int d = q.front().second;
+		if (s == b)return d;
+		q.pop();
+		if (s + k[s] <= n && !vis[s + k[s]]) {
+			vis[s + k[s]] = true;
+			q.push(make_pair(s + k[s], d + 1));
+		}
+		if (s - k[s] >= 1 && !vis[s - k[s]]) {
+			vis[s - k[s]] = true;
+			q.push(make_pair(s - k[s], d + 1));
+		}
+	}
+	return -1;
+}
+int main()
+{
+	cin >> n >> a >> b;
+	for (int i = 1; i <= n; i++)cin >> k[i];
+	cout << bfs() << endl;
+}

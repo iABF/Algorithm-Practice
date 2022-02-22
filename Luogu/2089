@@ -1,0 +1,41 @@
+#include<bits/stdc++.h>
+
+#define INF 99999999
+#define _PI 3.14159265358979323846
+using namespace std;
+int n;
+int a[10];
+int ans = 0;
+
+void dfs(int dp, int res) {
+    if (dp == 10 && res == 0) {
+        for (int i = 0; i < 9; i++)printf("%d ", a[i]);
+        printf("%d\n", a[9]);
+        return;
+    }
+    if ((10 - dp) * 3 < res)return;
+    if (res <= 0)return;
+    for (int i = 1; i <= 3; i++) {
+        a[dp] = i;
+        dfs(dp + 1, res - i);
+    }
+}
+
+void dfs_s(int dp, int res) {
+    if (dp == 10 && res == 0) {
+        ans++;
+        return;
+    }
+    if ((10 - dp) * 3 < res)return;
+    if (res <= 0)return;
+    for (int i = 1; i <= 3; i++) {
+        dfs_s(dp + 1, res - i);
+    }
+}
+
+int main() {
+    scanf("%d", &n);
+    dfs_s(0, n);
+    printf("%d\n", ans);
+    dfs(0, n);
+}

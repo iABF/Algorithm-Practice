@@ -1,0 +1,48 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<utility>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 30020
+#define _PI 3.14159265358979323846
+using namespace std;
+int n, m;
+int p[100005][2] = { 0 };
+bool vis[100005] = { false };
+int main()
+{
+	cin >> n;
+	int op, pos;
+	p[n + 1][1] = 1;
+	p[1][0] = n + 1;
+	for (int i = 2; i <= n; i++) {
+		cin >> op >> pos;
+		if (p[op][pos]) {
+			int k = p[op][pos];
+			p[op][pos] = i;
+			p[i][pos] = k;
+			p[k][1 - pos] = i;
+			p[i][1 - pos] = op;
+		}
+		else {
+			p[op][pos] = i;
+			p[i][1 - pos] = op;
+		}
+	}
+	cin >> m;
+	while (m--) {
+		cin >> op;
+		vis[op] = true;
+	}
+	int x = n + 1;
+	while (p[x][1]) {
+		x = p[x][1];
+		if (!vis[x])cout << x << ' ';
+	}
+	cout << endl;
+}

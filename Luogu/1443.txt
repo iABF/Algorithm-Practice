@@ -1,0 +1,53 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<utility>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 30020
+#define _PI 3.14159265358979323846
+using namespace std;
+int n, m, x, y;
+bool vis[405][405] = { false };
+int mp[405][405];
+int dir[8][2] = { 1,2,2,1,-1,2,2,-1,1,-2,-2,1,-1,-2,-2,-1 };
+bool ins(int a, int b) {
+	if (a<1 || a>n)return false;
+	if (b<1 || b>m)return false;
+	return true;
+}
+void bfs() {
+	queue<pair<pair<int,int>, int>>q;
+	q.push(make_pair(make_pair(x, y), 0));
+	vis[x][y] = true;
+	mp[x][y] = 0;
+	while (!q.empty()) {
+		int xx = q.front().first.first, yy = q.front().first.second, dd = q.front().second;
+		q.pop();
+		for (int i = 0; i < 8; i++) {
+			int nx = xx + dir[i][0];
+			int ny = yy + dir[i][1];
+			if (ins(nx, ny)&&!vis[nx][ny]) {
+				vis[nx][ny] = true;
+				mp[nx][ny] = dd + 1;
+				q.push(make_pair(make_pair(nx, ny), dd + 1));
+			}
+		}
+	}
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= m; j++) {
+			printf("%-5d", mp[i][j]);
+		}
+		cout << endl;
+	}
+}
+int main()
+{
+	cin >> n >> m >> x >> y;
+	for (int i = 0; i <= n; i++)for (int j = 0; j <= m; j++)mp[i][j] = -1;
+	bfs();
+} 

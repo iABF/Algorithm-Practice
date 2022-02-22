@@ -1,0 +1,40 @@
+#include<bits/stdc++.h>
+
+#define INF 99999999
+#define _PI 3.14159265358979323846
+using namespace std;
+int n, m;
+char s[55];
+int a[50][3] = {0};
+int ans = INF;
+
+void dfs(int ver, int dp, int sum) {
+    if (dp == n && ver == 2) {
+        if (sum < ans)ans = sum;
+        return;
+    }
+    if (dp >= n)return;
+    if (ver == 0) {
+        dfs(ver, dp + 1, sum + a[dp][1] + a[dp][2]);
+        dfs(ver + 1, dp + 1, sum + a[dp][0] + a[dp][2]);
+    } else if (ver == 1) {
+        dfs(ver, dp + 1, sum + a[dp][0] + a[dp][2]);
+        dfs(ver + 1, dp + 1, sum + a[dp][0] + a[dp][1]);
+    } else {
+        dfs(ver, dp + 1, sum + a[dp][1] + a[dp][0]);
+    }
+}
+
+int main() {
+    scanf("%d%d", &n, &m);
+    for (int i = 0; i < n; i++) {
+        scanf("%s", s);
+        for (int j = 0; j < m; j++) {
+            if (s[j] == 'W')a[i][0]++;
+            else if (s[j] == 'B')a[i][1]++;
+            else a[i][2]++;
+        }
+    }
+    dfs(0, 1, a[0][1] + a[0][2]);
+    printf("%d\n", ans);
+}

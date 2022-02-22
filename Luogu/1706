@@ -1,0 +1,33 @@
+#include<bits/stdc++.h>
+
+#define INF 99999999
+#define _PI 3.14159265358979323846
+using namespace std;
+int n;
+int a[12] = {0};
+bool vis[12] = {false};
+
+void print() {
+    for (int i = 0; i < n; i++)printf("%5d", a[i]);
+    printf("\n");
+}
+
+void dfs(int dp) {
+    if (dp == n) {
+        print();
+        return;
+    }
+    for (int i = 1; i <= n; i++) {
+        if (!vis[i]) {
+            a[dp] = i;
+            vis[i] = true;
+            dfs(dp + 1);
+            vis[i] = false;
+        }
+    }
+}
+
+int main() {
+    scanf("%d", &n);
+    dfs(0);
+}

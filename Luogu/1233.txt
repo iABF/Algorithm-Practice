@@ -1,0 +1,51 @@
+import java.util.*;
+import java.io.*;
+
+class Board implements Comparable<Board>{
+    public int l;
+    public int r;
+
+    public Board(int ll, int rr) {
+        this.l = ll;
+        this.r = rr;
+    }
+
+    @Override
+    public int compareTo(Board o) {
+        if(o.l == this.l)return o.r - this.r;
+        return o.l - this.l;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        Board a[] = new Board[n];
+        int ll, rr;
+        for(int i = 0; i < n; i++) {
+            ll = sc.nextInt();
+            rr = sc.nextInt();
+            a[i] = new Board(ll, rr);
+        }
+        Arrays.sort(a);
+        boolean vis[] = new boolean[n];
+        Arrays.fill(vis, false);
+        for(int i = 0; i < n; i++) {
+            if(vis[i])continue;
+            int cur = a[i].r;
+            for(int j = i + 1; j < n; j++) {
+                if(vis[j])continue;
+                if(a[j].r <= cur) {
+                    vis[j] = true;
+                    cur = a[j].r;
+                }
+            }
+        }
+        int ans = 0;
+        for(int i = 0; i < n; i++) {
+            if(!vis[i])ans++;
+        }
+        System.out.println(ans);
+    }
+}

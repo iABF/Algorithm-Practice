@@ -1,0 +1,51 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 30020
+#define _PI 3.14159265358979323846
+using namespace std;
+int n, k;
+struct M
+{
+	string name;
+	int sc;
+	int clsc;
+	char ism;
+	char iswe;
+	int pa;
+	int mo;
+	int id;
+}p[105];
+int getmoney(M&a) {
+	int ans = 0;
+	if (a.sc > 80 && a.pa >= 1)ans += 8000;
+	if (a.sc > 85 && a.clsc > 80)ans += 4000;
+	if (a.sc > 90)ans += 2000;
+	if (a.sc > 85 && a.iswe == 'Y')ans += 1000;
+	if (a.ism == 'Y' && a.clsc > 80)ans += 850;
+	return ans;
+}
+bool cmp(const M&a, const M&b) {
+	if (a.mo == b.mo)return a.id < b.id;
+	return a.mo > b.mo;
+}
+int e[11];
+int main()
+{
+	cin >> n;
+	int sum = 0;
+	for (int i = 0; i < n; i++) {
+		cin >> p[i].name >> p[i].sc >> p[i].clsc >> p[i].ism >> p[i].iswe >> p[i].pa;
+		p[i].mo = getmoney(p[i]);
+		sum += p[i].mo;
+		p[i].id = i;
+	}
+	sort(p, p + n, cmp);
+	cout << p[0].name << endl << p[0].mo << endl << sum << endl;
+}

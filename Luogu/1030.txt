@@ -1,0 +1,33 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<utility>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 30020
+#define _PI 3.14159265358979323846
+using namespace std;
+string m, e;
+void sl(int a,int b,int x,int y) {
+	if (b < a)return;
+	char root = e[y];
+	cout << root;
+	if (b == a || x == y)return;
+	for (int i = a; i <= b; i++) {
+		if (m[i] == root) {
+			sl(a, i - 1, x, x + i - a - 1);
+			sl(i + 1, b, x + i - a, y - 1);
+			break;
+		}
+	}
+}
+int main()
+{
+	cin >> m >> e;
+	sl(0, m.length() - 1, 0, e.length() - 1);
+	cout << endl;
+}

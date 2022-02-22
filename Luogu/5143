@@ -1,0 +1,27 @@
+#include<bits/stdc++.h>
+
+#define INF 99999999
+#define _PI 3.14159265358979323846
+using namespace std;
+int n;
+struct stu {
+    double x, y, z;
+} a[50005];
+
+bool cmp(const stu &xx, const stu &yy) {
+    return xx.z < yy.z;
+}
+
+int main() {
+    scanf("%d", &n);
+    for (int i = 0; i < n; i++) {
+        scanf("%lf%lf%lf", &a[i].x, &a[i].y, &a[i].z);
+    }
+    sort(a, a + n, cmp);
+    double s = 0;
+    for (int i = 1; i < n; i++) {
+        s += sqrt((a[i].x - a[i - 1].x) * (a[i].x - a[i - 1].x) + (a[i].y - a[i - 1].y) * (a[i].y - a[i - 1].y) +
+                  (a[i].z - a[i - 1].z) * (a[i].z - a[i - 1].z));
+    }
+    printf("%.3f\n", s);
+}

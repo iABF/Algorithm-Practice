@@ -1,0 +1,58 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 30020
+#define _PI 3.14159265358979323846
+using namespace std;
+int n;
+int mp[15];
+bool vis[15];
+int cnt = 0;
+bool check(int cur, int k) {
+	while (cur&&k) {
+		if (mp[cur] == k)return false;
+		cur--;
+		k--;
+	}
+	return true;
+}
+bool check2(int cur, int k) {
+	while (cur&&k <= n) {
+		if (mp[cur] == k)return false;
+		cur--;
+		k++;
+	}
+	return true;
+}
+void dfs(int cur) {
+	if (cur > n) {
+		cnt++;
+		if (cnt < 4) {
+			for (int i = 1; i < n; i++)cout << mp[i] << ' ';
+			cout << mp[n] << endl;
+		}
+		return;
+	}
+	for (int i = 1; i <= n; i++) {
+		if (!vis[i] && check(cur, i) && check2(cur, i)) {
+			vis[i] = true;
+			mp[cur] = i;
+			dfs(cur + 1);
+			mp[cur] = 0;
+			vis[i] = false;
+		}
+	}
+	return;
+}
+int main()
+{
+	cin >> n;
+	dfs(1);
+	cout << cnt << endl;
+} 

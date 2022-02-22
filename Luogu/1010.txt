@@ -1,0 +1,38 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<utility>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 30020
+#define _PI 3.14159265358979323846
+using namespace std;
+int n;
+string res(int k) {
+	if (k == 0)return "0";
+	if (k == 1)return "2(0)";
+	if (k == 2)return "2";
+	string ans = "";
+	int base = 0;
+	while (k) {
+		while (k % 2 == 0) {
+			base += 1;
+			k >>= 1;
+		}
+		if (k % 2) {
+			k -= 1;
+			if (base != 1)ans = "2(" + res(base) + ")+" + ans;
+			else ans = "2+" + ans;
+		}
+	}
+	return ans.substr(0, ans.length() - 1);
+}
+int main()
+{
+	cin >> n;
+	cout << res(n) << endl;
+}

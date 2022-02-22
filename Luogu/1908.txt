@@ -1,0 +1,45 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<utility>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 30020
+#define _PI 3.14159265358979323846
+using namespace std;
+int n;
+int a[500005];
+int temp[500005];
+long long ans = 0;
+void mergesort(int s, int e) {
+	if (s == e)return;
+	int m = (s + e) >> 1;
+	mergesort(s, m);
+	mergesort(m + 1, e);
+	int x = s, y = m + 1, cur = s;
+	while (x <= m && y <= e) {
+		if (a[x] > a[y]) {
+			ans += m - x + 1;
+			temp[cur++] = a[y++];
+		}
+		else {
+			temp[cur++] = a[x++];
+		}
+	}
+	while (x <= m)temp[cur++] = a[x++];
+	while (y <= e)temp[cur++] = a[y++];
+	for (int i = s; i <= e; i++)a[i] = temp[i];
+}
+int main()
+{
+	scanf("%d", &n);
+	for (int i = 0; i < n; i++) {
+		scanf("%d", &a[i]);
+	}
+	mergesort(0, n - 1);
+	printf("%lld\n", ans);
+}

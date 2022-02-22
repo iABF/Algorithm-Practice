@@ -1,0 +1,19 @@
+#include<bits/stdc++.h>
+
+#define INF 99999999
+#define _PI 3.14159265358979323846
+using namespace std;
+int n, k;
+
+bool check(int x) {
+    int c = 0;
+    for (; x; x -= x & -x)c++;
+    return c <= k;
+}
+
+int main() {
+    cin >> n >> k;
+    int t = n;
+    while (!check(t))t += t & -t;
+    cout << t - n << endl;
+}

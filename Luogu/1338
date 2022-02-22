@@ -1,0 +1,22 @@
+#include<bits/stdc++.h>
+
+#define INF 99999999
+#define _PI 3.14159265358979323846
+using namespace std;
+long long n, m;
+int ans[50005];
+
+int main() {
+    cin >> n >> m;
+    int s = 1, e = n;
+    for (int i = 1; i <= n; i++) {
+        long long t = (n - i) * (n - i - 1) / 2;
+        if (m > t) {
+            ans[e] = i;
+            m -= (e - s);
+            e--;
+        } else ans[s++] = i;
+    }
+    for (int i = 1; i <= n; i++)cout << ans[i] << ' ';
+    cout << endl;
+}
