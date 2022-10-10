@@ -1,0 +1,43 @@
+#include <bits/stdc++.h>
+
+#define INF 0x7f7f7f7f
+#define MAXN 1005
+#define MOD 10007
+#define _PI 3.14159265358979323846
+using namespace std;
+
+string small, big;
+
+int ans = 0, pos, s_next[15] = {0};
+
+void get_next() {
+    for (int i = 1; i < small.length(); ++i)
+        if (small[i] == small[s_next[i - 1]])
+            s_next[i] = s_next[i - 1] + 1;
+        else s_next[i] = 0;
+}
+
+void cmp() {
+    int nxt = 0;
+    for (int i = 0; i < big.length(); ++i) {
+        if (big[i] == small[nxt]) {
+            if (nxt == small.length() - 1) {
+                if (!ans)pos = i - small.length() + 1;
+                ans++;
+                nxt = s_next[nxt];
+            } else nxt++;
+        } else nxt = s_next[nxt];
+    }
+}
+
+
+int main() {
+    getline(cin, small);
+    getline(cin, big);
+    transform(small.begin(), small.end(), small.begin(), ::tolower);
+    transform(big.begin(), big.end(), big.begin(), ::tolower);
+    get_next();
+    cmp();
+    if (!ans)cout << -1 << endl;
+    else cout << ans << " " << pos << endl;
+}
