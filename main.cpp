@@ -7,18 +7,10 @@
 #define ll long long
 using namespace std;
 
-int ans = INF, n, s[11], b[11];
-
-void check(int cur, int so, int bi) {
-    if (!(so == 1 && bi == 0))ans = min(ans, abs(so - bi));
-    if (cur >= n)return;
-    check(cur + 1, so * s[cur], bi + b[cur]);
-    check(cur + 1, so, bi);
-}
+unsigned ll n, dp[5005] = {1, 1};
 
 int main() {
     cin >> n;
-    for (int i = 0; i < n; ++i)cin >> s[i] >> b[i];
-    check(0, 1, 0);
-    cout << ans << endl;
+    for (int i = 2; i <= n; ++i)dp[i] = dp[i - 1] + dp[i - 2];
+    cout << dp[n] << endl;
 }
