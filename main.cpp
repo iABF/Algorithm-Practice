@@ -7,20 +7,8 @@
 #define ll long long
 using namespace std;
 
-string gen() {
-    char c;
-    string ans;
-    int num;
-    while (cin >> c) {
-        if (c == '[') {
-            cin >> num;
-            string s = gen();
-            while (num--)ans += s;
-        } else if (c == ']')return ans;
-        else ans += c;
-    }
-}
+s
 
 int main() {
-    cout << gen() << endl;
+
 }

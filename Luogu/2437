@@ -1,0 +1,6 @@
+[m, n] = [int(r) for r in input().split()]
+x = y = 1
+z = 2
+for i in range(m + 2, n + 1):
+    (x, y, z) = (y, x + y, 0)
+print(y)
