@@ -7,36 +7,14 @@
 #define ll long long
 using namespace std;
 
-string N, prefix;
-int k;
+int n, a[MAXN], ans;
 
 int main() {
-    cin >> N >> k;
-    while (k) {
-        if (k == N.length()) {
-            N = "";
-            k = 0;
-        }
-        char min = '9' + 1;
-        int pos = 0;
-        for (int i = 0; i <= k; ++i) {
-            if (N[i] == '0') {
-                pos = i;
-                break;
-            }
-            if (N[i] < min) {
-                min = N[i];
-                pos = i;
-            }
-        }
-        if (pos < N.length()) {
-            prefix += N[pos];
-            N = N.substr(pos + 1);
-            k -= pos;
-        } else break;
+    cin >> n >> a[0];
+    ans = a[0];
+    for (int i = 1; i < n; ++i) {
+        cin >> a[i];
+        if (a[i] > a[i - 1])ans += a[i] - a[i - 1];
     }
-    N = prefix + N;
-    while (!N.empty() && N[0] == '0')N = N.substr(1);
-    if (N.empty())N = "0";
-    cout << N << endl;
+    cout << ans << endl;
 }
