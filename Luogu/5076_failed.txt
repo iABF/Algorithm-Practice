@@ -1,0 +1,131 @@
+#include <bits/stdc++.h>
+
+#define INF 0x7f7f7f7f
+#define MAXN 1005
+#define MOD 1000000
+#define _PI 3.14159265358979323846
+#define ll long long
+#define VPRINT(a, n) for(int i = 0; i < n - 1; ++i) cout << a[i] <<' '; cout << a[n-1] << endl
+#define PRINT(a) cout << a << endl
+using namespace std;
+
+struct Node {
+    Node *l = nullptr;
+    Node *r = nullptr;
+    Node *father = nullptr;
+    int count = 1;
+    int value;
+
+    Node(int v, Node *f) : value(v), father(f) {}
+
+    void insert(int x);
+
+    int find(int rank);
+
+    int find_predecessor(int x);
+
+    int find_successor(int x);
+
+    int find_rank(int x, int sum);
+
+};
+
+void Node::insert(int x) {
+    if (x < this->value) {
+        if (!this->l) {
+            this->l = new Node(x, this);
+            Node *cur = this;
+            while (cur) {
+                cur->count++;
+                cur = cur->father;
+            }
+        } else this->l->insert(x);
+    } else {
+        if (!this->r) {
+            this->r = new Node(x, this);
+            Node *cur = this;
+            while (cur) {
+                cur->count++;
+                cur = cur->father;
+            }
+        } else this->r->insert(x);
+    }
+}
+
+int Node::find(int rank) {
+    if (this->l) {
+        if (this->l->count < rank)rank -= this->l->count;
+        else return this->l->find(rank);
+    }
+    if (rank == 1)return this->value;
+    if (this->r)return this->r->find(rank - 1);
+    return 2147483647;
+}
+
+int Node::find_predecessor(int x) {
+    if (this->value >= x) {
+        if (this->l)return this->l->find_predecessor(x);
+        else if (this->father && this == this->father->r)return this->father->value;
+        else return -2147483647;
+    } else {
+        if (this->r)return this->r->find_predecessor(x);
+        else return this->value;
+    }
+}
+
+int Node::find_successor(int x) {
+    if (this->value <= x) {
+        if (this->r)return this->r->find_successor(x);
+        else if (this->father && this == this->father->l)return this->father->value;
+        else return 2147483647;
+    } else {
+        if (this->l)return this->l->find_successor(x);
+        else return this->value;
+    }
+}
+
+int Node::find_rank(int x, int sum) {
+    if (this->value == x) {
+        if (this->l)return this->l->count + 1 + sum;
+        else return 1 + sum;
+    } else if (this->value > x) {
+        if (this->l)return this->l->find_rank(x, sum);
+        else return 1 + sum;
+    } else {
+        if (!this->r)return 1 + sum;
+        if (this->l)return this->r->find_rank(x, sum + this->l->count + 1);
+        else return this->r->find_rank(x, sum + 1);
+    }
+}
+
+int q, op, n;
+Node *root = nullptr;
+
+
+int main() {
+    cin >> q;
+    while (q--) {
+        cin >> op >> n;
+        switch (op) {
+            case 1:
+                if (root)cout << root->find_rank(n, 0) << endl;
+                else cout << 1 << endl;
+                break;
+            case 2:
+                if (root)cout << root->find(n) << endl;
+                else cout << 2147483647 << endl;
+                break;
+            case 3:
+                if (root)cout << root->find_predecessor(n) << endl;
+                else cout << -2147483647 << endl;
+                break;
+            case 4:
+                if (root)cout << root->find_successor(n) << endl;
+                else cout << 2147483647 << endl;
+                break;
+            case 5:
+                if (root)root->insert(n);
+                else root = new Node(n, nullptr);
+        }
+    }
+}
