@@ -1,0 +1,33 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 200005
+#define MOD 998244353
+using namespace std;
+int n, k, h[MAXN], cur, num[MAXN], sum = 0, ans = 0;
+int main()
+{
+	cin >> n >> k;
+	for (int i = 1; i <= n; i++)cin >> h[i];
+	sort(h + 1, h + n + 1);
+	cur = n;
+	for (int i = h[n]; i >= 1; i--)
+	{
+		while (h[cur - 1] >= i)cur--;
+		num[i] = n - cur + 1;
+	}
+	for (int i = h[n]; i >= 2; i--)
+	{
+		if (num[i] == n)break;
+		if (sum + num[i] > k)sum = num[i], ans++;
+		else sum += num[i];
+	}
+	if (sum)ans++;
+	cout << ans << endl;
+}

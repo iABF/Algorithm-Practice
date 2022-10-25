@@ -1,0 +1,31 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 5010
+using namespace std;
+int n, m, p, x, y;
+int f[5010];
+int findd(int x) { return f[x] == x ? x : f[x] = findd(f[x]); }
+int main()
+{
+	cin >> n >> m >> p;
+	for (int i = 1; i <= n; i++)f[i] = i;
+	for (int i = 0; i < m; i++)
+	{
+		cin >> x >> y;
+		f[findd(x)] = findd(y);
+	}
+	for (int i = 1; i <= n; i++)findd(i);
+	for (int i = 0; i < p; i++)
+	{
+		cin >> x >> y;
+		if (findd(x) == findd(y))cout << "Yes" << endl;
+		else cout << "No" << endl;
+	}
+}

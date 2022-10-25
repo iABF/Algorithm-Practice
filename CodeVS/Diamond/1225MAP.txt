@@ -1,0 +1,76 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 100010
+using namespace std;
+int t = 0;
+int Choosenum[9][4] = { {-1,-1,1,3},{0,-1,2,4},{1,-1,-1,5},{-1,0,4,6},{3,1,5,7},{4,2,-1,8},{-1,3,7,-1},{6,4,8,-1},{7,5,-1,-1} };
+map<int, bool>mp;
+string s;
+int ten[10] = { 1,10,100,1000,10000,100000,1000000,10000000,100000000,1000000000 };
+const int fnl = 123804765;
+struct Pro
+{
+	int d;
+	int step;
+	Pro(int dd, int ss) :d(dd), step(ss) {}
+};
+int swapp(int x, int y, int base)
+{
+	int numy = base % ten[9 - y] / ten[8 - y];
+	base += numy * ten[8 - x];
+	base -= numy * ten[8 - y];
+	return base;
+}
+int checkzero(int base)
+{
+	for (int i = 0; i < 9; i++)
+	{
+		if (!(base / ten[8 - i]))return i;
+		base %= ten[8 - i];
+	}
+	return -1;
+}
+int bfs()
+{
+	queue<Pro>q;
+	q.push(Pro(t,0));
+	mp[t] = true;
+	while (!q.empty())
+	{
+		int r = q.front().d;
+		int ste = q.front().step;
+		if (r == fnl)return ste;
+		int zro = checkzero(r);
+		for (int i = 0; i < 4; i++)
+		{
+			if (Choosenum[zro][i] != -1)
+			{
+				int e = swapp(zro, Choosenum[zro][i], r);
+				if (!mp[e])
+				{
+					q.push(Pro(e, ste + 1));
+					mp[e] = true;
+				}
+			}
+		}
+		q.pop();
+	}
+	return -1;
+}
+int main()
+{
+	cin >> s;
+	for (int i = 0; i < 9; i++)
+	{
+		t *= 10;
+		t += s[i] - '0';
+	}
+	cout << bfs() << endl;
+}

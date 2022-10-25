@@ -1,0 +1,22 @@
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+using namespace std;
+int f[2100];
+int T;
+int n;
+int bcp[10004];
+int main()
+{
+	scanf("%d", &T);
+	while (T--)
+	{
+		scanf("%d", &n);
+		for (int i = 1; i < n; i++)scanf("%d", &f[i]);
+		memset(bcp, -9999999, sizeof(bcp));
+		bcp[0] = 0;
+		for (int i = 1; i < n - 1; i++)for (int j = 1; j <= i; j++) bcp[i] = max(bcp[i], bcp[i - j] + f[j + 1] - f[1]);
+		printf("%d\n", bcp[n - 2] + n*f[1]);
+	}
+}

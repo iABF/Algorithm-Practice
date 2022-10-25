@@ -1,0 +1,19 @@
+#include<iostream>
+using namespace std;
+int n, ans = 0, mp[25][25];
+bool ps[25];
+void dfs(int num, int cur)
+{
+	int t = num;
+	ps[cur] = true;
+	for (int i = 1; i <= n; i++)if (ps[i])t -= mp[cur][i]; else t += mp[cur][i];
+	if (ans < t)ans = t;
+	if (t > cur)for (int i = cur + 1; i <= n; i++) { dfs(t, i); ps[i] = false; }
+}
+int main()
+{
+	cin >> n;
+	for (int i = 1; i <= n; i++)for (int j = 1; j <= n; j++)cin >> mp[i][j];
+	dfs(0, 1);
+	cout << ans << endl;
+}

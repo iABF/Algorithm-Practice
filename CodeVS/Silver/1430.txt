@@ -1,0 +1,20 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<algorithm>
+#include<cmath>
+using namespace std;
+int x;
+int check(int a)
+{
+	if (a == 1)return false;
+	if (a < 4)return true;
+	for (int i = 2; i*i <= a; i++)if (a%i == 0)return false;
+	return true;
+}
+int main()
+{
+	cin >> x;
+	if (check(x))printf("\\t");
+	else printf("\\n");
+}

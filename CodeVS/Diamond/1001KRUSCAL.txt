@@ -1,0 +1,71 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 100010
+using namespace std;
+int n, m, st, ed, maxx, minn, ansmax, ansmin;
+double ans = 10000000;
+struct road
+{
+	int a, b, d;
+}r[5050];
+bool cmp(const road&a, const road&b)
+{
+	return a.d > b.d;
+}
+int father[550];
+int findd(int x)
+{
+	return father[x] == x ? x : father[x] = findd(father[x]);
+}
+int gcd(int p, int q)
+{
+	if (q == 0)return p;
+	return gcd(q, p%q);
+}
+void printmm()
+{
+	if (ansmax%ansmin == 0)cout << ansmax / ansmin << endl;
+	else cout << ansmax / gcd(ansmax, ansmin) << '/' << ansmin / gcd(ansmax, ansmin) << endl;
+}
+int main()
+{
+	cin >> n >> m;
+	for (int i = 0; i < m; i++)cin >> r[i].a >> r[i].b >> r[i].d;
+	cin >> st >> ed;
+	sort(r, r + m, cmp);
+	for (int k = 0; k < m; k++)
+	{
+		for (int i = 1; i <= n; i++)father[i] = i;
+		maxx = 0;
+		minn = INF;
+		for (int i = k; i < m; i++)
+		{
+			if (findd(r[i].a) != findd(r[i].b))
+			{
+				father[r[i].a] = r[i].b;
+				maxx = max(maxx, r[i].d);
+				minn = min(minn, r[i].d);
+				if (findd(st) == findd(ed))
+				{
+					if (ans > (double)maxx / (double)minn)
+					{
+						ansmax = maxx;
+						ansmin = minn;
+						ans = (double)maxx / (double)minn;
+					}
+					break;
+				}
+			}
+			else continue;
+		}
+	}
+	if(ans< 10000000)printmm();
+	else cout << "IMPOSSIBLE\n";
+}

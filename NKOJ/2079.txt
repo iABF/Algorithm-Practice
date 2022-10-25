@@ -1,0 +1,76 @@
+#include<stdio.h>
+#include<Windows.h>
+#include<string.h>
+int main()
+{
+	char code[105], message[105], key[26], s[105], out[105];
+	scanf("%s", code);
+	scanf("%s", message);
+	scanf("%s", s);
+	for (int i = 0; i <= 25; i++)
+	{
+		key[i] = '\0';
+	}
+	for (int i = 0; i <= 100; i++)
+	{
+		out[i] = '\0';
+	}
+	if (strlen(message) != strlen(code))
+	{
+		printf("Failed\n");
+		system("pause");
+		return 0;
+	}
+	for (int i = 0; i <= strlen(message) - 1; i++)
+	{
+		if (key[message[i] - 'A'] != '\0')
+		{
+			if (code[i] != key[message[i] - 'A'])
+			{
+				printf("Failed\n");
+				system("pause");
+				return 0;
+			}
+		}
+		else
+		{
+			key[message[i] - 'A'] = code[i];
+		}
+	}
+	for (int i = 0; i <= 24; i++)
+	{
+		if (key[i] == '\0')
+		{
+			printf("Failed\n");
+			system("pause");
+			return 0;
+		}
+	}
+	int t = 0;
+	for (int i = 0; i <= strlen(s) - 1; i++)
+	{
+		for (int j = 0; j <= 25; j++)
+		{
+			if (key[j] == s[i])
+			{
+				out[i] = 'A' + j;
+			}
+		}
+	}
+	for (int i = 0; i <= strlen(s) - 1; i++)
+	{
+		if (out[i] == '\0')
+		{
+			printf("Failed\n");
+			system("pause");
+			return 0;
+		}
+	}
+	for (int i = 0; i <= strlen(s) - 1; i++)
+	{
+		printf("%c", out[i]);
+	}
+	printf("\n");
+	system("pause");
+	return 0;
+}

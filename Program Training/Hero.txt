@@ -1,0 +1,39 @@
+#include<iostream>
+#include<queue>
+#include<algorithm>
+using namespace std;
+int n;
+struct Heroo
+{
+	int he, d;
+	Heroo() {}
+	Heroo(int hh, int dd):he(hh), d(dd) {}
+}h[30];
+bool cmp(const Heroo& a, const Heroo&b)
+{
+	return a.d*b.he > a.he*b.d;
+}
+int main()
+{
+	while (cin >> n)
+	{
+		int sum = 0;
+		for (int i = 0; i < n; i++)
+		{
+			cin >> h[i].d >> h[i].he;
+			sum += h[i].d;
+		}
+		sort(h, h + n, cmp);
+		int ans = 0;
+		for (int i = 0; i < n; i++)
+		{
+			while (h[i].he)
+			{
+				h[i].he--;
+				ans += sum;
+			}
+			sum -= h[i].d;
+		}
+		cout << ans << endl;
+	}
+}

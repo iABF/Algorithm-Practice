@@ -1,0 +1,60 @@
+#include<iostream>
+#include<stack>
+using namespace std;
+int num[100], t;
+int op[100];
+int ans;
+char fnum[100];
+int bestchance;
+stack<int>c, ansop;
+int fsum()
+{
+	stack<int>temp = c;
+	int sum = 0;
+	for (int i = 1; i <= temp.size(); i++)
+	{
+		int uppr = temp.top();
+		temp.pop();
+		int dn = temp.top();
+		for (int j = uppr, u = 1; j >= dn + 1; j--, u *= 10)sum += u*num[j];
+	}
+	return sum;
+}
+void dfs(int cur)
+{
+	if (fnum[cur] == '\0')return;
+	c.push(cur);
+	int sum = fsum();
+	if (sum < t)
+	{
+		if (sum > ans)
+		{
+			ans = sum;
+			ansop = c;
+			bestchance = 1;
+			return;
+		}
+		else if (sum == ans)bestchance++;
+	}
+	dfs(cur + 1);
+	c.pop();
+}
+int main()
+{
+	while (cin >> t >> fnum, t || fnum[0]-'0')
+	{
+		ans = bestchance = 0;
+		for (int i = 0; fnum[i] != '\0'; i++)num[i] = fnum[i] = '0';
+		c.push(0);
+		dfs(0);
+		if (!bestchance)cout << "error" << endl;
+		else if (bestchance >= 2)cout << "rejected" << endl;
+		else
+		{
+			for (int i = 0; i < ansop.size(); i++)
+			{
+
+			}
+		}
+	}
+}

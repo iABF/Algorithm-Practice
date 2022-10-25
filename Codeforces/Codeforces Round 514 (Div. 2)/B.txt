@@ -1,0 +1,49 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 1000000000
+#define MAXN 1005
+using namespace std;
+int n, m;
+bool mp[MAXN][MAXN];
+bool me[MAXN][MAXN];
+string s;
+bool check(int mm, int nn)
+{
+	if (mm + 2 > m || nn + 2 > n)return false;
+	for (int i = mm; i <= mm + 2; i++)for (int j = nn; j <= nn + 2; j++)
+	{
+		if (i == mm + 1 && j == nn + 1)continue;
+		if (!mp[j][i])return false;
+	}
+	return true;
+}
+void ttcc(int mm, int nn)
+{
+	for (int i = mm; i <= mm + 2; i++)for (int j = nn; j <= nn + 2; j++)
+	{
+		if (i == mm + 1 && j == nn + 1)continue;
+		me[j][i] = 1;
+	}
+}
+bool ck2()
+{
+	for (int i = 1; i <= n; i++)for (int j = 1; j <= m; j++)if (mp[i][j] != me[i][j])return false;
+	return true;
+}
+int main()
+{
+	scanf("%d%d", &n, &m);
+	for (int i = 1; i <= n; i++)
+	{
+		cin >> s;
+		for (int j = 1; j <= m; j++)mp[i][j] = s[j - 1] == '#' ? 1 : 0;
+	}
+	for (int i = 1; i <= n; i++)for (int j = 1; j <= m; j++)if (check(j, i))ttcc(j, i);
+	printf(ck2() ? "YES\n" : "NO\n");
+}

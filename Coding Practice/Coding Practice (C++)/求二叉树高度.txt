@@ -1,0 +1,23 @@
+#include<iostream>
+#include<algorithm>
+#include<cstdio>
+using namespace std;
+int n, height = 0;
+char a[55], b[55];
+void search(char*mlr, char*lmr, int num, int h)
+{
+	if (!num)return;
+	char root = *mlr;
+	int l, r;
+	height = max(h, height);
+	for (int i = 0; i < num; i++)if (*(lmr + i) == root) { l = i, r = num - i - 1; break; }
+	search(mlr + 1, lmr, l, h + 1);
+	search(mlr + 1 + l, lmr + 1 + l, r, h + 1);
+}
+int main()
+{
+	cin >> n;
+	scanf("%s %s", a, b);
+	search(a, b, n, 1);
+	cout << height << endl;
+}

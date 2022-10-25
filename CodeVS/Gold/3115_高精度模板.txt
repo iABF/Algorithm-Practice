@@ -1,0 +1,75 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+using namespace std;
+string a, b;
+bool cmp(string a, string b)
+{
+	if (a.size() == b.size()) 
+	{
+		for (int i = 0; i < a.size(); i++)
+		{
+			if (a[i] == b[i])continue;
+			return a[i] > b[i];
+		}
+		return 1;
+	}
+	return a.size() > b.size();
+}
+string jiafa(string a, string b);
+string jianfa(string a, string b)
+{
+	if (a[0] == '-'&&b[0] == '-')return jianfa(b.substr(1, b.size() - 1), a.substr(1, a.size() - 1));
+	else if (a[0]=='-')return '-' + jiafa(a.substr(1, a.size() - 1), b.substr(1, b.size() - 1));
+	else if (b[0] == '-')return jiafa(a, b.substr(1, b.size() - 1));
+	if (!cmp(a, b))return '-' + jianfa(b, a);
+	int aa = a.size(), bb = b.size(), t = 0, k = 0;
+	string c;
+	for (int i = 0; i < aa; i++)
+	{
+		k = 0;
+		if (i < bb)k = -b[bb - 1 - i] + '0';
+		k += a[aa - 1 - i] - '0' - t;
+		t = 0;
+		if (k < 0)k += 10, t = 1;
+		c = (char)(k + '0') + c;
+	}
+	while (c[0] == '0')c = c.substr(1, c.size() - 1);
+	return c;
+}
+string jiafa(string a, string b)
+{
+	if (a[0] == '-'&&b[0] == '-')return'-' + jiafa(a.substr(1, a.size() - 1), b.substr(1, b.size() - 1));
+	else if (a[0] == '-')return jianfa(b, a.substr(1, a.size() - 1));
+	else if (b[0] == '-')return jianfa(a, b.substr(1, b.size() - 1));
+	string c;
+	int aa = a.size(), bb = b.size(), t = 0, k = 0;
+	if (aa > bb)for (int i = 0; i < aa; i++)
+	{
+		k = 0;
+		if (i < bb)k = b[bb - 1 - i] - '0';
+		k += a[aa - 1 - i] - '0' + t;
+		t = 0;
+		if (k > 9)k -= 10, t = 1;
+		c = (char)(k + '0') + c;
+	}
+	else for (int i = 0; i < bb; i++)
+	{
+		k = 0;
+		if (i < aa)k = a[aa - 1 - i] - '0';
+		k += b[bb - 1 - i] - '0' + t;
+		t = 0;
+		if (k > 9)k -= 10, t = 1;
+		c = (char)(k + '0') + c;
+	}
+	if (t == 1)c = '1' + c;
+	return c;
+}
+int main()
+{
+	cin >> a >> b;
+	cout << jianfa(a, b) << endl;
+}

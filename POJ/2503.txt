@@ -1,0 +1,40 @@
+#include<stdio.h>
+#include<string.h>
+char c[15], d[15], u[30];
+int len;
+int key;
+struct huh
+{
+	bool occ;
+	char val[15];
+	char ori[15];
+}hush[10000][500];
+int main()
+{
+	while (gets_s(u), u[0])
+	{
+		sscanf(u, "%s %s", c, d);
+		key = 0;
+		len = strlen(d);
+		for (int i = 0; i < len; i++)key += (d[i] - 'a' + 1) * (i + 7);
+		for (len = 0; hush[key][len].occ; len++);
+		hush[key][len].occ = true;
+		strcpy(hush[key][len].val, d);
+		strcpy(hush[key][len].ori, c);
+	}
+	while (scanf("%s", c) != EOF)
+	{
+		key = 0;
+		len = strlen(c);
+		bool flag = false;
+		for (int i = 0; i < len; i++)key += (c[i] - 'a' + 1) * (i + 7);
+		for (int i = 0; hush[key][i].occ; i++)if(!strcmp(c,hush[key][i].val))
+		{
+			printf("%s\n", hush[key][i].ori);
+			flag = true;
+			break;
+		}
+		if (!flag)printf("eh\n");
+	}
+	return 0;
+}

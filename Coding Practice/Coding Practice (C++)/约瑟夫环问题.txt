@@ -1,0 +1,24 @@
+#include<iostream>
+#include<cstdio>
+#include<queue>
+#include<vector>
+using namespace std;
+int nn, kk;
+void josephus(int n, int k)
+{
+	vector<int>a;
+	int cur = 0;
+	for (int i = 1; i <= n; i++)a.push_back(i);
+	for (int i = n; i > 1; i--)
+	{
+		cur = (cur + k - 1) % a.size();
+		cout << a[cur]<< "->";
+		a.erase(a.begin() + cur);
+	}
+	cout << a[0] << endl;
+}
+int main()
+{
+	cin >> nn >> kk;
+	josephus(nn, kk);
+}

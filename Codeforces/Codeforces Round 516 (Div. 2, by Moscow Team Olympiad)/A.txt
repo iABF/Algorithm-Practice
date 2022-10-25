@@ -1,0 +1,24 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 200005
+#define MOD 998244353
+using namespace std;
+int a[3], ans;
+int main()
+{
+	cin >> a[0] >> a[1] >> a[2];
+	sort(a, a + 3);
+	for (int i = a[1]; i <= a[2]; i++)if (i + a[0] > a[2])
+	{
+		ans = i - a[1];
+		break;
+	}
+	cout << ans << endl;
+}

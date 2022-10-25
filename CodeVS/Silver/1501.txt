@@ -1,0 +1,24 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+using namespace std;
+struct node { int l, r; }nde[20];
+int n, maxd, l[20] = { 0 };
+void dfs(int d, int num)
+{
+	if (d > maxd)maxd = d;
+	l[d]++;
+	if (nde[num].l)dfs(d + 1, nde[num].l);
+	if (nde[num].r)dfs(d + 1, nde[num].r);
+}
+int main()
+{
+	cin >> n;
+	for (int i = 1; i <= n; i++)cin >> nde[i].l >> nde[i].r;
+	dfs(1, 1);
+	sort(l + 1, l + n + 1);
+	cout << l[n] << ' ' << maxd << endl;
+}

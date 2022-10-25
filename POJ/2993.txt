@@ -1,0 +1,63 @@
+#include<stdio.h>
+#include<string.h>
+#include<Windows.h>
+char t[10][10];//From 0 to 7
+void printline()
+{
+	printf("+---+---+---+---+---+---+---+---+\n");
+}
+int main()
+{
+	memset(t, ':', 100);
+	char c;
+	scanf("White: ");
+	while ((c = getchar()) != '\n')
+	{
+		if (c == 'K' || c == 'Q' || c == 'R' || c == 'B' || c == 'N')
+		{
+			int x = getchar() - 'a';
+			int y = getchar() - '1';
+			t[y][x] = c;
+		}
+		else if (c >= 'a'&&c <= 'h')
+		{
+			int x = c - 'a';
+			int y = getchar() - '1';
+			t[y][x] = 'P';
+		}
+	}
+	scanf("Black: ");
+	while ((c = getchar()) != '\n')
+	{
+		if (c == 'K' || c == 'Q' || c == 'R' || c == 'B' || c == 'N')
+		{
+			int x = getchar() - 'a';
+			int y = getchar() - '1';
+			t[y][x] = c - 'A' + 'a';
+		}
+		else if (c >= 'a'&&c <= 'h')
+		{
+			int x = c - 'a';
+			int y = getchar() - '1';
+			t[y][x] = 'p';
+		}
+	}
+	for (int row = 0; row <= 7; row++)
+	{
+		printline();
+		for (int col = 0; col <= 7; col++)
+		{
+			printf("|");
+			if ((7 - row - col) % 2 != 0)
+			{
+				if (t[7 - row][col] == ':')t[7 - row][col] = '.';
+				printf(".%c.", t[7 - row][col]);
+			}
+			else printf(":%c:", t[7 - row][col]);
+		}
+		printf("|\n");
+	}
+	printline();
+	system("pause");
+	return 0;
+}

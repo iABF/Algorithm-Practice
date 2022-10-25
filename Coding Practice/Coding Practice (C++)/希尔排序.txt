@@ -1,0 +1,23 @@
+#include<iostream>
+using namespace std;
+int a[10005], n;
+void Shellsort(int n)
+{
+	for (int d = n / 2; d >= 1; d /= 2)
+	{
+		for (int i = d; i < n; i++)
+		{
+			int j = i - d, t = a[i];
+			for (; j >= 0 && a[j] > t; j -= d)a[j + d] = a[j];
+			a[j + d] = t;
+		}
+		for (int i = 0; i < n - 1; i++)cout << a[i] << ' ';
+		cout << a[n - 1] << endl;
+	}
+}
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < n; i++)cin >> a[i];
+	Shellsort(n);
+}

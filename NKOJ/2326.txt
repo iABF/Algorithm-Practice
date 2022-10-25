@@ -1,0 +1,58 @@
+#include<stdio.h>
+#include<Windows.h>
+int a;
+int b[30] = { 0 };
+int c[30] = { 0 };
+int t[30];
+int m = 0, s = 0, k = 1;
+int nm = 0, ns = 0;
+int main()
+{
+	int n;
+	scanf("%d", &n);
+	for (int i = 0; i <= n - 1; i++)
+	{
+		scanf("%d", &a);
+		if (m != a&&s != a)
+		{
+			if (m == 0) { m = a; nm++; }
+			else if (s == 0) { s = a; ns++; }
+			else k = 0;
+		}
+		else if (m == a)nm++;
+		else if (s == a)ns++;
+		for (int i = 29; i >= 0; i--)
+		{
+			t[i] = a % 2;
+			a = (a - t[i]) / 2;
+			if (t[i] == 0)b[i]++;
+			else c[i]++;
+		}
+	}
+	if(k==0||(k==1&&n==1)||(k==1&&ns!=nm))for (int i = 0; i <= 29; i++)
+	{
+		printf("%d", b[i] > n/2 ? 0 : 1);
+	}
+	else
+	{
+		int sb = 0, sc = 0;
+		for (int i = 29; i >=0; i--)
+		{
+			b[i] = m % 2;
+			m = (m - b[i]) / 2;
+			c[i] = s % 2;
+			s = (s - c[i]) / 2;
+			if (b[i] == 1)sb++;
+			if (c[i] == 1)sc++;
+		}
+		int *p;
+		p = sb < sc ? b : c;
+		for (int i = 0; i <= 29; i++)
+		{
+			printf("%d", p[i]);
+		}
+	}
+	printf("\n");
+	system("pause");
+	return 0;
+}

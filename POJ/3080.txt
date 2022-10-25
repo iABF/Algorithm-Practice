@@ -1,0 +1,44 @@
+#include<stdio.h>
+#include<string.h>
+#include<Windows.h>
+char d[12][65];
+int m;
+char min[65];
+bool findm(int len, int st, int num)
+{
+	for (int i = 0; i <= 60 - len; i++)if (!strncmp(d[num] + i, d[0] + st, len))return true;
+	return false;
+}
+bool find(int len, int st)
+{
+	for (int i = 1; i < m; i++)if (!findm(len, st, i))return false;
+	return true;
+}
+int main()
+{
+	int dataset;
+	scanf("%d", &dataset);
+	while (dataset--)
+	{
+		scanf("%d", &m);
+		bool key = false;
+		memset(min, 'Z', sizeof(min));
+		for (int i = 0; i < m; i++)scanf("%s", d[i]);
+		for (int i = 60; i >= 3; i--)
+		{
+			for (int s = 0; s <= 60 - i; s++)
+			{
+				if (find(i, s))if (strncmp(min, d[0] + s, i) > 0)strncpy(min, d[0] + s, i), key = true;
+			}
+			if (key)
+			{
+				for (int j = 0; j < i; j++)printf("%c", min[j]);
+				printf("\n");
+				break;
+			}
+		}
+		if (!key)printf("no significant commonalities\n");
+	}
+	system("pause");
+	return 0;
+}

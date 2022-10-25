@@ -1,0 +1,54 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<Windows.h>
+#define inf 99999999
+int n;
+int a[100010][6];
+int b[12][6];
+int num[6];
+int ch[12];
+int cmp(const void *x, const void*y)
+{
+	for (int i = 0; i < 6; i++)if (((int*)x)[i] != ((int*)y)[i])return ((int*)x)[i] - ((int*)y)[i];
+	return 0;
+}
+bool check(int g, int h)
+{
+	for (int i = 0; i < 6; i++)if (a[g][i] != a[h][i])return false;
+	return true;
+}
+int main()
+{
+	scanf("%d", &n);
+	int min, sta;
+	int k;
+	for (int i = 0; i < n; i++)
+	{
+		min = inf;
+		k = 0;
+		for (int j = 0; j < 6; j++)
+		{
+			scanf("%d", &num[j]);
+			if (min > num[j])min = num[sta = j];
+		}
+		for (int j = 0; j < 6; j++)if (min == num[sta = j])
+		{
+			if (num[(sta + 1) % 6] >= num[(sta + 5) % 6])for (int j = 0; j < 6; j++)b[k][j] = num[(sta - j + 6) % 6];
+			else for (int j = 0; j < 6; j++)b[k][j] = num[(sta + j) % 6];
+			k++;
+		}
+		qsort(b, k, sizeof(b[0]), cmp);
+		for (int j = 0; j < 6; j++)a[i][j] = b[0][j];
+	}
+	qsort(a, n, sizeof(a[0]), cmp);
+	bool key = 0;
+	for (int i = 0; i < n - 1; i++)if (check(i, i + 1))
+	{
+		printf("Twin snowflakes found.\n");
+		key = 1;
+		break;
+	}
+	if (!key)printf("No two snowflakes are alike.\n");
+	system("pause");
+	return 0;
+}

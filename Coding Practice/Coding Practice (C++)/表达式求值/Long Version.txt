@@ -1,0 +1,185 @@
+#include<iostream>
+#include<stack>
+#include<string>
+#include<cstdio>
+#include<vector>
+#include<cmath>
+using namespace std;
+int pc[128] = { 0 };//常量数组存放优先级
+double x, y, temp;
+string a;//存放初始的中缀表达式
+struct PFX//符号和数字二合一的结构体，分为数字部分和符号部分；自编构造函数方便快速格式转换，精简代码
+{
+	double dbl;
+	char c;
+	PFX(double w) { dbl = w; c = 0; }
+	PFX(char w) { dbl = 0; c = w; }
+};
+bool flag, dot, num;//flag用于表示表达式是否错误
+int key;
+void ini()//初始化常量数组
+{
+	pc['+'] = pc['-'] = 1;//加减优先度设为1
+	pc['*'] = pc['/'] = pc['%'] = 2;//乘除余优先度设为2
+	pc['^'] = 3;//取幂优先度设为3
+}
+double compute()//主要求值函数
+{
+	vector<PFX>postfix;//后缀表达式（包含符号与数字）
+	stack<char>func;//中缀表达式转后缀表达式时的符号栈
+	stack<double>val;//后缀表达式求值时的数字栈
+	flag = true;//默认表达式可以求值
+	int d = a.size();//d代表中缀表达式的长度（注意：需要随中缀表达式的长度变化而更新）
+
+	//开始进行对中缀表达式a的预处理
+
+	for (int i = 0; i < d; i++)if ((i == 0 && a[i] == '-') || (a[i] == '-'&&a[i - 1] == '('))a.insert(a.begin() + i, '0'), d = a.size();//对于所有在中缀表达式最左以及每个左括号'('右面第一位的减号'-'，前面添加'0'；注意更新d
+	for (int i = 0; i < d; i++)if ((i == 0 && a[i] == '+') || (a[i] == '+'&&a[i - 1] == '('))a.insert(a.begin() + i, '0'), d = a.size();//对于所有在中缀表达式最左以及每个左括号'('右面第一位的加号'+'，前面添加'0'；注意更新d
+	for (int i = 0; i < d - 1; i++)	if (((a[i] == '+' || a[i] == '-' || a[i] == '*' || a[i] == '/' || a[i] == '^' || a[i] == '%' || a[i] == '.') && (a[i + 1] == '+' || a[i + 1] == '-' || a[i + 1] == '*' || a[i + 1] == '/' || a[i + 1] == '^' || a[i + 1] == '%' || a[i + 1] == '.')) || (a[i] == '(' && (a[i + 1] == '*' || a[i + 1] == '/' || a[i + 1] == '^' || a[i + 1] == '%' || a[i + 1] == '.')) || ((a[i] == '+' || a[i] == '-' || a[i] == '*' || a[i] == '/' || a[i] == '^' || a[i] == '%' || a[i] == '.') && a[i + 1] == ')') || (a[i] >= '0'&&a[i] <= '9'&&a[i + 1] == '(') || (a[i + 1] >= '0'&&a[i + 1] <= '9'&&a[i] == ')') || (a[i] == ')'&&a[i + 1] == '('))
+	{
+		flag = false;
+		//cout << "Error Type: " << 1 << endl;
+		return 0;
+	}//对于一些不可能出现在可以计算的表达式中的数字符号组合进行判断，若存在这些错误组合，返回【错误类型1】；这样的好处是之后的算法可以无视掉这些扰乱因素
+
+	//下面进行中缀表达式转后缀表达式
+
+	for (int i = 0; i < d; i++)
+	{
+		temp = key = dot = num = 0;
+		while ((a[i] >= '0'&&a[i] <= '9') || a[i] == '.')//如果读取到数码，那么直接将这个数字读取完毕并计算出来存放到后缀表达式里
+		{
+			num = true;
+			if (a[i] != '.')
+			{
+				if (!dot)temp = temp * 10 + a[i] - '0';
+				else temp += (a[i] - '0') * pow(10, -key);
+			}
+			else if (dot)//如果读取数字过程中读取到多于一个小数点'.'（小数点可以不相邻），那么返回【错误类型2】
+			{
+				flag = false;
+				//cout << "Error Type: " << 2 << endl;
+				return 0;
+			}
+			else dot = true;
+			if (dot)key++;
+			i++;
+		}
+		if (num)postfix.push_back(temp);//将所得数字存放到后缀表达式里
+		if (i >= d)break;//如果移动出了字符串范围，直接跳出防止访问冲突
+		if (a[i] == '(')func.push(a[i]);//如果遇到左括号'('，直接将其压入符号栈
+		else if (a[i] == ')')//如果遇到右括号')'，将其与符号栈最近的左括号'('中间的符号出栈存入后缀表达式，同时左括号出栈
+		{
+			if (func.empty())//如果此时符号栈为空，则左右括号不匹配，返回【错误类型9】
+			{
+				flag = false;
+				//cout << "Error Type: " << 9 << endl;
+				return 0;
+			}
+			while (func.top() != '(')
+			{
+				postfix.push_back(func.top());
+				func.pop();
+				if (func.empty())//如果出栈符号时符号栈为空，则左右括号同样不匹配，返回【错误类型10】
+				{
+					flag = false;
+					//cout << "Error Type: " << 10 << endl;
+					return 0;
+				}
+			}
+			func.pop();
+		}
+		else if (a[i] == '+' || a[i] == '-' || a[i] == '*' || a[i] == '/' || a[i] == '%')//如果遇到了取幂'^'之外的运算符，那么把符号栈顶所有优先度大于等于它本身的符号出栈存入后缀表达式，同时当前符号入栈
+		{
+			while (!func.empty() && pc[func.top()] >= pc[a[i]])
+			{
+				postfix.push_back(func.top());
+				func.pop();
+			}
+			func.push(a[i]);
+		}
+		else if (a[i] == '^')func.push(a[i]);//如果遇到取幂'^'运算符，直接将其压入符号栈
+		else//如果遇到了其它字符，返回【错误类型3】
+		{
+			flag = false;
+			//cout << "Error Type: " << 3 << endl;
+			return 0;
+		}
+	}
+	while (!func.empty())//将符号栈中符号出栈存入后缀表达式直到栈为空
+	{
+		postfix.push_back(func.top());
+		func.pop();
+	}
+
+	//下面对后缀表达式进行求值
+
+	d = postfix.size();//d被赋值后缀表达式的长度
+	for (int i = 0; i < d; i++)
+	{
+		if (!postfix[i].c)val.push(postfix[i].dbl);//如果当前位存值为数字（符号部分为0），则将数字压入数字栈
+		else if (val.size() < 2)//若数字栈不足两个数字，则返回【错误类型11】
+		{
+			flag = false;
+			//cout << "Error Type: " << 11 << endl;
+			return 0;
+		}
+		else if (postfix[i].c == '+' || postfix[i].c == '-' || postfix[i].c == '*' || postfix[i].c == '/' || postfix[i].c == '%' || postfix[i].c == '^')
+		{
+			x = val.top(); val.pop();
+			y = val.top(); val.pop();
+			if (postfix[i].c == '+')val.push(x + y);//如果当前位为加号'+'，出栈两数字，并将它们的和入栈
+			else if (postfix[i].c == '-')val.push(y - x);//如果当前位为减号'-'，出栈两数字，并将它们的差入栈
+			else if (postfix[i].c == '*')val.push(x*y);//如果当前位为乘号'*'，出栈两数字，并将它们的积入栈
+			else if (postfix[i].c == '^')val.push(pow(y, x));//如果当前位为取幂'^'，出栈两数字，并将它们的幂运算结果入栈
+			else if (postfix[i].c == '/')//如果当前位为除号'/'，出栈两数字，并将它们的商入栈（注意判断除数为0的错误）
+			{
+				if (!x)//若除数为0，则返回【错误类型4】
+				{
+					flag = false;
+					//cout << "Error Type: " << 4 << endl;
+					return 0;
+				}
+				val.push(y / x);
+			}
+			else//如果当前位为取余'%'，出栈两数字，并将它们的取余运算结果入栈（注意判断不是整数的错误以及除数为0的错误）
+			{
+				if (!x)//若除数为0，则返回【错误类型5】
+				{
+					flag = false;
+					//cout << "Error Type: " << 5 << endl;
+					return 0;
+				}
+				if (y != (int)y || x != (int)x)//若双方不都是整数，则返回【错误类型6】
+				{
+					flag = false;
+					//cout << "Error Type: " << 6 << endl;
+					return 0;
+				}
+				val.push((double)((int)y % (int)x));
+			}
+		}
+		else//若当前位不是任何合法运算符（比如是'('，这里主要判断左括号'('多于右括号')'的情况），返回【错误类型8】
+		{
+			flag = false;
+			//cout << "Error Type: " << 8 << endl;
+			return 0;
+		}
+	}
+	if (val.size() != 1)//若最后数字栈数字多于一个（这里主要判断运算符过少的错误），则返回【错误类型7】
+	{
+		flag = false;
+		//cout << "Error Type: " << 7 << endl;
+		return 0;
+	}
+	return val.top();//返回数字栈的栈顶
+}
+int main()
+{
+	ini();
+	while (cin >> a)
+	{
+		double ans = compute();
+		printf(flag ? "%.2f\n" : "ERROR IN INFIX NOTATION\n", ans);
+	}
+}

@@ -1,0 +1,68 @@
+#include<bits/stdc++.h>
+
+ using namespace std;
+ int _;
+ int n;
+
+ struct Po {
+     double x;
+     double y;
+
+     Po() {
+         x = 0;
+         y = 0;
+     }
+
+     Po(double xx, double yy) : x(xx), y(yy) {}
+ };
+
+ Po a, b;
+
+ struct Li {
+     double x;
+     double y;
+     double z;
+ } l[1005];
+
+ bool is_parallel(Li A, Li B) {
+     return A.x * B.y == B.x * A.y;
+ }
+
+ Po get_point(Li A, Li B) {
+     double D = A.x * B.y - B.x * A.y;
+     Po res((A.y * B.z - B.y * A.z) / D, (B.x * A.z - A.x * B.z) / D);
+     return res;
+ }
+
+ bool is_inside(Po r) {
+     if (a.x == b.x) {
+         if (a.y < b.y)
+             return r.y > a.y && r.y < b.y;
+         else if (a.y > b.y)
+             return r.y > b.y && r.y < a.y;
+     } else {
+         if (a.x < b.x)return r.x > a.x && r.x < b.x;
+         else return r.x > b.x && r.x < a.x;
+     }
+     return false;
+ }
+
+ int main() {
+     scanf("%d", &n);
+     for (int i = 0; i < n; i++) {
+         scanf("%lf%lf%lf", &l[i].x, &l[i].y, &l[i].z);
+     }
+     scanf("%lf%lf", &a.x, &a.y);
+     scanf("%lf%lf", &b.x, &b.y);
+     scanf("%d", &_);
+     Li route;
+     route.x = b.y - a.y;
+     route.y = a.x - b.x;
+     route.z = b.x * a.y - a.x * b.y;
+     int ans=0;
+     for (int i = 0; i < n; i++) {
+         if (is_parallel(route, l[i]))continue;
+         if (is_inside(get_point(route, l[i])))ans++;
+     }
+     printf("%d\n",ans);
+ }

@@ -1,0 +1,39 @@
+#include<iostream>
+#include<cstring>
+#include<cstdio>
+#include<vector>
+long long MOD = 1000000007;
+using namespace std;
+long long n;
+long long qui(long long top, long long base)
+{
+	if (top == 0)return 1 % MOD;
+	long long ans = 1;
+	while (top)
+	{
+		if (top & 1)ans = (ans*base) % MOD;
+		base = (base*base) % MOD;
+		top >>= 1;
+	}
+	return ans;
+}
+long long poww(long long a, long long i,long long mod)
+{
+	if (i == 0)return 1 % mod;
+	long long t = poww(a, i >> 1,mod);
+	t =( (t%mod) * (t%mod))%mod;
+	if (i %2==1)t = (long long)t*a%mod;
+	return t;
+}
+int main()
+{
+	while (scanf("%lld",&n)!=EOF)
+	{
+		long long ans = 1;
+		long long n2 = poww(2, n, MOD);
+		n -= 1;
+		n2 = ((n2%MOD)*(n%MOD)) % MOD;
+		ans = (ans + n2 + MOD) % MOD;
+		printf("%lld\n", ans);
+	}
+}

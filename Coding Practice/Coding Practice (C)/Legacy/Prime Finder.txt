@@ -1,0 +1,30 @@
+#include<stdio.h>
+#include<math.h>
+#include<windows.h>
+int main()
+{
+	int n, i, j, t = 0, r;
+	printf("Please enter interger n:");
+	scanf("%d", &n);
+	if(n >= 2)
+	{
+		for (i = 2; i <= n; i++)
+			{
+				r = sqrt((double(i)));
+				for (j = 2; j <= r; j++)
+				{
+					if (i%j == 0)break;
+				}
+				if (j >= r + 1)
+				{
+					printf("%d\t%d\n", ++t, i);
+				}
+			}
+	}
+	else
+	{
+		printf("WTF?\n");
+	}
+	system("pause");
+	return 0;
+}

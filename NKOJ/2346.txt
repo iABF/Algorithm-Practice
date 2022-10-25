@@ -1,0 +1,23 @@
+#include<cstdio>
+#include<algorithm>
+using namespace std;
+int n, k;
+int a[1000010];
+int main()
+{
+	scanf("%d %d", &n, &k);
+	for (int i = 0; i < n; i++)scanf("%d", &a[i]);
+	sort(a, a + n);
+	long long int ans = 0;
+	for (int i = 0; i < n; i++)
+	{
+		if (a[i] > k)ans += a[i];
+		else
+		{
+			ans += k;
+			k -= 10;
+		}
+	}
+	printf("%lld\n", ans);
+	return 0;
+}

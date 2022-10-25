@@ -1,0 +1,46 @@
+#include<stdio.h>
+#include<string.h>
+#include<Windows.h>
+int n, m, s;//N - the number of currencies, M - the number of exchange points, S - the number of currency Nick has
+double v;//V - the quantity of currency units he has
+struct POiNT
+{
+	int a, b;//START & END
+	double r, c;//RATE & COMMISSION
+} p[210];
+double dis[105];
+bool find()
+{
+	for (int i = 1; i <= n - 1; i++)
+	{
+		bool key = 0;
+		for (int j = 1; j <= 2 * m; j++)if (dis[p[j].b] < (dis[p[j].a] - p[j].c)*p[j].r)key = 1, dis[p[j].b] = (dis[p[j].a] - p[j].c)*p[j].r;
+		if (!key)break;
+	}
+	for (int j = 1; j <= 2 * m; j++)if (dis[p[j].b] < (dis[p[j].a] - p[j].c)*p[j].r)return true;
+	return false;
+}
+int main()
+{
+	scanf("%d %d %d %lf", &n, &m, &s, &v);
+	int a, b;
+	double rab, cab, rba, cba;
+	for (int u = 1; u <= m; u++)
+	{
+
+		scanf("%d %d %lf %lf %lf %lf", &a, &b, &rab, &cab, &rba, &cba);
+		p[2 * u - 1].a = a;
+		p[2 * u - 1].b = b;
+		p[2 * u - 1].c = cab;
+		p[2 * u - 1].r = rab;
+		p[2 * u].a = b;
+		p[2 * u].b = a;
+		p[2 * u].c = cba;
+		p[2 * u].r = rba;
+	}
+	memset(dis, 0, 105);
+	dis[s] = v;
+	printf(find() ? "YES\n" : "NO\n");
+	system("pause");
+	return 0;
+}

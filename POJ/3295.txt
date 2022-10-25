@@ -1,0 +1,38 @@
+#include<stdio.h>
+#include<Windows.h>
+char a[105];
+int cur;
+int K[2][2] = { 0,0,0,1 };
+int A[2][2] = { 0,1,1,1 };
+int N[2] = { 1,0 };
+int C[2][2] = { 1,1,0,1 };
+int E[2][2] = { 1,0,0,1 };
+bool logic(int bin)
+{
+	char c = a[cur++];
+	switch (c)
+	{
+	case'p':return bin & 1;
+	case'q':return bin&(1 << 1);
+	case'r':return bin&(1 << 2);
+	case's':return bin&(1 << 3);
+	case't':return bin&(1 << 4);
+	case'K':return K[logic(bin)][logic(bin)];
+	case'A':return A[logic(bin)][logic(bin)];
+	case'N':return N[logic(bin)];
+	case'C':return C[logic(bin)][logic(bin)];
+	case'E':return E[logic(bin)][logic(bin)];
+	}
+}
+int main()
+{
+	while (scanf("%s", a), a[0] != '0')
+	{
+		bool key = 1;
+		cur = 0;
+		for (int i = 0; i < 32 && key; i++, cur = 0)if (!logic(i))key = 0;
+		printf(key ? "tautology\n" : "not\n");
+	}
+	system("pause");
+	return 0;
+}

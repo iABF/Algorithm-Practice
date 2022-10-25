@@ -1,0 +1,52 @@
+#include<stdio.h>
+#include<string.h>
+int n, m, f, in[30], tin[30], count;
+struct Road
+{
+	int from;
+	int to;
+}r[1000];
+char seq[30];
+int toposort()//0 Error   1 Unsure    2 Sure
+{
+	int flag = 2, cur, k, count = 0;
+	memcpy(tin, in, sizeof(in));
+	for (int j = 1; j <= n; j++)
+	{
+		k = 0;
+		for (int i = 0; i < n; i++)if (!tin[i])cur = i, k++;
+		if (!k)return 0;
+		else if (k > 1)flag = 1;
+		seq[count++] = cur + 'A';
+		tin[cur] = -1;
+		for (int i = 0; i < f; i++)if (r[i].from == cur)tin[r[i].to]--;
+	}
+	seq[count] = '\0';
+	return flag;
+}
+int main()
+{
+	while (scanf("%d%d", &n, &m), n||m)
+	{
+		int num = 0, h, r0, r2;
+		f = 0;
+		bool key = false;
+		memset(in, 0, sizeof(in));
+		for (int mm = 1; mm <= m; mm++)
+		{
+			char str[10];
+			scanf("%s", str);
+			if (key)continue;
+			r[f].from = str[0] - 'A';
+			r[f].to = str[2] - 'A';
+			in[r[f++].to]++;
+			h = toposort();
+			if (h == 0)r0 = mm, key = true;
+			else if (h == 2)r2 = mm, key = true;
+		}
+		if (h == 0)printf("Inconsistency found after %d relations.\n", r0);
+		else if (h == 2)printf("Sorted sequence determined after %d relations: %s.\n", r2, seq);
+		else printf("Sorted sequence cannot be determined.\n");
+	}
+	return 0;
+}

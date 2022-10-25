@@ -1,0 +1,62 @@
+#include<stdio.h>
+#include<Windows.h>
+#include<string.h>
+char c[27];
+long long int Greatinput(char *a, long long int mod)
+{
+	scanf("%s", a);
+	long long int sum = 0;
+	int l = strlen(a);
+	for (int i = 0; i <= l - 1; i++)
+	{
+		sum = sum * 10 + a[i] - '0';
+		sum %= mod;
+	}
+	return sum;
+}
+long long int PowerMod(long long int a, long long int b,long long int c)
+{
+	long long int ans = 1;
+	a = a % c;
+	while (b>0)
+	{
+		if ((b % 2) == 1)
+			ans = (ans * a) % c;
+		b = b / 2;
+		a = (a * a) % c;
+	}
+	return ans;
+}
+int main()
+{
+	int t;
+	scanf("%d", &t);
+	for (int r = 1; r <= t; r++)
+	{
+		long long int m, n;
+		int k;
+		const long long int p = 1e9 + 7;
+		m = Greatinput(c, p-1);
+		n = Greatinput(c, p-1);
+		printf("|%lld %lld|\n", m, n);
+		scanf("%d", &k);
+		long long int all, t1,te,m1,n1,t2,m2,n2,t3;
+		t2 = (m*n) % (p - 1);
+		all = PowerMod(2, t2, p);
+		m2 = m - 1; n2 = n - 1;
+		t3 = (m2*n2) % (p - 1);
+		t1 = PowerMod(2, t3, p);
+		if ((m + n) % 2 == 1 && k == 1)
+		{
+			printf("%lld\n", all);
+		}
+		else
+		{
+			te = all - t1 + p;
+			te %= p;
+			printf("%lld\n", te);
+		}
+	}
+	system("pause");
+	return 0;
+}

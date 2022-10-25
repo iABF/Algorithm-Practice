@@ -1,0 +1,81 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<stack>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 505
+#define MOD 998244353
+typedef long long LL;
+using namespace std;
+int n;
+LL a[MAXN],tem,ans=1,tem2,tem3,tem4;
+map<LL,int>prime,undetectedprime;
+LL mygcd(LL x,LL y){return y==0?x:mygcd(y,x%y);}
+LL mysqrt2(LL x)
+{
+    LL l=0,r=2e9;
+    while(r-l>1)
+    {
+        LL m=(l+r)>>1;
+        if(m*m<=x)l=m;
+        else r=m;
+    }
+    return l;
+}
+LL mysqrt3(LL x)
+{
+    LL l=0,r=2e6;
+    while(r-l>1)
+    {
+        LL m=(l+r)>>1;
+        if(m*m*m<=x)l=m;
+        else r=m;
+    }
+    return l;
+}
+LL mysqrt4(LL x)
+{
+    LL l=0,r=4e4;
+    while(r-l>1)
+    {
+        LL m=(l+r)>>1;
+        if(m*m*m*m<=x)l=m;
+        else r=m;
+    }
+    return l;
+}
+int main()
+{
+    cin>>n;
+	for(int i=0;i<n;i++)cin>>a[i];
+	for(int i=0;i<n;i++)
+    {
+        tem2=mysqrt2(a[i]),tem3=mysqrt3(a[i]),tem4=mysqrt4(a[i]);
+        if(tem4*tem4*tem4*tem4==a[i])prime[tem4]+=4;
+        else if(tem3*tem3*tem3==a[i])prime[tem3]+=3;
+        else if(tem2*tem2==a[i])prime[tem2]+=2;
+        else
+        {
+            bool flag=false;
+            for(int j=0;j<n;j++)
+            {
+                if(i==j)continue;
+                tem=mygcd(a[i],a[j]);
+                if(tem>1&&tem<a[i])
+                {
+                    prime[tem]++,prime[a[i]/tem]++,flag=true;
+                    break;
+                }
+            }
+            if(!flag)undetectedprime[a[i]]++;
+        }
+    }
+    for(map<LL,int>::iterator e=prime.begin();e!=prime.end();e++)ans=(ans*((*e).second+1))%MOD;
+    for(map<LL,int>::iterator e=undetectedprime.begin();e!=undetectedprime.end();e++)ans=(ans*((*e).second+1)*((*e).second+1))%MOD;
+    cout<<ans<<endl;
+}

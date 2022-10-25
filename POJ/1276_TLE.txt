@@ -1,0 +1,23 @@
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+using namespace std;
+int N, n[15], d[15], cash, dp[15][100010];
+int main()
+{
+	while (scanf("%d", &cash) != EOF)
+	{
+		scanf("%d", &N);
+		memset(dp, 0, sizeof(dp));
+		for (int i = 1; i <= N; i++)scanf("%d%d", &n[i], &d[i]);
+		for (int j = 1; j <= cash; j++)dp[1][j] = d[1] * min(j / d[1], n[1]);
+		for (int i = 1; i <= N; i++)for (int j = d[i]; j <= cash; j++)
+		{
+			dp[i][j] = dp[i - 1][j];
+			int r = min(j / d[i], n[i]);
+			for (int k = 0; k <= r; k++)dp[i][j] = max(dp[i][j], dp[i - 1][j - d[i] * k] + d[i] * k);
+		}
+		printf("%d\n", dp[N][cash]);
+	}
+}

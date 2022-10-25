@@ -1,0 +1,51 @@
+#include<stdio.h>
+#include<string.h>
+#include<math.h>
+#define inf 9999999
+int n;
+int f = 0;
+struct st
+{
+	int x;
+	int y;
+}s[210];
+struct rd
+{
+	int a, b;
+	double d;
+}r[21000];
+double fr[210];
+void bellman_ford()
+{
+	memset(fr, inf, sizeof(fr));
+	fr[1] = 0;
+	bool k = 0;
+	for (int i = 1; i <= n - 1; i++)
+	{
+		k = 0;
+		for (int j = 0; j < f; j++)
+		{
+			if (fr[r[j].a] > (fr[r[j].b] < r[j].d ? r[j].d : fr[r[j].b]))k = 1, fr[r[j].a] = (fr[r[j].b] < r[j].d ? r[j].d : fr[r[j].b]);
+			if (fr[r[j].b] > (fr[r[j].a] < r[j].d ? r[j].d : fr[r[j].a]))k = 1, fr[r[j].b] = (fr[r[j].a] < r[j].d ? r[j].d : fr[r[j].a]);
+		}
+		if (!k)return;
+	}
+}
+int main()
+{
+	int t = 1;
+	while (scanf("%d", &n), n)
+	{
+		f = 0;
+		for (int num = 1; num <= n; num++)scanf("%d%d", &s[num].x, &s[num].y);
+		for (int i = 1; i <= n; i++)for (int j = i + 1; j <= n; j++)
+		{
+			r[f].a = i;
+			r[f].b = j;
+			r[f++].d = sqrt((s[i].x - s[j].x)*(s[i].x - s[j].x) + (s[i].y - s[j].y)*(s[i].y - s[j].y));
+		}
+		bellman_ford();
+		printf("Scenario #%d\nFrog Distance = %.3f\n\n", t++, fr[2]);
+	}
+	return 0;
+}

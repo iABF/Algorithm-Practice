@@ -1,0 +1,50 @@
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+using namespace std;
+int cells[3][3][3][3], mp[9][9], T, xx, yy, chk[9], dhk[9], ehk[9];
+bool fg;
+char ss[12];
+bool check(int x,int y)
+{
+	xx = x / 3, yy = y / 3;
+	for (int i = 0; i < 9; i++)chk[i] = dhk[i] = ehk[i] = 0;
+	for (int i = 0; i < 9; i++)if (mp[x][i] && ++chk[mp[x][i] - 1] > 1)return false;
+	for (int i = 0; i < 9; i++)if (mp[i][y] && ++dhk[mp[i][y] - 1] > 1)return false;
+	for (int i = 0; i < 9; i++)if (cells[xx][yy][i % 3][i / 3] && ++ehk[cells[xx][yy][i % 3][i / 3] - 1] > 1)return false;
+	return true;
+}
+void dfs(int x, int y)
+{
+	int nx = x, ny = y;
+	while (mp[nx][ny]) { ny = ny + (nx + 1) / 9; nx = (nx + 1) % 9; }
+	if (ny >= 9) { fg = true; return; }
+	int a = nx / 3, b = ny / 3, c = nx % 3, d = ny % 3;
+	for (int i = 1; i < 10; i++)
+	{
+		mp[nx][ny] = cells[a][b][c][d] = i;
+		if (!check(nx, ny)) { mp[nx][ny] = cells[a][b][c][d] = 0; continue; }
+		dfs(nx, ny);
+		if (fg)return;
+		else mp[nx][ny] = cells[a][b][c][d] = 0;
+	}
+}
+int main()
+{
+	scanf("%d", &T);
+	while (T--)
+	{
+		fg = false;
+		for (int i = 0; i < 9; i++)
+		{
+			scanf("%s", ss);
+			for (int j = 0; j < 9; j++)mp[i][j] = ss[j] - '0', cells[i / 3][j / 3][i % 3][j % 3] = mp[i][j];
+		}
+		dfs(0, 0);
+		for (int i = 0; i < 9; i++)
+		{
+			for (int j = 0; j < 9; j++)printf("%d", mp[i][j]);
+			printf("\n");
+		}
+	}
+}

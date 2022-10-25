@@ -1,0 +1,33 @@
+#include<iostream>
+using namespace std;
+class eicne
+{
+public:
+	int a[6];
+	int* sort();
+	void Set(int(&b)[6]) { cin >> b[0] >> b[1] >> b[2] >> b[3] >> b[4] >> b[5]; }
+	void Get(int(&x)[6]) {cout << x[0] << " " << x[1] << " " << x[2] << " " << x[3] << " " << x[4] << " " << x[5] << endl; }
+	int &Getfirst() { return a[0]; }
+};
+int* eicne::sort()
+{
+	for (int i = 0; i < 5; i++)for (int j = i + 1; j < 6; j++)if (a[i] >= a[j])
+	{
+		int t;
+		t = a[i];
+		a[i] = a[j];
+		a[j] = t;
+	}
+	return a;
+}
+int main()
+{
+	eicne X;
+	X.Set(X.a);
+	int t;
+	cin >> t;
+	X.a[0] = t;
+	X.sort();
+	X.Get(X.a);
+	return 0;
+}

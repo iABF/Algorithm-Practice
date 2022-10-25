@@ -1,0 +1,27 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 1000000000
+#define MAXN 100000008
+using namespace std;
+bool vis[MAXN];
+int n, m, a;
+int main()
+{
+	cin >> n >> m;
+	for (int i = 1; i <= n; i++)
+	{
+		cin >> a;
+		vis[a] = true;
+	}
+	for (int i = 1; i <= m; i++)
+	{
+		cin >> a;
+		printf(vis[a] ? "YES\n" : "NO\n");
+	}
+}

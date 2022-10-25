@@ -1,0 +1,31 @@
+#include<iostream>
+using namespace std;
+const double pai = 3.14;
+class Shape
+{
+public:
+	virtual double GetArea() { return 0; }
+};
+class Circle :public Shape
+{
+	double r;
+public:
+	Circle(double rr = 0) { r = rr; }
+	double GetArea() { return pai*r*r; }
+};
+class Rectangle :public Shape
+{
+	double a, b;
+public:
+	Rectangle(double aa = 0, double bb = 0) { a = aa; b = bb; }
+	double GetArea() { return a*b; }
+};
+int main()
+{
+	double a, b, e;
+	cin >> a >> b >> e;
+	Circle c(a);
+	Rectangle d(b, e);
+	Shape* s[2] = { &c,&d };
+	cout << s[0]->GetArea() << endl << s[1]->GetArea() << endl;
+}

@@ -1,0 +1,49 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+using namespace std;
+int n, vis[25];
+string a[25], cc, maxs;
+bool check(int j, string x, string y, int f)
+{
+	for (int i = 0; i <= j - 1; i++)if (x[f - j + i] != y[i])return false;
+	return true;
+}
+void dfs(string tis)
+{
+	int f = tis.size();
+	if (f > maxs.size())maxs = tis;
+	for (int i = 0; i < n; i++)
+	{
+		if (vis[i] < 2)
+		{
+			for (int j = 1; j <= f; j++)
+			{
+				if (j <= a[i].size() && check(j, tis, a[i], f))
+				{
+					vis[i]++;
+					string p = tis;
+					for (int r = j; r <= a[i].size() - 1; r++)p += a[i][r];
+					dfs(p);
+					vis[i]--;
+					break;
+				}
+			}
+		}
+	}
+}
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < n; i++)cin >> a[i];
+	cin >> cc;
+	memset(vis, 0, sizeof(vis));
+	maxs = cc;
+	dfs(cc);
+	cout << maxs.size() << endl;
+}

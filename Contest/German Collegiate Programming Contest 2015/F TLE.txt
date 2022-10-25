@@ -1,0 +1,76 @@
+#include<iostream>
+#include<cstdio>
+#include<cmath>
+using namespace std;
+double h = 1;
+int main()
+{
+	long long N;
+	scanf("%lld", &N);
+	long long ans = 1;
+	long long k = 1;
+	bool key = false;
+	long long c = sqrt(N + 0.5);
+	k = 1;
+	while (N%2 == 0)
+	{
+		key = true;
+		N /= 2;
+		k++;
+	}
+	if (key)
+	{
+		c = sqrt(N + 0.5);
+		key = false;
+	}
+	ans *= k;
+	k = 1;
+	while (N%3 == 0)
+	{
+		key = true;
+		N /= 3;
+		k++;
+	}
+	if (key)
+	{
+		c = sqrt(N + 0.5);
+		key = false;
+	}
+	ans *= k;
+	for (int i = 5;i<=c; i+=6)
+	{
+		k = 1;
+		while (N%i == 0)
+		{
+			key = true;
+			N /= i;
+			k++;
+		}
+		if (key) 
+		{
+			c = sqrt(N + 0.5); 
+			key = false;
+		}
+		ans *= k;
+	}
+	for (int i = 7; i <= c; i += 6)
+	{
+		k = 1;
+		while (N%i == 0)
+		{
+			key = true;
+			N /= i;
+			k++;
+		}
+		if (key)
+		{
+			c = sqrt(N + 0.5);
+			key = false;
+		}
+		ans *= k;
+	}
+	if (N > 1)ans *= 2;
+	printf("%lld\n", ans);
+	cin >> ans;
+	return 0;
+}

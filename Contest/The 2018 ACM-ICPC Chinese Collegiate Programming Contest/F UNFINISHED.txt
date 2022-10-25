@@ -1,0 +1,40 @@
+#include<iostream>
+#include<cstdio>
+#include<cmath>
+#include<cstdlib>
+using namespace std;
+int T;
+int n;
+int cmp(const void*a, const void*b)
+{
+	return (*(se*)a).s > (*(se*)b).s ? 1 : -1;
+}
+struct se
+{
+	int hp;
+	int atk;
+	int tme;
+	double s;
+}m[100010];
+int sum;
+double dd;
+int fe;
+int main()
+{
+	cin >> T;
+	for (int cse = 1; cse <= T; cse++)
+	{
+		fe = 0;
+		cin >> n;
+		for (int i = 0; i < n; i++)
+		{
+			scanf("%d %d", &m[i].hp, &m[i].atk);
+			dd = sqrt((double)(2 * m[i].hp));
+			if (dd - (int)dd < 0.5)m[i].tme = (int)dd;
+			else m[i].tme = (int)dd + 1;
+			m[i].s = (double)m[i].atk / (double)m[i].tme;
+		}
+		qsort(m, n, sizeof(m[0]), cmp);
+
+	}
+}

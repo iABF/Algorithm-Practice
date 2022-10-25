@@ -1,0 +1,47 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+using namespace std;
+int n, cse, s, A, B;
+double t, mp[410][410], ans;
+struct city { double x[4], y[4], pr; }cty[105];
+double floyd()
+{
+	for (int k = 1; k <= 4 * s; k++)for (int i = 1; i <= 4 * s; i++)for (int j = 1; j <= 4 * s; j++)if (i != j&&k != i&&k != j)mp[i][j] = min(mp[i][k] + mp[k][j], mp[i][j]);
+	double anss = 1000000000;
+	for (int i = 1; i <= 4; i++)for (int j = 1; j <= 4; j++)anss = min(anss, mp[(A - 1) * 4 + i][(B - 1) * 4 + j]);
+	return anss;
+}
+int main()
+{
+	scanf("%d", &cse);
+	while (cse--)
+	{
+		for (int i = 0; i < 410; i++)for (int j = 0; j < 410; j++)mp[i][j] = 1000000000;
+		scanf("%d%lf%d%d", &s, &t, &A, &B);
+		for (int i = 1; i <= s; i++)
+		{
+			scanf("%lf%lf%lf%lf%lf%lf%lf", &cty[i].x[0], &cty[i].y[0], &cty[i].x[1], &cty[i].y[1], &cty[i].x[2], &cty[i].y[2], &cty[i].pr);
+			for (int j = 0; j < 3; j++)if ((cty[i].y[(j + 1) % 3] - cty[i].y[j])*(cty[i].y[(j + 2) % 3] - cty[i].y[(j + 1) % 3]) + (cty[i].x[(j + 1) % 3] - cty[i].x[j])*(cty[i].x[(j + 2) % 3] - cty[i].x[(j + 1) % 3]) == 0)
+			{
+				cty[i].x[3] = cty[i].x[j] + cty[i].x[(j + 2) % 3] - cty[i].x[(j + 1) % 3];
+				cty[i].y[3] = cty[i].y[j] + cty[i].y[(j + 2) % 3] - cty[i].y[(j + 1) % 3];
+				break;
+			}
+			for (int j = 1; j <= 4; j++)for (int k = 1; k < j; k++)mp[(i - 1) * 4 + j][(i - 1) * 4 + k] = mp[(i - 1) * 4 + k][(i - 1) * 4 + j] = cty[i].pr * sqrt((cty[i].x[j - 1] - cty[i].x[k - 1])*(cty[i].x[j - 1] - cty[i].x[k - 1]) + (cty[i].y[j - 1] - cty[i].y[k - 1])*(cty[i].y[j - 1] - cty[i].y[k - 1]));
+		}
+		if (A == B)
+		{
+			printf("0.0\n");
+			continue;
+		}
+		for (int i = 1; i <= s; i++)for (int j = 1; j < i; j++)for (int p = 1; p <= 4; p++)for (int q = 1; q <= 4; q++)mp[(i - 1) * 4 + p][(j - 1) * 4 + q] = mp[(j - 1) * 4 + q][(i - 1) * 4 + p] = t*sqrt((cty[i].x[p - 1] - cty[j].x[q - 1])*(cty[i].x[p - 1] - cty[j].x[q - 1]) + (cty[i].y[p - 1] - cty[j].y[q - 1])*(cty[i].y[p - 1] - cty[j].y[q - 1]));
+		ans = floyd();
+		printf("%.1lf\n", ans);
+	}
+}

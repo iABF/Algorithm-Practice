@@ -1,0 +1,31 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+using namespace std;
+struct Line { int l, r; }line[105];
+int n, l, r, t, ans = 0;
+bool cmp(const Line&x, const Line&y) { if (x.l != y.l)return x.l < y.l; else return x.r < y.r; }
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> line[i].l >> line[i].r;
+		if (line[i].l > line[i].r) { t = line[i].r, line[i].r = line[i].l, line[i].l = t; }
+	}
+	sort(line, line + n, cmp);
+	for (int i = 0; i < n;)
+	{
+		if (i == n - 1)break;
+		for (int j = i + 1; j < n; j++)
+		{
+			if (line[j].r <= line[i].r) { ans += j - i; i = j; break; }
+			if (line[j].l >= line[i].r) { ans += j - i - 1; i = j; break; }
+			if (j == n - 1) { ans += j - i; i = n; break; }
+		}
+	}
+	cout << n - ans << endl;
+}

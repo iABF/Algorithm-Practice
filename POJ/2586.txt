@@ -1,0 +1,17 @@
+#include<stdio.h>
+int main()
+{
+	int a, n;
+	while (scanf("%d%d", &a, &n) != EOF)
+	{
+		int sum;
+		if (n - 4 * a > 0)sum = 10 * a - 2 * n;
+		else if (2 * n - 3 * a > 0)sum = 8 * a - 4 * n;
+		else if (3 * n - 2 * a > 0)sum = 6 * a - 6 * n;
+		else if (4 * n - a > 0)sum = 3 * a - 9 * n;
+		else sum = -1;
+		if (sum > 0)printf("%d\n", sum);
+		else printf("Deficit\n");
+	}
+	return 0;
+}

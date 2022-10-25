@@ -1,0 +1,119 @@
+#include<iostream>
+#include<cstdio>
+#include<queue>
+#include<vector>
+#include<algorithm>
+#include<cstring>
+#include<string>
+using namespace std;
+#define MAXN 100005
+int n, number, timee, fwd, f = 0, endv, lth, crr;
+char c, s[100];
+struct edge
+{
+	int num, dis;
+	edge(int n, int d) :num(n), dis(d) {}
+};
+struct road
+{
+	int from, to, dis, e, l;
+	void set(int ff, int tt, int dd) { from = ff, to = tt, dis = dd; }
+}r[MAXN];
+struct node
+{
+	int ve, vl, indeg, temptime;
+	bool end, vis;
+	vector<edge>to;
+	vector<edge>from;
+	node() :end(true), vis(false), indeg(0) {}
+}v[MAXN];
+bool calve()
+{
+	queue<int>q;
+	q.push(0);
+	v[0].ve = 0, v[0].vis = true, v[0].end = false;
+	while (!q.empty())
+	{
+		int p = q.front();
+		q.pop();
+		v[p].vis = true;
+		for (vector<edge>::iterator e = v[p].to.begin(); e != v[p].to.end(); e++)
+		{
+			if (v[(*e).num].vis)return false;
+			v[(*e).num].ve = max(v[(*e).num].ve, v[p].ve + (*e).dis);
+			q.push((*e).num);
+		}
+	}
+	return true;
+}
+bool calvl()
+{
+	for (int i = 1; i <= n; i++)if (v[i].end) { endv = i; break; }
+	queue<int>q;
+	q.push(endv);
+	v[endv].vl = v[endv].ve;
+	while (!q.empty())
+	{
+		int p = q.front();
+		q.pop();
+		for (vector<edge>::iterator e = v[p].from.begin(); e != v[p].from.end(); e++)
+		{
+			v[(*e).num].vl = min(v[(*e).num].vl, v[p].vl - (*e).dis);
+			q.push((*e).num);
+		}
+	}
+	return true;
+}
+int calle()
+{
+	int ans = 0;
+	for (int i = 0; i < f; i++)
+	{
+		r[i].e = v[r[i].from].ve;
+		r[i].l = v[r[i].to].vl - r[i].dis;
+		if (r[i].e == r[i].l)ans += r[i].e;
+	}
+	return ans;
+}
+int main()
+{
+	cin >> n;
+	for (int i = 1; i <= n; i++)
+	{
+		scanf("%d %d", &number, &timee);
+		v[number].temptime = timee;
+		c = getchar();
+		if(c=='\n')
+		{
+			v[number].indeg++;
+			v[number].from.push_back(edge(0, timee));
+			v[0].to.push_back(edge(number, timee));
+			r[f++].set(0, number, timee);
+			continue; 
+		}
+		scanf("%s", s);
+		lth = strlen(s), crr = 0;
+		for (int i = 0; i < lth; i++)
+		{
+			if (s[i] != ';')
+			{
+				crr *= 10;
+				crr += s[i] - '0';
+				continue;
+			}
+			else
+			{
+				fwd = crr;
+				crr = 0;
+				v[number].indeg++;
+				v[number].from.push_back(edge(fwd, timee));
+				v[fwd].end = false;
+				v[fwd].to.push_back(edge(number, timee));
+				r[f++].set(fwd, number, timee);
+			}
+			
+		}
+	}
+	if (calve() && calvl())cout << v[endv].vl << endl;
+	else cout << "error\n";
+}

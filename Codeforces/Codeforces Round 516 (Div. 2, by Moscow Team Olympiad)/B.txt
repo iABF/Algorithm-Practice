@@ -1,0 +1,38 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<stack>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 35
+#define MOD 998244353
+using namespace std;
+int T;
+long long m, ans;
+stack<bool>a;
+int main()
+{
+	cin >> T;
+	while (ans = 1, T--)
+	{
+		cin >> m;
+		if (!m)
+		{
+			cout << 1 << endl;
+			continue;
+		}
+		while (m)a.push(m % 2), m /= 2;
+		while (a.size() > 1)
+		{
+			if (a.top())ans *= 2;
+			a.pop();
+		}
+		ans *= 1 << a.top();
+		a.pop();
+		cout << ans << endl;
+	}
+}

@@ -1,0 +1,75 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 0x7f7f7f7f
+#define MAXN 20010
+#define _PI 3.14159265358979323846
+using namespace std;
+int n, m, mp[510][510];
+int l[510][510], r[510][510];
+int dir[4][2] = { {-1,0},{1,0},{0,1},{0,-1} };
+struct lr
+{
+	int l, r;
+}w[510][510];
+bool vis[510][510];
+bool cmp(lr&a, lr&b)
+{
+	return a.l < b.l;
+}
+void dfs(int x, int y)
+{
+	vis[x][y] = true;
+	for (int i = 0; i < 4; i++)
+	{
+		int nx = x + dir[i][0];
+		int ny = y + dir[i][1];
+		if (nx<1 || ny<1 || nx>n || ny>m)continue;
+		if (mp[nx][ny] >= mp[x][y])continue;
+		if (!vis[nx][ny])dfs(nx, ny);
+		w[x][y].l = min(w[x][y].l, w[nx][ny].l);
+		w[x][y].r = max(w[x][y].r, w[nx][ny].r);
+	}
+}
+int main()
+{
+	cin >> n >> m;
+	for (int i = 1; i <= n; i++)for (int j = 1; j <= m; j++)
+	{
+		cin >> mp[i][j];
+		vis[i][j] = false;
+		w[i][j].l = INF;
+		w[i][j].r = 0;
+	}
+	for (int j = 1; j <= m; j++)w[n][j].l = w[n][j].r = j;
+	for (int i = 1; i <= m; i++)dfs(1, i);
+	int unocc = 0;
+	for (int i = 1; i <= m; i++)if (!vis[n][i])unocc++;
+	if (unocc)
+	{
+		cout << 0 << endl << unocc << endl;
+		return 0;
+	}
+	sort(w[1] + 1, w[1] + m + 1, cmp);
+	int farr = 0;
+	int ans = 0;
+	int curl = 0;
+	for (int i = 1; i <= m; i++)
+	{
+		if (!w[1][i].r)continue;
+		if (w[1][i].l <= curl + 1)farr = max(farr, w[1][i].r);
+		else
+		{
+			ans++;
+			curl = farr;
+			farr = max(farr, w[1][i].r);
+		}
+	}
+	if (curl < m)ans++;
+	cout << 1 << endl << ans << endl;
+}

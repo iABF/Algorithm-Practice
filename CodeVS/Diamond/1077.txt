@@ -1,0 +1,24 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 1000000000
+using namespace std;
+int n, mp[105][105], Q, a, b;
+void floyd() { for (int k = 1; k <= n; k++)for (int i = 1; i <= n; i++)for (int j = 1; j <= n; j++)if (i != j&&k != i&&k != j)mp[i][j] = min(mp[i][k] + mp[k][j], mp[i][j]); }
+int main()
+{
+	scanf("%d", &n);
+	for (int i = 1; i <= n; i++)for (int j = 1; j <= n; j++)scanf("%d", &mp[i][j]);
+	scanf("%d", &Q);
+	floyd();
+	for (int i = 0; i < Q; i++)
+	{
+		scanf("%d%d", &a, &b);
+		printf("%d\n", mp[a][b]);
+	}
+}

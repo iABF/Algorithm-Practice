@@ -1,0 +1,27 @@
+#include<stdio.h>
+#include<string.h>
+int main()
+{
+	char a[260];
+	while (1)
+	{
+		gets_s(a);
+		if (a[0] != '#' || a[1] != '\0')
+		{
+			int n = strlen(a), sum = 0;
+			for (int i = 0; i <= n - 1; i++)
+			{
+				if (a[i] == ' ') {}
+				else if (a[i] >= 'A'&&a[i] <= 'Z')
+				{
+					sum += (i + 1)*(a[i] - 64);
+				}
+			}
+			printf("%d\n", sum);
+			sum = 0;
+			for (int j = 0; j <= n - 1; j++) { a[j] = '\0'; }
+		}
+		else
+			return 0;
+	}
+}

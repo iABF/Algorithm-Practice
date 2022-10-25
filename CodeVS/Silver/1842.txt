@@ -1,0 +1,18 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+using namespace std;
+int n;
+int f(int x)
+{
+	if (x >= 0)return 5;
+	else return f(x + 1) + f(x + 2) + 1;
+}
+int main()
+{
+	cin >> n;
+	cout << f(n) << endl;
+}

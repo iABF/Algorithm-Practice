@@ -1,0 +1,60 @@
+#include<stdio.h>
+#include<string.h>
+int n;
+int f = 0;
+bool flag = 0;
+char name[35][100];
+struct Road
+{
+	int a;
+	int b;
+	double d;
+}r[10000];
+double dis[35];
+void bellman_ford(int start)
+{
+	memset(dis, 0, sizeof(dis));
+	dis[start] = 1;
+	bool key = 1;
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 0; j < f; j++)
+		{
+			if (dis[r[j].b] < dis[r[j].a] * r[j].d)dis[r[j].b] = dis[r[j].a] * r[j].d;
+			key = 0;
+		}
+	}
+	if (dis[start] > 1)flag = 1;
+	return;
+}
+int main()
+{
+	int cn = 1;
+	while (scanf("%d", &n), n)
+	{
+		flag = 0;
+		f = 0;
+		for (int i = 1; i <= n; i++)scanf("%s", name[i]);
+		int m;
+		scanf("%d", &m);
+		while (m--)
+		{
+			char from[100], to[100];
+			scanf("%s %lf %s", from, &r[f].d, to);
+			for (int i = 1; i <= n; i++)if (!strcmp(from, name[i]))
+			{
+				r[f].a = i;
+				break;
+			}
+			for (int i = 1; i <= n; i++)if (!strcmp(to, name[i]))
+			{
+				r[f++].b = i;
+				break;
+			}
+		}
+		for (int s = 1; s <= n; s++)bellman_ford(s);
+		printf("Case %d: ", cn++);
+		printf(flag ? "Yes\n" : "No\n");
+	}
+	return 0;
+}

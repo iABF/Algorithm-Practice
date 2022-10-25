@@ -1,0 +1,45 @@
+#include<iostream>
+#include<cstdio>
+#include<cmath>
+using namespace std;
+int T;
+int x[60];
+int y[60];
+double d[60];
+double d01[60];
+int px;
+int py;
+int n;
+double ans;
+double theta;
+double t;
+int main()
+{
+	scanf("%d", &T);
+	for(int kd=1;kd<=T;kd++)
+	{
+		ans = 0;
+		scanf("%d", &n);
+		for (int i = 0; i < n; i++)
+		{
+			scanf("%d %d", &x[i], &y[i]);
+		}
+		x[n] = x[0];
+		y[n] = y[0];
+		x[n + 1] = x[1];
+		y[n + 1] = y[1];
+		scanf("%d %d", &px, &py);
+		for (int i = 0; i < n + 1; i++)
+		{
+			d[i] = sqrt((double)((x[i] - px)*(x[i] - px) + (y[i] - py)*(y[i] - py)));
+			d01[i] = sqrt((double)((x[i] - x[i + 1])*(x[i] - x[i + 1]) + (y[i] - y[i + 1])*(y[i] - y[i + 1])));
+		}
+		for (int i = 0; i < n; i++)
+		{
+			t = ((double)((x[i + 1] - x[i])*(x[i + 2] - x[i + 1]) + (y[i + 1] - y[i])*(y[i + 2] - y[i + 1]))) / (d01[i] * d01[i + 1]);
+			theta = acos(t);
+			ans += theta*d[i + 1];
+		}
+		printf("Case #%d: %.3lf\n", kd,ans);
+	}
+}

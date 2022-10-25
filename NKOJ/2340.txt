@@ -1,0 +1,66 @@
+#include<cstdio>
+#include<iostream>
+using namespace std;
+int n;
+bool Onlysolve(int p)
+{
+	for (int i = 2, cnt = 0; i * i < p; i++)
+	{
+		if (p % i == 0 && p / i < n)
+			cnt++;
+		if (cnt > 1)return false;
+	}
+	return true;
+}
+bool Sum_ALLProductNotonlysolve(int s)
+{
+	if (s % 2 == 0)
+		return false;
+	for (int i = 2; i * 2 < s; i++)
+		if (Onlysolve(i * (s - i)))
+			return false;
+	return true;
+}
+bool Secondhand_Product_OnlyoneSumOK(int p)
+{
+	for (int i = 2, cnt = 0; i * i < p; i++)
+	{
+		if (p % i == 0 && p / i < n)
+			if (Sum_ALLProductNotonlysolve(i + p / i))
+				cnt++;
+		if (cnt > 1)
+			return false;
+	}
+	return true;
+}
+bool Sum_OnlyoneProductOK(int s)
+{
+	for (int i = 2, cnt = 0; i * 2 < s; i++)
+	{
+		if (Secondhand_Product_OnlyoneSumOK(i * (s - i)))
+			cnt++;
+		if (cnt > 1)
+			return false;
+	}
+	return true;
+}
+int main()
+{
+	//scanf("%d", &n);
+	//int m = 2 * n > 150 ? 150 : 2 * n;
+	//for (int i = 7; i < m; i+=2)
+	//	if (Sum_ALLProductNotonlysolve(i) && Sum_OnlyoneProductOK(i))
+	//		for (int j = 2; j + j < i; j++)
+	//			if (Secondhand_Product_OnlyoneSumOK(j * (i - j)))
+	//				printf("%d %d\n", j, i - j);
+	while(scanf("%d", &n)!=EOF)
+	{
+		int m = 2 * n > 150 ? 150 : 2 * n;
+		for (int i = 7; i < m; i += 2)
+			if (Sum_ALLProductNotonlysolve(i) && Sum_OnlyoneProductOK(i))
+				for (int j = 2; j + j < i; j++)
+					if (Secondhand_Product_OnlyoneSumOK(j * (i - j)))
+						printf("%d %d\n", j, i - j);
+	}
+	return 0;
+}

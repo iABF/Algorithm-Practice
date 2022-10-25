@@ -1,0 +1,33 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+int T;
+double a[1005];
+int n, v;
+double s[1005];
+double ans = 0;
+
+int main() {
+    scanf("%d", &T);
+    while (T--) {
+        scanf("%d%d", &n, &v);
+        ans = 0;
+        for (int i = 0; i < n; i++) {
+            scanf("%lf", a + i);
+        }
+        sort(a, a + n);
+        for (int i = 0; i < n; i++) {
+            if (i == 0)s[i] = a[i];
+            else s[i] = s[i - 1] + a[i];
+            double c = (double) (s[i] + v) / double(i + 1);
+            if (c < a[i])continue;
+            if (i < n - 1) {
+                ans = max(ans, min(c, a[i + 1]));
+            } else {
+                ans = max(ans, c);
+            }
+        }
+        printf("%d\n", (int) ceil(ans));
+    }
+}

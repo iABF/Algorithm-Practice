@@ -1,0 +1,21 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+using namespace std;
+int n;
+void hanoi(int num, char from, char mid, char to)
+{
+	if (!num)return;
+	hanoi(num - 1, from, to, mid);
+	printf("%d from %c to %c\n", num, from, to);
+	hanoi(num - 1, mid, from, to);
+}
+int main()
+{
+	cin >> n;
+	cout << ((1 << n) - 1) << endl;
+	hanoi(n, 'A', 'B', 'C');
+}

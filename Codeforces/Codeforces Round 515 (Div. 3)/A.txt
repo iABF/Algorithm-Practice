@@ -1,0 +1,22 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 1000000007
+using namespace std;
+int L, l, r, v, t;
+int main()
+{
+	cin >> t;
+	while (t--)
+	{
+		cin >> L >> v >> l >> r;
+		int ans = (l - 1) / v + L / v - r / v;
+		cout << ans << endl;
+	}
+}

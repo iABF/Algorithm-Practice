@@ -1,0 +1,76 @@
+#include<stdio.h>
+#include<Windows.h>
+int *jd;
+void baoshu(int *p, int length, int spc)
+{
+	int s = 0, i, k, e;
+	for (int j = 0; j <= length - 1; j++)
+	{
+		if (jd[j] != 0) { s++; k = j; }
+	}
+	if (s == 1) { printf("\n%d\n", jd[k]); }
+	else
+	{
+		for (i = 1; i <= spc; i++)
+		{
+			if (p + i - 1 >= jd + length)
+			{
+				p -= length;
+			}
+			if (p[i - 1] == 0) { i--; p++; continue; }
+			if (i == spc)
+			{
+				if (s == 2)printf("%d", p[i - 1]);
+				else printf("%d ", p[i - 1]);
+				p[i - 1] = 0;
+				break;
+			}
+		}
+		for (e = 0; e <= length - 1; e++)
+		{
+			if (p + i + e >= jd + length)
+			{
+				p -= length;
+			}
+			if (p[i + e]>0)
+			{
+				break;
+			}
+		}
+		baoshu(p + i + e, length, spc);
+	}
+}
+int main()
+{
+	int n, m, a[105];
+	jd = a;
+	for (int i = 0; i <= 102 - 1; i++)
+	{
+		a[i] = -1;
+	}
+	scanf("%d", &n);
+	if (n<1 || n>99)
+	{
+		printf("WRONG!\n");
+		return 0;
+	}
+	else
+	{
+		scanf("%d", &m);
+		if (m<1 || m>99)
+		{
+			printf("WRONG!\n");
+			return 0;
+		}
+		else
+		{
+			for (int i = 0; i <= n - 1; i++)
+			{
+				a[i] = i + 1;
+			}
+			baoshu(a, n, m);
+		}
+	}
+	system("pause");
+	return 0;
+}

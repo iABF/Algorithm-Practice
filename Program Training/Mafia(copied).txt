@@ -1,0 +1,87 @@
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+#include<iostream>
+using namespace std;
+const int N = 405, M = 40005, INF = 2e9;
+struct queue {
+	int l, r, a[N];
+	void clear() { l = 0, r = 1; }
+	bool empty() { return l + 1 == r; }
+	void push(int x) {
+		a[r] = x;
+		r = (r + 1) % N;
+	}
+	void pop() { l = (l + 1) % N; }
+	int front() { return a[(l + 1) % N]; }
+}q;
+struct edge { int v, w, next; }e[M << 1];
+int head[N], k, d[N], s, t;
+void add(int u, int v, int w) {
+	e[k] = edge { v, w, head[u] };
+	head[u] = k++;
+	e[k] = edge { u, 0, head[v] };
+	head[v] = k++;
+}
+bool BFS() {
+	q.clear();
+	memset(d, 0, sizeof(d));
+	d[s] = 1;
+	q.push(s);
+	int i, u;
+	while (!q.empty()) {
+		u = q.front();
+		q.pop();
+		for (i = head[u]; i != -1; i = e[i].next) {
+			if (!d[e[i].v] && e[i].w) {
+				d[e[i].v] = d[u] + 1;
+				q.push(e[i].v);
+			}
+		}
+	}
+	return d[t];
+}
+int dfs(int u, int f) {
+	if (u == t || !f) {
+		return f;
+	}
+	int i;
+	int use = 0, t;
+	for (i = head[u]; i != -1; i = e[i].next) {
+		if (d[e[i].v] == d[u] + 1 && (t = dfs(e[i].v, min(e[i].w, f - use)))) {
+			e[i].w -= t;
+			e[i ^ 1].w += t;
+			use += t;
+			if (use == f) {
+				return f;
+			}
+		}
+	}
+	return use;
+}
+int dinic() {
+	int ans = 0;
+	while (BFS()) {
+		ans += dfs(s, INF);
+	}
+	return ans;
+}
+int main() {
+	int n, m, i, x;
+	memset(head, -1, sizeof(head));
+	scanf("%d%d%d%d", &n, &m, &s, &t);
+	s <<= 1;
+	t <<= 1;
+	++t;
+	for (i = 1; i <= n; i++) {
+		scanf("%d", &x);
+		add(i << 1, (i << 1) + 1, x);
+	}
+	while (m--) {
+		scanf("%d%d", &i, &x);
+		add((i << 1) + 1, x << 1, INF);
+		add((x << 1) + 1, i << 1, INF);
+	}
+	printf("%d\n", dinic());
+	return 0;
+}

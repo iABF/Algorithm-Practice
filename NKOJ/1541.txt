@@ -1,0 +1,24 @@
+#include<stdio.h>
+#include<Windows.h>
+int main()
+{
+	int l[10001], nl, nm, sum = 0;
+	for (int i = 0; i <= 10000; i++)l[i] = 0;
+	scanf("%d%d", &nl, &nm);
+	for (int i = 0; i <= nl; i++)l[i] = 1;
+	for (int i = 0, j, k; i <= nm - 1;i++)
+	{
+		scanf("%d%d", &j, &k);
+		for (int t = j; t <= k; t++)
+		{
+			l[t] = 0;
+		}
+	}
+	for (int i = 0; i <= nl; i++)
+	{
+		if (l[i] == 1)sum++;
+	}
+	printf("%d\n", sum);
+	system("pause");
+	return 0;
+}

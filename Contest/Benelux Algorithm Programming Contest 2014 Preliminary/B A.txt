@@ -1,0 +1,61 @@
+#include<cstdio>
+#include<iostream>
+#include<cstring>
+using namespace std;
+#define inf 100000000
+int cse;
+struct road
+{
+	int s;
+	int e;
+	int t;
+}r[100010];
+int n;
+int d;
+int c;
+int dis[10010];
+int countt;
+int ans;
+void bf()
+{
+	bool key = false;
+	for (int i = 1; i <= n; i++)dis[i] = inf;
+	dis[c] = 0;
+	for (int i = 1; i < n; i++)
+	{
+		key = false;
+		for (int j = 0; j < d; j++)
+		{
+			if (dis[r[j].e] > dis[r[j].s] + r[j].t)
+			{
+				dis[r[j].e] = dis[r[j].s] + r[j].t;
+				key = true;
+			}
+		}
+		if (!key)break;
+	}
+	for (int i = 1; i <= n; i++)
+	{
+		if (dis[i] < inf)
+		{
+			countt++;
+			if (ans < dis[i])ans = dis[i];
+		}
+		
+	}
+}
+int main()
+{
+	scanf("%d", &cse);
+	while (cse--)
+	{
+		countt = 0;
+		ans = 0;
+		scanf("%d %d %d", &n, &d, &c);
+		for (int i = 0; i < d; i++)scanf("%d %d %d", &r[i].e, &r[i].s, &r[i].t);
+		bf();
+		if (n == 1)printf("1 0\n");
+		else printf("%d %d\n", countt, ans);
+	}
+	return 0;
+}

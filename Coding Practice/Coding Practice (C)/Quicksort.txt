@@ -1,0 +1,54 @@
+#include<stdio.h>
+#include<Windows.h>
+void change(int *x, int *y)
+{
+	int temp;
+	temp = *x;
+	*x = *y;
+	*y = temp;
+}
+void quicksort(int n, int *a)
+{
+	if (n>1)
+	{
+		int *p;
+		int *b;
+		int m = 0, f = a[0], e = a[n - 1], u = n - 1;
+		for (p = a + 1; p<a + n; p++)
+		{
+			if (*p<f)
+			{
+				change(a + m, p);
+				m++;
+			}
+		}
+		for (p = a + n - 1; p >= a + m; p--)
+		{
+			if (*p>f)
+			{
+				change(a + u, p);
+				u--;
+			}
+		}
+		quicksort(m + 1, a);
+		quicksort(n - m - 1, a + m + 1);
+	}
+}
+int main()
+{
+	int i;
+	scanf("%d", &i);
+	int a[1000];
+	for (int j = 0; j <= i - 1; j++)
+	{
+		scanf("%d", &a[j]);
+	}
+	quicksort(i, a);
+	for (int k = 0; k <= i - 1; k++)
+	{
+		printf("%d ", a[k]);
+	}
+	printf("\n");
+	system("pause");
+	return 0;
+}

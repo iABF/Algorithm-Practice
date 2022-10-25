@@ -1,0 +1,20 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 1000000000
+#define MAXN 1005
+using namespace std;
+int x, y, z, a, b, c;
+int main()
+{
+	cin >> x >> y >> z >> a >> b >> c;
+	int r = abs(x - y)*a;
+	int s = abs(x - z)*b + 3 * c + abs(x - y)*b;
+	if (r < s)cout << "NO\n";
+	else cout << "YES\n";
+}

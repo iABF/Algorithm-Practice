@@ -1,0 +1,33 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+int n;
+int a[5005];
+
+int main() {
+    scanf("%d", &n);
+    for (int i = 0; i < n; i++) {
+        scanf("%d", a + i);
+    }
+    sort(a, a + n);
+    int cnt = 0, ans = 0;
+    int d;
+    int cur;
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            cnt = 2;
+            cur=j;
+            d = a[j] - a[i];
+            for (int k = j + 1; k < n; k++) {
+                if (a[k] - a[cur] < d)continue;
+                else if (a[k] - a[cur] == d) {
+                    cnt++;
+                    cur = k;
+                } else if (a[k] - a[cur] > d)break;
+            }
+            if(cnt>ans)ans=cnt;
+        }
+    }
+    printf("%d\n",ans);
+
+}

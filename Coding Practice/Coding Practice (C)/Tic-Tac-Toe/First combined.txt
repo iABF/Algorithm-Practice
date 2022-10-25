@@ -1,0 +1,336 @@
+#include<stdio.h>
+#include<Windows.h>
+#include<string.h>
+#define COMPUTER -1   
+#define HUMAN 1  
+#define STEP 9       //这个是二者最大步数
+#define DRAW 0   
+#define ROW 3   
+#define COL 3  
+#define MAX_NUM 1000;  
+//当前深度  
+int currentDepth;
+int player = HUMAN;
+char tempQP[3][3] = { '\0','\0','\0','\0','\0','\0','\0','\0','\0' };
+char PLAYER_CHESS, COMPUTER_CHESS;
+struct Move
+{
+	int x;
+	int y;
+};
+//最好的一步  
+Move bestMove;
+//以下是放棋子函数
+void MakeMove(Move curMove, char(*p)[3], char com_c)
+{
+	p[curMove.x][curMove.y] = com_c;
+	player = (player == COMPUTER) ? HUMAN : COMPUTER;
+}
+void BackMove(Move curMove, char(*p)[3] ,char com_c)
+{
+	p[curMove.x][curMove.y] = '\0';
+	player = (player == COMPUTER) ? HUMAN : COMPUTER;
+}
+//***以上第一个是x.y的位置放上X或O***
+//***第二个是用来在操作过后恢复原样时用到的***
+//以下是得到有空位集合的函数 
+int GetMoveList(Move moveList[], char(*p)[3])
+{
+	int moveCount = 0;
+	int i, j;
+	for (i = 0; i < COL; i++)
+	{
+		for (j = 0; j < ROW; j++)
+		{
+			if (p[i][j] == '\0')
+			{
+				moveList[moveCount].x = i;
+				moveList[moveCount].y = j;
+				moveCount++;
+			}
+		}
+	}
+	return moveCount; //返回一共多少个空的位置   
+					  //***通读程序后发现，这可能是用来计算是否结束的方法***
+					  //***同时这将为子位置创建可能性***
+}
+//以下是计算价值的函数  
+int CalculateEvaluate(char(*p)[3],char com_c)
+{
+	char checkwinner(char(*p)[3]);
+	bool flag = true;
+	int i, j;
+	if (checkwinner(p) == com_c)  return MAX_NUM;//如果计算机赢了，返回最大值   
+	if (checkwinner(p) == 'O' + 'X' - com_c)  return -MAX_NUM;//如果计算机输了，返回最小值   
+	int count = 0;//该变量用来表示评估函数的值  
+				  //将棋盘中的空格填满自己的棋子，既将棋盘数组中的0变为1  
+	for (i = 0; i < 3; i++)
+		for (j = 0; j < 3; j++)
+		{
+			if (p[i][j] == 0)  tempQP[i][j] = COMPUTER;
+			else  tempQP[i][j] = p[i][j];
+		}
+	//电脑一方  
+	//计算每一行中有多少行的棋子连成3个的  
+	for (i = 0; i < 3; i++)
+		count += (tempQP[i][0] + tempQP[i][1] + tempQP[i][2]) / 3;
+	for (i = 0; i < 3; i++)
+		count += (tempQP[0][i] + tempQP[1][i] + tempQP[2][i]) / 3;
+	count += (tempQP[0][0] + tempQP[1][1] + tempQP[2][2]) / 3;
+	count += (tempQP[2][0] + tempQP[1][1] + tempQP[0][2]) / 3;
+	//将棋盘中的空格填满对方的棋子，既将棋盘数组中的0变为-1  
+	for (i = 0; i < 3; i++)
+		for (j = 0; j < 3; j++)
+		{
+			if (p[i][j] == 0)  tempQP[i][j] = HUMAN;
+			else tempQP[i][j] = p[i][j];
+		}
+	//对方  
+	//计算每一行中有多少行的棋子连成3个的  
+	for (i = 0; i < 3; i++)
+		count += (tempQP[i][0] + tempQP[i][1] + tempQP[i][2]) / 3;
+	for (i = 0; i < 3; i++)
+		count += (tempQP[0][i] + tempQP[1][i] + tempQP[2][i]) / 3;
+	count += (tempQP[0][0] + tempQP[1][1] + tempQP[2][2]) / 3;
+	count += (tempQP[2][0] + tempQP[1][1] + tempQP[0][2]) / 3;
+	return count;
+	//***注意到，由于两次添加的分别是1和-1，这会导致实际上count是一个作差的过程***
+	//***做出来的差就是这个位置的评估数***
+	//***目前来看，这个数越大越好（电脑是1）***
+}
+int MaxMinEvaluate(int depth, char(*p)[3], char com_c)
+{
+	char checkwinner(char(*p)[3]);
+	int value;             //价值
+	int bestValue = 0;     //最好的价值  
+	int moveCount = 0;
+	int i; int m, n;
+	Move moveList[9];      //保存可以下棋子的位置  
+	if (checkwinner(p) == com_c || checkwinner(p) == 'O' + 'X' - com_c)
+	{
+		return CalculateEvaluate(p, com_c); //一般是返回极大极小值  
+	}
+	//以下表示如果搜索深度depth耗尽，返回这一步的价值   
+	if (depth == 0)
+	{
+		return CalculateEvaluate(p, com_c);
+	}
+	//以下表示根据不同的玩家（人或电脑）对bestvalue赋值
+	//这是用来奠基的，其实即使不是+-1000这样的数，绝对值稍小应该也没事
+	if (COMPUTER == player)
+	{
+		bestValue = -MAX_NUM;
+	}
+	else if (HUMAN == player)
+	{
+		bestValue = MAX_NUM;
+	}
+	//以下为计算一共多少步，同时建立等数目个子位置
+	moveCount = GetMoveList(moveList, p);
+	//以下开始建立子位置
+	for (i = 0; i < moveCount; i++)
+	{
+		Move curMove = moveList[i];
+		MakeMove(curMove,p, com_c);
+		value = MaxMinEvaluate(depth - 1,p,com_c);
+		//***注意，这里的递归，即电脑会考虑多少步***
+		//***同时此处会计算出这一步的价值，用它与bestvalue比较***
+		BackMove(curMove,p, com_c);
+		//***回溯***
+		//以下表示对于电脑，值越大越好，最终将从这里选出value最大的下法，并记下这一步的位置
+		if (player == COMPUTER)
+		{
+			if (value > bestValue)
+			{
+				bestValue = value;
+				if (depth == currentDepth)
+				{
+					bestMove = curMove;
+				}
+			}
+		}
+		//反之以下表示对于人，值越小越好，最终将选出value最小的下法，记下这一步的位置
+		else if (player == HUMAN)
+		{
+			if (value < bestValue)
+			{
+				bestValue = value;
+				if (depth == currentDepth)
+				{
+					bestMove = curMove;
+				}
+			}
+		}
+	}
+	return bestValue;
+}
+void print(char (*p)[3])
+{
+	printf("|%c%3c%3c|\n|%c%3c%3c|\n|%c%3c%3c|\n", p[0][0], p[0][1], p[0][2], p[1][0], p[1][1], p[1][2], p[2][0], p[2][1], p[2][2]);
+}
+char checkwinner(char(*p)[3])
+{
+	if ((p[0][0] == 'X' && p[1][0] == 'X' && p[2][0] == 'X') || (p[0][1] == 'X' && p[1][1] == 'X' && p[2][1] == 'X') || (p[0][2] == 'X' && p[1][2] == 'X' && p[2][2] == 'X') || (p[0][0] == 'X'&& p[0][1] == 'X'&& p[0][2] == 'X') || (p[1][0] == 'X'&& p[1][1] == 'X'&& p[1][2] == 'X') || (p[2][0] == 'X'&& p[2][1] == 'X'&& p[2][2] == 'X') || (p[0][0] == 'X'&& p[1][1] == 'X'&& p[2][2] == 'X') || (p[0][2] == 'X'&& p[1][1] == 'X'&& p[2][0] == 'X'))
+	{
+		return('X');
+	}
+	else if ((p[0][0] == 'O' && p[1][0] == 'O' && p[2][0] == 'O') || (p[0][1] == 'O' && p[1][1] == 'O' && p[2][1] == 'O') || (p[0][2] == 'O' && p[1][2] == 'O' && p[2][2] == 'O') || (p[0][0] == 'O'&& p[0][1] == 'O'&& p[0][2] == 'O') || (p[1][0] == 'O'&& p[1][1] == 'O'&& p[1][2] == 'O') || (p[2][0] == 'O'&& p[2][1] == 'O'&& p[2][2] == 'O') || (p[0][0] == 'O'&& p[1][1] == 'O'&& p[2][2] == 'O') || (p[0][2] == 'O'&& p[1][1] == 'O'&& p[2][0] == 'O'))
+	{
+		return('O');
+	}
+	else if (!(p[0][0] == '\0' || p[0][1] == '\0' || p[0][2] == '\0' || p[1][0] == '\0' || p[1][1] == '\0' || p[1][2] == '\0' || p[2][0] == '\0' || p[2][1] == '\0' || p[2][2] == '\0'))
+	{
+		return('D');
+	}
+	else return NULL;
+}
+void X_turn(char(*p)[3])
+{
+	void O_turn(char(*p)[3]);
+begin:int point;
+	printf("X next, please input number 1~9 to continue:");
+	scanf("%d", &point);
+	if (point <= 9 && point >= 1 && p[2 - (point - 1) / 3][(point - 1) % 3] == '\0')
+	{
+		p[2 - (point - 1) / 3][(point - 1) % 3] = 'X';
+		print(p);
+		char c = checkwinner(p);
+		if (c == 'X') { printf("Winner is X.\n"); return; }
+		else if (c == 'O') { printf("Winner is O.\n"); return; }
+		else if (c == 'D') { printf("Draw.\n"); return; }
+		else O_turn(p);
+	}
+	else
+	{
+		printf("Wrong input.\n");
+		goto begin;
+	}
+}
+void O_turn(char(*p)[3])
+{
+begin:int point;
+	printf("O next, please input number 1~9 to continue:");
+	scanf("%d", &point);
+	if (point <= 9 && point >= 1 && p[2 - (point - 1) / 3][(point - 1) % 3] == '\0')
+	{
+		p[2 - (point - 1) / 3][(point - 1) % 3] = 'O';
+		print(p);
+		char c = checkwinner(p);
+		if (c == 'X') { printf("Winner is X.\n"); return; }
+		else if (c == 'O') { printf("Winner is O.\n"); return; }
+		else if (c == 'D') { printf("Draw.\n"); return; }
+		else X_turn(p);
+	}
+	else
+	{
+		printf("Wrong input.\n");
+		goto begin;
+	}
+}
+void computer_turn(char(*p)[3],char chess)
+{
+	void pve_O_turn(char(*p)[3]);
+	void pve_X_turn(char(*p)[3]);
+	printf("computer(%c) turn:\n", chess);
+	MaxMinEvaluate(currentDepth, p, chess);
+	p[bestMove.x][bestMove.y] = chess;
+	currentDepth--;
+	player = (player == COMPUTER) ? HUMAN : COMPUTER;
+	print(p);
+	char c = checkwinner(p);
+	if (c == chess) { printf("Winner is computer(%c).\n",chess); return; }
+	else if (c == 'O' + 'X' - chess) { printf("Winner is you(%c).\n", 'O' + 'X' - chess); return; }
+	else if (c == 'D') { printf("Draw.\n"); return; }
+	if (chess == 'X')pve_O_turn(p);
+	else pve_X_turn(p);
+}
+void pve_O_turn(char(*p)[3])
+{
+begin:int point;
+	printf("You(O) next, please input number 1~9 to continue:");
+	scanf("%d", &point);
+	if (point <= 9 && point >= 1 && p[2 - (point - 1) / 3][(point - 1) % 3] == '\0')
+	{
+		p[2 - (point - 1) / 3][(point - 1) % 3] = 'O';
+		currentDepth--;
+		player = (player == COMPUTER) ? HUMAN : COMPUTER;
+		print(p);
+		char c = checkwinner(p);
+		if (c == 'X') { printf("Winner is computer(X).\n"); return; }
+		else if (c == 'O') { printf("Winner is you(O).\n"); return; }
+		else if (c == 'D') { printf("Draw.\n"); return; }
+		else
+		{
+			computer_turn(p, 'X');
+		}
+	}
+	else
+	{
+		printf("Wrong input.\n");
+		goto begin;
+	}
+}
+void pve_X_turn(char(*p)[3])
+{
+begin:int point;
+	printf("You(X) next, please input number 1~9 to continue:");
+	scanf("%d", &point);
+	if (point <= 9 && point >= 1 && p[2 - (point - 1) / 3][(point - 1) % 3] == '\0')
+	{
+		p[2 - (point - 1) / 3][(point - 1) % 3] = 'X';
+		currentDepth--;
+		player = (player == COMPUTER) ? HUMAN : COMPUTER;
+		print(p);
+		char c = checkwinner(p);
+		if (c == 'O') { printf("Winner is computer(O).\n"); return; }
+		else if (c == 'X') { printf("Winner is you(X).\n"); return; }
+		else if (c == 'D') { printf("Draw.\n"); return; }
+		else
+		{
+			computer_turn(p, 'O');
+		}
+	}
+	else
+	{
+		printf("Wrong input.\n");
+		goto begin;
+	}
+}
+int main()
+{
+	start:
+	char a[3][3] = { '\0','\0','\0','\0','\0','\0','\0','\0','\0' };
+	printf("Guide:\npress number 1~9 as:\n|%d%3d%3d|\n|%d%3d%3d|\n|%d%3d%3d|\n", 7, 8, 9, 4, 5, 6, 1, 2, 3);
+	int gamemode;
+	printf("Press 1->PVP, O first;\n      2->PVE, you first;\n      3->PVE, computer first:");
+	scanf("%d", &gamemode);
+	switch (gamemode)
+	{
+	case 1:
+	{
+		O_turn(a);
+		break;
+	}
+	case 2:
+	{
+		PLAYER_CHESS = 'O';
+		COMPUTER_CHESS = 'X';
+		player = HUMAN;
+		pve_O_turn(a);
+		break;
+	}
+	case 3:
+	{
+		PLAYER_CHESS = 'X';
+		COMPUTER_CHESS = 'O';
+		player = COMPUTER;
+		computer_turn(a, 'O');
+	}
+	}
+	printf("Try again?\nPress 1 to have another game, press others END:");
+	int trynum;
+	scanf("%d", &trynum);
+	if (trynum == 1)goto start;
+	system("pause");
+	return 0;
+}

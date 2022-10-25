@@ -1,0 +1,37 @@
+#include<stdio.h>
+#include<string.h>
+#include<Windows.h>
+void clear(char *p, int n)
+{
+	for (int i = 0; i <= n - 1; i++)*(p + i) = '\0';
+}
+int main()
+{
+	char control[15], str[2005];
+	clear(control, 15);
+	gets_s(control);
+	while (strcmp(control, "ENDOFINPUT") != 0)
+	{
+		while (strcmp(control, "START") == 0)
+		{
+			gets_s(str);
+			for (int i = 0; i <= strlen(str) - 1; i++)
+			{
+				if (str[i] >= 'F'&&str[i] <= 'Z')str[i] -= ('F' - 'A');
+				else if (str[i] >= 'A'&&str[i] <= 'E')str[i] += ('V' - 'A');
+			}
+			puts(str);
+			clear(str, strlen(str));
+			clear(control, strlen(control));
+			gets_s(control);
+			if (strcmp(control, "END") == 0)
+			{
+				clear(control, strlen(control));
+				gets_s(control);
+				continue;
+			}
+		}
+	}
+	system("pause");
+	return 0;
+}

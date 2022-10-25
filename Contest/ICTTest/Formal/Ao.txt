@@ -1,0 +1,23 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+int n;
+int a[200005];
+
+
+int main() {
+    while (scanf("%d", &n), n) {
+        int res = 0;
+        for (int i = 0; i < n; i++) {
+            scanf("%d", a + i);
+        }
+        for(int i=0;i<n;i++){
+            if(a[i]<res)continue;
+            for(int j=i+1;j<n;j++){
+                res=max(res,a[i]&a[j]);
+            }
+        }
+        printf("%d\n",res);
+    }
+}

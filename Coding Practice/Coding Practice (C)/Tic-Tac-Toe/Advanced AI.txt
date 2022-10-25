@@ -1,0 +1,356 @@
+#include <stdio.h>  
+#include<conio.h>   
+#include<stdlib.h>
+
+#define COMPUTER -1   
+#define HUMAN 1  
+#define STEP 9       //这个是二者最大步数
+#define DRAW 0   
+#define ROW 3   
+#define COL 3  
+#define MAX_NUM 1000;  
+
+struct Move
+{
+	int x;
+	int y;
+
+};
+
+//棋盘  
+int QP[3][3] = { { 0,0,0 },
+{ 0,0,0 },
+{ 0,0,0 }
+};
+int tempQP[3][3] = { { 0,0,0 },
+{ 0,0,0 },
+{ 0,0,0 }
+};
+//玩家  
+int player = HUMAN;
+//最好的一步  
+Move bestMove;
+//当前深度  
+int currentDepth;
+//谁先走  
+bool MAN_first = true;
+
+
+//以下是判断输赢的函数  
+int JudgeWin()
+{
+	int i, j;
+	for (int i = 0; i < 3; i++)
+	{
+		if (QP[i][0] + QP[i][1] + QP[i][2] == 3)  return 1;
+		else if (QP[i][0] + QP[i][1] + QP[i][2] == -3)  return -1;
+	}
+	for (int j = 0; j < 3; j++)
+	{
+		if (QP[0][j] + QP[1][j] + QP[2][j] == 3)  return 1;
+		else if (QP[0][j] + QP[1][j] + QP[2][j] == -3)   return -1;
+	}
+	if (QP[0][0] + QP[1][1] + QP[2][2] == 3 || QP[0][2] + QP[1][1] + QP[2][0] == 3)
+		return 1;
+	else if (QP[0][0] + QP[1][1] + QP[2][2] == -3 || QP[0][2] + QP[1][1] + QP[2][0] == -3)
+		return -1;
+	else  return 0;
+}
+
+//以下是计算价值的函数  
+int CalculateEvaluate()
+{
+	bool flag = true;
+	int i, j;
+	if (JudgeWin() == COMPUTER)  return MAX_NUM;//如果计算机赢了，返回最大值   
+	if (JudgeWin() == HUMAN)  return -MAX_NUM;//如果计算机输了，返回最小值   
+	int count = 0;//该变量用来表示评估函数的值  
+				  //将棋盘中的空格填满自己的棋子，既将棋盘数组中的0变为1  
+	for (i = 0; i < 3; i++)
+		for (j = 0; j < 3; j++)
+		{
+			if (QP[i][j] == 0)  tempQP[i][j] = COMPUTER;
+			else  tempQP[i][j] = QP[i][j];
+		}
+	//电脑一方  
+	//计算每一行中有多少行的棋子连成3个的  
+	for (i = 0; i < 3; i++)
+		count += (tempQP[i][0] + tempQP[i][1] + tempQP[i][2]) / 3;
+	for (i = 0; i < 3; i++)
+		count += (tempQP[0][i] + tempQP[1][i] + tempQP[2][i]) / 3;
+	count += (tempQP[0][0] + tempQP[1][1] + tempQP[2][2]) / 3;
+	count += (tempQP[2][0] + tempQP[1][1] + tempQP[0][2]) / 3;
+	//将棋盘中的空格填满对方的棋子，既将棋盘数组中的0变为-1  
+	for (i = 0; i < 3; i++)
+		for (j = 0; j < 3; j++)
+		{
+			if (QP[i][j] == 0)  tempQP[i][j] = HUMAN;
+			else tempQP[i][j] = QP[i][j];
+		}
+	//对方  
+	//计算每一行中有多少行的棋子连成3个的  
+	for (i = 0; i < 3; i++)
+		count += (tempQP[i][0] + tempQP[i][1] + tempQP[i][2]) / 3;
+	for (i = 0; i < 3; i++)
+		count += (tempQP[0][i] + tempQP[1][i] + tempQP[2][i]) / 3;
+	count += (tempQP[0][0] + tempQP[1][1] + tempQP[2][2]) / 3;
+	count += (tempQP[2][0] + tempQP[1][1] + tempQP[0][2]) / 3;
+	return count;
+	//***注意到，由于两次添加的分别是1和-1，这会导致实际上count是一个作差的过程***
+	//***做出来的差就是这个位置的评估数***
+	//***目前来看，这个数越大越好（电脑是1）***
+}
+
+//以下是放棋子函数
+void MakeMove(Move curMove)
+{
+	QP[curMove.x][curMove.y] = player;
+	player = (player == COMPUTER) ? HUMAN : COMPUTER;
+}
+void BackMove(Move curMove)
+{
+	QP[curMove.x][curMove.y] = 0;
+	player = (player == COMPUTER) ? HUMAN : COMPUTER;
+}
+//***以上第一个是x.y的位置放上X或O***
+//***第二个是用来在操作过后恢复原样时用到的***
+
+//以下是得到有空位集合的函数 
+int GetMoveList(Move moveList[])
+{
+	int moveCount = 0;
+	int i, j;
+	for (i = 0; i < COL; i++)
+	{
+		for (j = 0; j < ROW; j++)
+		{
+			if (QP[i][j] == 0)
+			{
+				moveList[moveCount].x = i;
+				moveList[moveCount].y = j;
+				moveCount++;
+			}
+		}
+	}
+	return moveCount; //返回一共多少个空的位置   
+					  //***通读程序后发现，这可能是用来计算是否结束的方法***
+					  //***同时这将为子位置创建可能性***
+}
+
+
+//***下面是主要的算法，用到的是极大值极小值算法***
+//***depth你可以理解为是电脑计算的步数***
+//***这一个函数将会被电脑和人都调用***
+int MaxMinEvaluate(int depth)
+{
+	int value;             //价值
+	int bestValue = 0;     //最好的价值  
+	int moveCount = 0;
+	int i; int m, n;
+	Move moveList[9];      //保存可以下棋子的位置  
+	if (JudgeWin() == COMPUTER || JudgeWin() == HUMAN)
+	{
+		return CalculateEvaluate();  //一般是返回极大极小值  
+	}
+	//以下表示如果搜索深度depth耗尽，返回这一步的价值   
+	if (depth == 0)
+	{
+		return CalculateEvaluate();
+	}
+	//以下表示根据不同的玩家（人或电脑）对bestvalue赋值
+	//这是用来奠基的，其实即使不是+-1000这样的数，绝对值稍小应该也没事
+	if (COMPUTER == player)
+	{
+		bestValue = -MAX_NUM;
+	}
+	else if (HUMAN == player)
+	{
+		bestValue = MAX_NUM;
+	}
+	//以下为计算一共多少步，同时建立等数目个子位置
+	moveCount = GetMoveList(moveList);
+	//以下开始建立子位置
+	for (i = 0; i < moveCount; i++)
+	{
+		Move curMove = moveList[i];
+		MakeMove(curMove);
+		value = MaxMinEvaluate(depth - 1);
+		//***注意，这里的递归，即电脑会考虑多少步***
+		//***同时此处会计算出这一步的价值，用它与bestvalue比较***
+		BackMove(curMove);
+		//***回溯***
+		//以下表示对于电脑，值越大越好，最终将从这里选出value最大的下法，并记下这一步的位置
+		if (player == COMPUTER)
+		{
+			if (value > bestValue)
+			{
+				bestValue = value;
+				if (depth == currentDepth)
+				{
+					bestMove = curMove;
+				}
+			}
+		}
+		//反之以下表示对于人，值越小越好，最终将选出value最小的下法，记下这一步的位置
+		else if (player == HUMAN)
+		{
+			if (value < bestValue)
+			{
+				bestValue = value;
+				if (depth == currentDepth)
+				{
+					bestMove = curMove;
+				}
+			}
+		}
+	}
+	return bestValue;
+}
+
+//输出棋盘
+void PrintBoard()
+{
+	int i, j;
+	for (i = 0; i < COL; i++)
+	{
+		printf("-------------\n");
+		for (j = 0; j < ROW; j++)
+		{
+			if (QP[i][j] == COMPUTER)
+			{
+				printf("| X ");
+			}
+			else if (QP[i][j] == HUMAN)
+			{
+				printf("| O ");
+			}
+			else
+			{
+				printf("|   ");
+			}
+		}
+		printf("|\n");
+	}
+	printf("-------------\n");
+}
+//必须要说的是，这个棋盘真的太tm丑了
+
+//以下表示，如果是电脑，则电脑调用算法函数
+void Computer_Turn()
+{
+	MaxMinEvaluate(currentDepth);
+	QP[bestMove.x][bestMove.y] = COMPUTER;
+}
+
+//以下表示人输入
+void Human_Turn()
+{
+	int x, y;
+	printf("请输入位置坐标。注意务必以x y的格式输入，同时它们都是0-2的整数。\n");
+	scanf_s("%d", &x);
+	scanf_s("%d", &y);
+	while (x < 0 || x > 2 || y < 0 || y > 2)
+	{
+		printf("您输入的坐标错误（不在正确范围内）\n");
+		scanf_s("%d", &x);
+		scanf_s("%d", &y);
+	}
+	while (QP[x][y] != 0)
+	{
+		printf("该位置已有棋，请重新输入:\n");
+		scanf_s("%d", &x);
+		scanf_s("%d", &y);
+	}
+	QP[x][y] = HUMAN;
+	//这些应该都是很好懂的
+}
+
+//以下是决定先后顺序的函数
+void ChoseFirst()
+{
+	char c;
+	printf("Do you want to play first? \ny-你先走  , n-电脑先走\n");
+	for (c = getchar(); c != 'Y'&&c != 'y'&&c != 'N'&&c != 'n'; c = getchar());
+	//不行让我吐槽一句这个神一样的for用法
+	if (c == 'n' || c == 'N')
+	{
+		MAN_first = false;
+	}
+	//由于默认是人先走，只要输入n就是人先走false
+	printf("\n");
+}
+
+
+int main()
+{
+	currentDepth = 9;    //计算深度从9开始
+	int step = 1;
+	ChoseFirst();        //决定先后 
+	PrintBoard();        //输出原始棋盘
+	if (MAN_first)
+	{
+		player = HUMAN;
+		for (step = 1; step <= STEP; )
+		{
+			Human_Turn();
+			PrintBoard();
+			if (player == JudgeWin())
+			{
+				printf("您获胜了");
+				break;
+			}
+			step++;
+			currentDepth--;
+			if (step == 10)
+			{
+				printf("平局");
+				break;
+			}
+			player = (player == COMPUTER) ? HUMAN : COMPUTER;
+			Computer_Turn();
+			PrintBoard();
+			if (player == JudgeWin())
+			{
+				printf("电脑获胜");
+				break;
+			}
+			step++;
+			currentDepth--;
+			player = (player == COMPUTER) ? HUMAN : COMPUTER;
+		}
+	}
+	else      //上面是人先走，下面是电脑先走
+	{
+		player = COMPUTER;
+		for (step = 1; step <= STEP; )
+		{
+			Computer_Turn();
+			PrintBoard();
+			if (player == JudgeWin())
+			{
+				printf("电脑获胜");
+				break;
+			}
+			step++;
+			currentDepth--;
+			if (step == 10) {
+				printf("平局");
+				break;
+			}
+			player = (player == COMPUTER) ? HUMAN : COMPUTER;
+			Human_Turn();
+			PrintBoard();
+			if (player == JudgeWin()) {
+				printf("您获胜了");
+				break;
+			}
+			step++;
+			currentDepth--;
+			player = (player == COMPUTER) ? HUMAN : COMPUTER;
+		}
+	}
+	system("pause");
+	return 0;
+}
+//***补充一下，这个是没有难度评级的，而且一上来就是depth为9，也就是说是终极难度了***
+//***如果想要改变难度可以在设置一个函数改变depth的值***

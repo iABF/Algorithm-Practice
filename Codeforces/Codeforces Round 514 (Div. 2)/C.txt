@@ -1,0 +1,37 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 1000000000
+#define MAXN 1005
+using namespace std;
+int n;
+void f(int beishu, int num)
+{
+	if (num == 1)
+	{
+		cout << beishu << endl;
+		return;
+	}
+	if (num == 2)
+	{
+		cout << beishu << ' ' << beishu * 2 << endl;
+		return;
+	}
+	if (num == 3)
+	{
+		cout << beishu << ' ' << beishu << ' ' << beishu * 3 << endl;
+		return;
+	}
+	for (int i = 1; i <= (num + 1) / 2; i++)cout << beishu << ' ';
+	f(beishu << 1, num / 2);
+}
+int main()
+{
+	scanf("%d", &n);
+	f(1, n);
+}

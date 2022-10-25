@@ -1,0 +1,26 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+using namespace std;
+int n, a[105], ave = 0, sum = 0, cnt = 0, ans;
+int main()
+{
+	cin >> n;
+	ans = n;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> a[i];
+		ave += a[i];
+	}
+	ave /= n;
+	for (int i = 0; i < n; i++) 
+	{
+		sum += a[i];
+		cnt++;
+		if (sum == ave*cnt) ans--, sum = 0, cnt = 0;
+	}
+	cout << ans << endl;
+}

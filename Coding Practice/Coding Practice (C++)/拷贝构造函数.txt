@@ -1,0 +1,46 @@
+#include<iostream>
+#include<cstring>
+#include<cstdio>
+using namespace std;
+class MyString
+{
+public:
+	int length;
+	char* str;
+	MyString(char* s)
+	{
+		str = new char[length = strlen(s)];
+		for (int i = 0; i < length; i++)*(str + i) = *(s + i);
+	}
+	MyString(MyString &s)
+	{
+		length = s.length;
+		str = new char[length];
+		for (int i = 0; i < length; i++)*(str + i) = *(s.str + i);
+	}
+	~MyString() { delete[]str; }
+	MyString assignment(MyString &s)
+	{
+		length = s.length;
+		str = new char[length];
+		for (int i = 0; i < length; i++)*(str + i) = *(s.str + i);
+		return *this;
+	}
+	void print()
+	{
+		for (int i = 0; i < length; i++)printf("%c", *(str + i));
+		cout << endl;
+	}
+};
+int main()
+{
+	char *p = new char[100];
+	char *q = new char[100];
+	cin >> p;
+	cin >> q;
+	MyString a(p);
+	MyString b(q);
+	MyString c(b);
+	c.assignment(a);
+	c.print();
+}

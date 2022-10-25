@@ -1,0 +1,38 @@
+#include<iostream>
+#include<cstdio>
+using namespace std;
+class Complex
+{
+public:
+	double re, im;
+	Complex(double a = 0, double b = 0) { re = a; im = b; }
+	void print()const
+	{
+		printf("%g", re);
+		if (im > 0)printf("+%gi", im);
+		else if (im < 0)printf("-%gi", -im);
+		printf("\n");
+	}
+	const Complex operator+(const Complex&s) { return Complex(re + s.re, im + s.im); }
+	const Complex operator-(const Complex&s) { return Complex(re - s.re, im - s.im); }
+	const Complex operator*(const Complex&s) { return Complex(re * s.re, im * s.im); }
+	const Complex operator/(const Complex&s) { return Complex(re / s.re, im / s.im); }
+	const Complex& operator++() { re++; im++; return *this; }
+	const Complex operator++(int) { Complex t(re, im); re++; im++; return t; }
+	const Complex& operator--() { re--; im--; return *this; }
+	const Complex operator--(int) { Complex t(re, im); re--; im--; return t; }
+};
+int main()
+{
+	double a, b, c, d;
+	cin >> a >> b >> c >> d;
+	Complex x(a, b), y(c, d);
+	x.print();
+	y.print();
+	(x + y).print();
+	(x - y).print();
+	(x * y).print();
+	(x / y).print();
+	(++x).print();
+	(--x).print();
+}

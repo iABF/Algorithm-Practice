@@ -1,0 +1,32 @@
+#include<iostream>
+#include<string>
+using namespace std;
+class StaticTest
+{
+public:
+	StaticTest(int x, int y, int z):classname("c++"){ A = x; B = y; C = z; Sum += x + y + z; }
+	static void totalandoneValue(StaticTest &s) { cout << s.A << " " << s.B << " " << s.C << " " << Sum << endl; }
+	void GetSum() { cout <<"Sum = "<< Sum << endl; }
+	void GetClass() { cout << "Class = " << classname << endl; }
+	void getPersonSum()const { cout << "the sum of one person is: " << A + B + C << endl; }
+private:
+	int A, B, C;
+	static int Sum;
+	const string classname;
+};
+int StaticTest::Sum = 0;
+int main()
+{
+	int x, y, z;
+	cin >> x >> y >> z;
+	StaticTest M(x, y, z);
+	cin >> x >> y >> z;
+	StaticTest N(x, y, z);
+	cin >> x >> y >> z;
+	const StaticTest P(x, y, z);
+	M.GetClass();
+	P.getPersonSum();
+	M.GetSum();
+	N.GetSum();
+	M.totalandoneValue(M);
+}

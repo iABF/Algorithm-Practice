@@ -1,0 +1,23 @@
+#include<iostream>
+#include<cstdio>
+#include<cmath>
+using namespace std;
+class Triangle
+{
+public:
+	float a, b, c;
+	Triangle();
+	void Getabc();
+	float Perimeter();
+	float Area();
+};
+Triangle::Triangle(){cin >> a >> b >> c;}
+void Triangle::Getabc() { printf("%.2f %.2f %.2f", a, b, c); }
+float Triangle::Perimeter(){return a + b + c;}
+float Triangle::Area(){return sqrtf((a + b + c)*(a - b + c)*(a + b - c)*(b + c - a)) / 4;}
+int main()
+{
+	Triangle tri;
+	printf("%.2f %.2f %.2f %.2f %.2f\n", tri.a, tri.b, tri.c, tri.Perimeter(), tri.Area());
+	return 0;
+}

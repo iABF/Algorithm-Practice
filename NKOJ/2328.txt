@@ -1,0 +1,70 @@
+#include<stdio.h>
+#include<windows.h>
+const int maxn = 5e5 + 100;
+const int MOD = 1e9 + 7;
+int a[maxn];
+int k[maxn];
+int t[maxn];
+void change(int *x, int *y)
+{
+	int temp;
+	temp = *x;
+	*x = *y;
+	*y = temp;
+}
+void quicksort(int n, int *a)
+{
+	if (n>1)
+	{
+		int *p;
+		int *b;
+		int m = 0, f = a[0], e = a[n - 1], u = n - 1;
+		for (p = a + 1; p<a + n; p++)
+		{
+			if (*p<f)
+			{
+				change(a + m, p);
+				m++;
+			}
+		}
+		for (p = a + n - 1; p >= a + m; p--)
+		{
+			if (*p>f)
+			{
+				change(a + u, p);
+				u--;
+			}
+		}
+		quicksort(m + 1, a);
+		quicksort(n - m - 1, a + m + 1);
+	}
+}
+int main()
+{
+	int n;
+	scanf("%d", &n);
+	for (int i = 0; i <= n - 1; i++) scanf("%d", &a[i]);
+	for (int i = 2; i <= n; i++)
+	{
+		for (int j = 0; j <= n - 2; j++)
+		{
+			k[i] += (a[j] > a[i - 1]);
+		}
+	}
+	t[0] = 1;
+	for (int i = 1; i <= n - 1; i++)
+	{
+		t[i] = 2 * t[i - 1];
+		t[i] %= MOD;
+	}
+	long long int wtf = 0;
+	for (int i = 2; i <= n-1; i++)
+	{
+		wtf += t[n - 1 - i] * k[i];
+		wtf %= MOD;
+	}
+	wtf += k[n];
+	printf("%lld\n", wtf);
+	system("pause");
+	return 0;
+}

@@ -1,0 +1,62 @@
+#include<iostream>
+#include<queue>
+#include<cstring>
+using namespace std;
+char mp[35][35][35];
+bool vis[35][35][35];
+int x, y, z;
+int ans;
+int nxt[6][3] = { 1,0,0,-1,0,0,0,1,0,0,-1,0,0,0,1,0,0,-1 };
+struct Point
+{
+	int x, y, z, s;
+}sta;
+bool check(int rx, int ry, int rz)
+{
+	if (rx < 0 || ry < 0 || rz < 0 || rx >= x || ry >= y || rz >= z)return false;
+	if (mp[rz][ry][rx] == '#')return false;
+	return true;
+}
+int bfs()
+{
+	queue<Point>q;
+	memset(vis, false, sizeof(vis));
+	q.push(sta);
+	vis[sta.z][sta.y][sta.x] = true;
+	while (!q.empty())
+	{
+		int xx = q.front().x;
+		int yy = q.front().y;
+		int zz = q.front().z;
+		int ss = q.front().s;
+		if (mp[zz][yy][xx] == 'E')return ss;
+		for (int i = 0; i < 6; i++)
+		{
+			int nx = xx + nxt[i][0];
+			int ny = yy + nxt[i][1];
+			int nz = zz + nxt[i][2];
+			if (check(nx, ny, nz) && !vis[nz][ny][nx])
+			{
+				Point t = { nx,ny,nz,ss + 1 };
+				q.push(t);
+				vis[nz][ny][nx] = true;
+			}
+		}
+		q.pop();
+	}
+	return 0;
+}
+int main()
+{
+	while (cin >> z >> y >> x, x || y || z)
+	{
+		for (int i = 0; i < z; i++)for (int j = 0; j < y; j++)
+		{
+			cin >> mp[i][j];
+			for (int k = 0; k < x; k++)if (mp[i][j][k] == 'S')sta.x = k, sta.y = j, sta.z = i, sta.s = 0;
+		}
+		ans = bfs();
+		if (ans == 0)cout << "Trapped!" << endl;
+		else cout << "Escaped in " << ans << " minute(s)." << endl;
+	}
+}

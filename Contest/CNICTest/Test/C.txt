@@ -1,0 +1,33 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int T;
+int y[2], m[2], d[2];
+int md[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+bool checkrun(int year) {
+    return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+}
+
+int calday(int year, int mon, int day) {
+    int ret = 0;
+    for (int i = 0; i < mon - 1; ++i)ret += md[i];
+    if ((checkrun(year)) && (mon >= 3))ret++;
+    ret += day;
+    return ret;
+}
+
+int main() {
+    cin >> T;
+    while (T--) {
+        scanf("%d-%d-%d %d-%d-%d", y, m, d, y + 1, m + 1, d + 1);
+        int ans = 0;
+        for (int i = y[0]; i < y[1]; ++i) {
+            if (checkrun(i))ans += 366;
+            else ans += 365;
+        }
+        ans += calday(y[1], m[1], d[1]) - calday(y[0], m[0], d[0]) + 1;
+        cout << ans << endl;
+    }
+}

@@ -1,0 +1,40 @@
+#include<stdio.h>
+#include<Windows.h>
+int muniu(int m)
+{
+	int num;
+	if (m == 1 || m == 2 || m == 3)return 1;
+	else
+	{
+		num = muniu(m - 3) + muniu(m - 1);
+		return num;
+	}
+}
+int main()
+{
+	int n, a[50];
+	scanf("%d", &n);
+	if (n<1)
+	{
+		printf("WRONG!\n");
+		return 0;
+	}
+	else
+	{
+		for (int i = 0; i <= n - 1; i++)
+		{
+			scanf("%d", &a[i]);
+			if (a[i]<1 || a[i]>44)
+			{
+				printf("WRONG!\n");
+				continue;
+			}
+			else
+			{
+				printf("%d\n", muniu(a[i]));
+			}
+		}
+	}
+	system("pause");
+	return 0;
+}

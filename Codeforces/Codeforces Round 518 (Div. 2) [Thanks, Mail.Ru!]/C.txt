@@ -1,0 +1,34 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 0x7f7f7f7f
+#define MAXN 1005
+#define MOD 1000000007
+#define _PI 3.14159265358979323846
+using namespace std;
+int n, m;
+int cnt[501] = { 0 };
+int main() {
+	cin >> n >> m;
+	vector<pair<int, int>>v;
+	int a, b;
+	for (int i = 0; i < m; i++) {
+		cin >> a >> b;
+		cnt[a]++;
+		cnt[b]++;
+		v.push_back(make_pair(a, b));
+	}
+	for (int i = 1; i <= n; i++) {
+		cout << 1 + cnt[i] << endl;
+		cout << i << ' ' << i << endl;
+		for (int j = 0; j < m; j++) {
+			if (v[j].first == i)cout << j + 1 + n << ' ' << i << endl;
+			else if (v[j].second == i)cout << j + 1 + n << ' ' << i << endl;
+		}
+	}
+}

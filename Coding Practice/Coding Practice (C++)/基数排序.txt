@@ -1,0 +1,38 @@
+#include<iostream>
+#include<cstdio>
+#include<vector>
+using namespace std;
+vector<int>a, buk[10];
+int n, b, d, x, k = 1;
+int getmax()
+{
+	int ans = 0, t, maxx = 0;
+	for (int i = 0; i < x; i++, ans = 0)
+	{
+		t = a[i];
+		while (t)t /= 10, ans++;
+		maxx = ans > maxx ? ans : maxx;
+	}
+	return maxx;
+}
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> b;
+		a.push_back(b);
+	}
+	x = a.size();
+	d = getmax();
+	while (d--)
+	{
+		for (int i = 0; i < 10; i++)buk[i].clear();
+		for (int i = 0; i < x; i++)buk[a[i] % (k * 10) / k].push_back(a[i]);
+		a.clear();
+		k *= 10;
+		for (int i = 0; i < 10; i++)a.insert(a.end(), buk[i].begin(), buk[i].end());
+		for (int i = 0; i < x - 1; i++)cout << a[i] << ' ';
+		cout << a[x - 1] << endl;
+	}
+}

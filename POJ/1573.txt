@@ -1,0 +1,65 @@
+#include<stdio.h>
+struct q
+{
+	char str;
+	int time;
+}t[20][20];
+struct p
+{
+	int x;
+	int y;
+}cur;
+void move()
+{
+	switch (t[cur.y][cur.x].str)
+	{
+	case'N':cur.y--; break;
+	case'E':cur.x++; break;
+	case'S':cur.y++; break;
+	case'W':cur.x--; break;
+	}
+}
+int main()
+{
+	int x, y, start;
+	while (scanf("%d%d%d", &y, &x, &start), x || y || start)
+	{
+		for (int i = 1; i <= y; i++)
+		{
+			char s[20];
+			scanf("%s", s);
+			for (int j = 1; j <= x; j++) 
+			{
+				t[i][j].str = s[j - 1];
+				t[i][j].time = 0;
+			}
+		}
+		cur.x = start;
+		cur.y = 1;
+		int step = 0;
+		int loopstep = 0;
+		int key = 1;//0->Exit   1->loop
+		while (1)
+		{
+			t[cur.y][cur.x].time++;
+			move();
+			step++;
+			if (cur.x<1 || cur.x>x || cur.y<1 || cur.y>y)
+			{
+				key = 0;
+				break;
+			}
+			else if (t[cur.y][cur.x].time == 1)
+			{
+				loopstep++;
+			}
+			else if (t[cur.y][cur.x].time == 2)
+			{
+				break;
+			}
+		}
+		if (!key)printf("%d step(s) to exit\n", step);
+		else printf("%d step(s) before a loop of %d step(s)\n", step - 2 * loopstep, loopstep);
+	}
+	return 0;
+}

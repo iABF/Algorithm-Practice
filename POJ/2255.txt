@@ -1,0 +1,22 @@
+#include<stdio.h>
+#include<string.h>
+void Search_Replace_PrintTree(char*mlr, char*lmr, int num)
+{
+	if (num == 0)return;
+	char root = *mlr;
+	int numl, numr;
+	for (int i = 0; i <= num - 1; i++)if (lmr[i] == root) { numl = i; numr = num - 1 - i; }
+	Search_Replace_PrintTree(mlr + 1, lmr, numl);
+	Search_Replace_PrintTree(mlr + 1 + numl, lmr + 1 + numl, numr);
+	printf("%c", root);
+}
+int main()
+{
+	char a[30], b[30];
+	while (scanf("%s%s", a, b) != EOF)
+	{
+		Search_Replace_PrintTree(a, b, strlen(a));
+		printf("\n");
+	}
+	return 0;
+}

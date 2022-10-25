@@ -1,0 +1,21 @@
+#include<iostream>
+using namespace std;
+class Cube
+{
+public:
+	int a, b, c;
+	Cube();
+	int volume();
+};
+Cube::Cube(){cin >> a >> b >> c;}
+int Cube::volume() { return a * b * c; }
+int main()
+{
+	int n;
+	cin >> n;
+	while (n--)
+	{
+		Cube c;
+		cout << c.volume() << endl;
+	}
+}

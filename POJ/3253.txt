@@ -1,0 +1,40 @@
+#include<stdio.h>
+#include<stdlib.h>
+int n;
+struct unit
+{
+	long long int length;
+}p[20050];
+int cmp(const void*x, const void*y)
+{
+	return (*(unit*)x).length - (*(unit*)y).length;
+}
+void swap(int x, int y)
+{
+	unit t;
+	t = p[x];
+	p[x] = p[y];
+	p[y] = t;
+}
+long long int ans = 0;
+void check(int pnum)
+{
+	p[pnum + 1].length += p[pnum].length;
+	ans += p[pnum + 1].length;
+	for (int i = pnum + 1; i < n - 1; i++)if (p[i].length > p[i + 1].length)swap(i, i + 1);
+}
+int main()
+{
+	while (scanf("%d", &n) != EOF)
+	{
+		ans = 0;
+		for (int i = 0; i < n; i++)
+		{
+			scanf("%d", &p[i].length);
+		}
+		qsort(p, n, sizeof(p[0]), cmp);
+		for (int i = 0; i < n - 1; i++)check(i);
+		printf("%lld\n", ans);
+	}
+	return 0;
+}

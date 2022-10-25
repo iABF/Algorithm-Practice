@@ -1,0 +1,47 @@
+#include<stdio.h>
+#include<Windows.h>
+void rchange(double *p)
+{
+	double xo, yo;
+	xo = (p[0] + p[2] + p[4]) / 3;
+	yo = (p[1] + p[3] + p[5]) / 3;
+	p[0] = (xo + p[0]) / 2;
+	p[2] = (xo + p[2]) / 2;
+	p[4] = (xo + p[4]) / 2;
+	p[1] = (yo + p[1]) / 2;
+	p[3] = (yo + p[3]) / 2;
+	p[5] = (yo + p[5]) / 2;
+}
+void revchange(double *p)
+{
+	double xmi,ymi,xsum,ysum;
+	xmi = (p[0] - p[2]) / 2;
+	ymi = (p[1] - p[3]) / 2;
+	xsum= (p[0] + p[2]) / 2;
+	ysum= (p[1] + p[3]) / 2;
+	p[0] = xmi + p[4];
+	p[1] = ymi + p[5];
+	p[2] = p[4] - xmi;
+	p[3] = p[5] - ymi;
+	p[4] = xsum;
+	p[5] = ysum;
+}
+int main()
+{
+	int t;
+	scanf("%d", &t);
+	for (int tryn = 1; tryn <= t; tryn++)
+	{
+		int n;
+		double xyz[6];
+		scanf("%d%lf%lf%lf%lf%lf%lf", &n, &xyz[0], &xyz[1], &xyz[2], &xyz[3], &xyz[4], &xyz[5]);
+		for (int i = 1; i <= n; i++)
+		{
+			rchange(xyz);
+			revchange(xyz);
+		}
+		printf("%.4lf %.4lf %.4lf %.4lf %.4lf %.4lf\n", xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
+	}
+	system("pause");
+	return 0;
+}

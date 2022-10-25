@@ -1,0 +1,21 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+using namespace std;
+int m, f = 0, k = 1;
+char c[100];
+int main()
+{
+	scanf("%s %d", c, &m);
+	for (int i = strlen(c) - 1; i >= 0; i--)
+	{
+		if (c[i] >= '0'&&c[i] <= '9')c[i] -= '0';
+		else c[i] -= ('A' - 10);
+		f += c[i] * k;
+		k *= m;
+	}
+	cout << f << endl;
+}

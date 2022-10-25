@@ -1,0 +1,25 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<algorithm>
+#include<cmath>
+using namespace std;
+int n, x, y, t, ans = 0;
+int check(int a, int b)
+{
+	while (a) 
+	{ 
+		t = b%a;
+		b = a;
+		a = t;
+	}
+	return b;
+}
+int main()
+{
+	cin >> x >> y;
+	if (y%x != 0) { cout << 0 << endl; return 0; }
+	n = y / x;
+	for (int i = 1; i*i <= n; i++)if (n%i == 0 && check(i, n / i) == 1)ans++;
+	cout << ans * 2 << endl;
+}

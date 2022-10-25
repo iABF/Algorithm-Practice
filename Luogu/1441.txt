@@ -1,0 +1,59 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 0x7f7f7f7f
+#define MAXN 20010
+#define _PI 3.14159265358979323846
+using namespace std;
+int n, m, a[23];
+int mp[104] = { 0 };
+int sel[23];
+bool vis[2050];
+int ans = 0;
+int minv = INF, maxv = 0;
+void cal()
+{
+	memset(vis, false, sizeof(vis));
+	vis[0] = true;
+	int sum = 0, cnt = 0;
+	for (int i = 0; i < n - m; i++)sum += sel[i];
+	for (int i = 0; i < n - m; i++)for (int j = sum; j >=sel[i]; j--)vis[j] = vis[j] || vis[j - sel[i]];
+	for (int i = 1; i <= sum; i++)if (vis[i])cnt++;
+	ans = max(ans, cnt);
+}
+void dfs(int cnt, int nxt)
+{
+	if (cnt >= n - m)
+	{
+		cal();
+		return;
+	}
+	for (int i = nxt; i <= maxv; i++)
+	{
+		if (mp[i])
+		{
+			mp[i]--;
+			sel[cnt] = i;
+			dfs(cnt + 1, i);
+			mp[i]++;
+		}
+	}
+}
+int main()
+{
+	cin >> n >> m;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> a[i];
+		mp[a[i]]++;
+		minv = min(minv, a[i]);
+		maxv = max(maxv, a[i]);
+	}
+	dfs(0, minv);
+	cout << ans << endl;
+}

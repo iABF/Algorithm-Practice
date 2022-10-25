@@ -1,0 +1,68 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+using namespace std;
+string a, b, ra[8], rb[8], t1, t2;
+map<string, bool>mp;
+int y = 0;
+int gethash(string f)
+{
+	int anss = 0;
+	for (int i = 0; i < f.size(); i++)anss += (i + 1)*(i + 1)*(f[i]);
+	return anss;
+}
+struct node
+{
+	string s;
+	int st;
+	node(string ss, int sss) { s = ss, st = sss; }
+};
+int bfs()
+{
+	queue<node>q;
+	mp[a] = true;
+	q.push(node(a, 0));
+	int tem;
+	while (!q.empty())
+	{
+		if (q.front().st > 10)return 0;
+		if (q.front().s == b)return q.front().st;
+		string p = q.front().s;
+		int d = q.front().st;
+		for (int i = 0; i < y; i++)
+		{
+			for (int stt = 0; stt < p.size();)
+			{
+				if ((tem = p.find(ra[i], stt)) != p.npos)
+				{
+					string pp = "";
+					for (int j = 0; j <= tem - 1; j++)pp += p[j];
+					pp += rb[i];
+					for (int j = tem + ra[i].size(); j <= p.size() - 1; j++)pp += p[j];
+					stt = tem + 1;
+					if (!mp[pp])
+					{
+						mp[pp] = true;
+						q.push(node(pp, d + 1));
+					}
+				}
+				else break;
+			}
+		}
+		q.pop();
+	}
+	return 0;
+}
+int main()
+{
+	cin >> a >> b;
+	while (y<6&&cin >> t1 >> t2)ra[y] = t1, rb[y++] = t2;
+	int ans = bfs();
+	if (ans)cout << ans << endl;
+	else cout << "NO ANSWER!" << endl;
+}

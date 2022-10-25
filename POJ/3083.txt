@@ -1,0 +1,80 @@
+#include<cstdio>
+#include<queue>
+#include<cstring>
+using namespace std;
+int w, h, left[4] = { 1,2,3,0 }, right[4] = { 3,0,1,2 }, stepnxt[4][2] = { 0,-1,-1,0,0,1,1,0 }, bfsstep[50][50];
+char mp[50][50];
+bool key,bfsvisit[50][50];
+struct cuuu { int h, w, dir; }start;
+struct Point { int x; int y; };
+bool check(int x, int y)
+{
+	if (x >= w || x < 0 || y >= h || y < 0)return false;
+	if (mp[y][x] == '#')return false;
+	return true;
+}
+int dfsl(int step, int x, int y, int d)
+{
+	if (mp[y][x] == 'E')return step;
+	int nx, ny, nd;
+	for (int i = 0; i < 4; i++)
+	{
+		nd = (left[d] - i + 4) % 4;
+		nx = x + stepnxt[nd][0];
+		ny = y + stepnxt[nd][1];
+		if (check(nx, ny))return dfsl(step + 1, nx, ny, nd);
+	}
+}
+int dfsr(int step, int x, int y, int d)
+{
+	if (mp[y][x] == 'E')return step;
+	int nx, ny, nd;
+	for (int i = 0; i < 4; i++)
+	{
+		nd = (right[d] + i) % 4;
+		nx = x + stepnxt[nd][0];
+		ny = y + stepnxt[nd][1];
+		if (check(nx, ny))return dfsr(step + 1, nx, ny, nd);
+	}
+}
+int bfs()
+{
+	queue<Point>q;
+	Point s = { start.w,start.h };
+	q.push(s);
+	bfsvisit[start.w][start.h] = true;
+	bfsstep[start.w][start.h] = 1;
+	while (!q.empty())
+	{
+		if (mp[q.front().y][q.front().x] == 'E')return bfsstep[q.front().x][q.front().y];
+		int nx, ny;
+		for (int i = 0; i < 4; i++)
+		{
+			nx = q.front().x + stepnxt[i][0];
+			ny = q.front().y + stepnxt[i][1];
+			if (check(nx, ny))if (!bfsvisit[nx][ny])s.x = nx, s.y = ny, q.push(s), bfsvisit[nx][ny] = true, bfsstep[nx][ny] = bfsstep[q.front().x][q.front().y] + 1;
+		}
+		q.pop();
+	}
+}
+int main()
+{
+	int casenum;
+	scanf("%d", &casenum);
+	while (casenum--)
+	{
+		key = false;
+		memset(bfsvisit, false, sizeof(bfsvisit));
+		scanf("%d%d", &w, &h);
+		for (int i = 0; i < h; i++)
+		{
+			scanf("%s", mp[i]);
+			for (int j = 0; !key && (j < w); j++)if (mp[i][j] == 'S')start.h = i, start.w = j, key = true;
+		}
+		if (start.h == h - 1)start.dir = 0;
+		if (start.h == 0)start.dir = 2;
+		if (start.w == w - 1)start.dir = 1;
+		if (start.w == 0)start.dir = 3;
+		printf("%d %d %d\n", dfsl(1, start.w, start.h, start.dir), dfsr(1, start.w, start.h, start.dir), bfs());
+	}
+}

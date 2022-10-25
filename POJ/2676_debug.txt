@@ -1,0 +1,100 @@
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+using namespace std;
+int cells[3][3][3][3];
+int mp[9][9];
+int T;
+int cnt;
+bool fg;
+int xx, yy;
+char ss[12];
+int chk[9] = { 0 };
+int dhk[9] = { 0 };
+int ehk[9] = { 0 };
+bool check(int x,int y)
+{
+	for (int i = 0; i < 9; i++)chk[i] = dhk[i] = ehk[i] = 0;
+	xx = x / 3;
+	yy = y / 3;
+	for (int i = 0; i < 9; i++) { if (mp[x][i] && ++chk[mp[x][i] - 1] > 1)return false; }
+	for (int i = 0; i < 9; i++) { if (mp[i][y] && ++dhk[mp[i][y] - 1] > 1)return false; }
+	for (int i = 0; i < 9; i++) { if (cells[xx][yy][i % 3][i / 3] && ++ehk[cells[xx][yy][i % 3][i / 3] - 1] > 1)return false; }
+	return true;
+}
+void dfs(int x, int y)
+{
+	if (fg)return;
+	if ((y >= 9) || cnt == 81)
+	{
+		fg = true;
+		return;
+	}
+	int nx = x, ny = y;
+	while (mp[nx][ny])
+	{
+		cout << "current xy is:" << nx << '|' << ny << endl;
+		ny = ny + (nx + 1) / 9;
+		nx = (nx + 1) % 9;
+	}
+	if (ny >= 9)
+	{
+		fg = true;
+		return;
+	}
+	cout <<"next xy is:"<< nx << '|' << ny << endl;
+	int a = nx / 3;
+	int b = ny / 3;
+	int c = nx % 3;
+	int d = ny % 3;
+	for (int i = 1; i < 10; i++)
+	{
+		mp[nx][ny] = cells[a][b][c][d] = i;
+		cnt++;
+		cout << cnt << endl;
+		cout << "check this|" <<nx<<'|'<<ny<<'|'<< i << '|' << check(nx, ny) << endl;
+		if (!check(nx, ny))
+		{
+			mp[nx][ny] = cells[a][b][c][d] = 0;
+			cnt--;
+			cout << cnt << endl;
+			continue;
+		}
+		dfs(nx, ny);
+		if (fg)return;
+		else
+		{
+			mp[nx][ny] = cells[a][b][c][d] = 0;
+			cnt--;
+			cout << cnt << endl;
+		}
+	}
+}
+int main()
+{
+	scanf("%d", &T);
+	while (T--)
+	{
+		cnt = 0;
+		fg = false;
+		for (int i = 0; i < 9; i++)
+		{
+			scanf("%s", ss);
+			for (int j = 0; j < 9; j++)
+			{
+				mp[i][j] = ss[j] - '0';
+				if (mp[i][j])cnt;
+				cells[i / 3][j / 3][i % 3][j % 3] = mp[i][j];
+			}
+		}
+
+		dfs(0, 0);
+		for (int i = 0; i < 9; i++)
+		{
+			for (int j = 0; j < 9; j++)printf("%d", mp[i][j]);
+			printf("\n");
+		}
+		cout << cnt << endl;
+		cin >> ss;
+	}
+}

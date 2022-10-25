@@ -1,0 +1,48 @@
+#include<stdio.h>
+#include<string.h>
+#include<Windows.h>
+bool mp[600][600];
+int n, k;
+bool visit[600];
+int y_x[600];
+bool find(int start)
+{
+	for (int i = 1; i <= n; i++)
+	{
+		if (mp[start][i] && !visit[i])
+		{
+			visit[i] = true;
+			if (!y_x[i] || find(y_x[i]))
+			{
+				y_x[i] = start;
+				return true;
+			}
+		}
+	}
+	return false;
+}
+int hungry()
+{
+	int firetime = 0;
+	for (int i = 1; i <= n; i++)
+	{ 
+		memset(visit, false, sizeof(visit)); 
+		if (find(i))firetime++;
+	}
+	return firetime;
+}
+int main()
+{
+	memset(mp, false, sizeof(mp));
+	memset(y_x, 0, sizeof(y_x));
+	scanf("%d%d", &n, &k);
+	for (int i = 1; i <= k; i++)
+	{
+		int m, nmm;
+		scanf("%d%d", &m, &nmm);
+		mp[m][nmm] = true;
+	}
+	printf("%d\n", hungry());
+	system("pause");
+	return 0;
+}

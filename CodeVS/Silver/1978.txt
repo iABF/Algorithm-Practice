@@ -1,0 +1,16 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+using namespace std;
+int n;
+int f[1010] = { 0 };
+int main()
+{
+	cin >> n;
+	f[2] = f[1] = 1;
+	for (int i = 3; i <= n; i++)f[i] = f[i - 1] + f[i - 2];
+	cout << f[n] << endl;
+}

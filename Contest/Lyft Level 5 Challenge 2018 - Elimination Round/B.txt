@@ -1,0 +1,31 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<stack>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 1005
+#define MOD 998244353
+typedef long long LL;
+using namespace std;
+LL t,a,b;
+bool prime(LL x)
+{
+    if(x<4)return true;
+    for(LL i=2;i*i<=x;i++)if(x%i==0)return false;
+    return true;
+}
+int main()
+{
+	cin>>t;
+	while(t--)
+    {
+        cin>>a>>b;
+        if(a-b==1&&prime(a+b))cout<<"YES\n";
+        else cout<<"NO\n";
+    }
+}

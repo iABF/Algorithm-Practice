@@ -1,0 +1,22 @@
+#include<stdio.h>
+#include<math.h>
+#include<windows.h>
+int main()
+{
+	int k;
+	double n = 1, sgn = 1, sum = 0, finalsum = 0, term = 0, s = 0;
+	printf("请输入期望达到的k：");
+	scanf("%d", &k);
+	for (; n <= k; n++, sgn *= -1)
+	{
+		s = 2 * n - 1;
+		term = sgn / s;
+		sum = sum + term;
+		//finalsum = sum * 4;
+		//printf("%d\t%20.18lf\n", (int)n, finalsum);
+	}
+	sum = sum * 4;
+	printf("sum=4*Σ[1/(2*k-1)*（-1)^(k+1)]≈%20.18lf\n", sum);
+	system("pause");
+	return 0;
+}

@@ -1,0 +1,86 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<dirent.h>
+#include<sys/stat.h>
+#include<sys/types.h>
+#include<pthread.h>
+#include <semaphore.h>
+
+#define THREAD_NUM 10
+#define CHAR_LEN 51200
+
+char source_arr[CHAR_LEN];
+char destination_arr[CHAR_LEN];
+sem_t pSem;
+
+void *copy_file(void *args) {
+    char **arg = (char **)args;
+    char *buffer;
+    FILE *in, *out;
+    in = fopen(arg[0], "rb");
+    out = fopen(arg[1], "wb");
+    int len;
+    buffer = malloc(1024);
+    while(len = fread(buffer, 1, sizeof(buffer), in)) {
+        fwrite(buffer, 1, len, out);
+    }
+    fclose(out);
+    fclose(in);
+    free(arg[0]);
+    free(arg[1]);
+    free(buffer);
+}
+
+
+void read_folder() {
+    DIR *dp = opendir(source_arr);
+    if(!dp) { // dp is a file
+        sem_wait(&pSem);
+        char *src = (char *)malloc(CHAR_LEN);
+        char *des = (char *)malloc(CHAR_LEN);
+        char *args[2];
+        args[0] = src;
+        args[1] = des;
+        strcpy(src, source_arr);
+        strcpy(des, destination_arr);
+        pthread_t p;
+        pthread_create(&p, NULL, (void *)copy_file, (void *)args);
+        pthread_join(p, NULL);
+        sem_post(&pSem);
+    } else { // dp is not a file
+        mkdir(destination_arr, S_IRWXU);
+        struct dirent *dir_info;
+        while(dir_info = readdir(dp)) {
+            if(dir_info && strcmp(dir_info->d_name, ".") && strcmp(dir_info->d_name, "..")) { // dir_info is a real folder
+                strcat(source_arr, "/");
+                strcat(destination_arr, "/");
+                strcat(source_arr, dir_info->d_name);
+                strcat(destination_arr, dir_info->d_name);
+                read_folder();
+                int i = strlen(source_arr);
+                while(source_arr[i] != '/') i--;
+                source_arr[i] = '\0';
+                i = strlen(destination_arr);
+                while(destination_arr[i] != '/') i--;
+                destination_arr[i] = '\0';
+            }
+        }
+        closedir(dp);
+    }
+}
+
+int main(int argc, char *argv[]) {
+    if (argv[1] == NULL || argv[2] == NULL) {
+        printf("Please input two dirs\n");
+        exit(1);
+    }
+    strcpy(source_arr, argv[1]);
+    strcpy(destination_arr, argv[2]);
+    mkdir(destination_arr, S_IRWXU);
+    sem_init(&pSem, 0, THREAD_NUM); // THREAD_NUM assures maximum thread numbers
+    read_folder(); // creating threads while finding folders
+    sem_destroy(&pSem);
+    printf("Mission Success.\n");
+    return 0;
+}

@@ -1,0 +1,29 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<vector>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 1000000000
+#define MAXN 200005
+using namespace std;
+int n, k, a[MAXN];
+map<long long, long long>mp;
+int main()
+{
+	cin >> n >> k;
+	for (int i = 0; i < n; i++)cin >> a[i];
+	long long maxa = (1ll << k) - 1ll, cur = 0, ans = n * (n + 1ll) / 2ll;
+	mp[0] = 1ll;
+	for (int i = 0; i < n; i++)
+	{
+		cur ^= a[i];
+		cur = mp[cur] > mp[cur^maxa] ? cur ^ maxa : cur;
+		ans -= mp[cur];
+		mp[cur]++;
+	}
+	cout << ans << endl;
+}

@@ -1,0 +1,61 @@
+#include<stdio.h>
+#include<math.h>
+#include<Windows.h>
+int main()
+{
+	while(1)
+	{
+		char sgn,s;
+		double a, b;
+		double t = 0, d = 0, e = 0, h = 0, hum = 0;
+		scanf("%c", &sgn);
+		if (sgn == 'E')break;
+		scanf("%lf %c %lf", &a, &s, &b);
+		getchar();
+		if (sgn == 'D'&&s == 'T') 
+		{ 
+			d = a; t = b;
+			e = 6.11*pow(2.718281828, (5417.753*(1 / 273.16 - (1 / (d + 273.16)))));
+			h = 0.5555*(e - 10);
+			hum = t + h;
+		}
+		else if (sgn == 'T'&&s == 'D')
+		{
+			d = b; t = a;
+			e = 6.11*pow(2.718281828, (5417.753*(1 / 273.16 - (1 / (d + 273.16)))));
+			h = 0.5555*(e - 10);
+			hum = t + h;
+		}
+		else if (sgn == 'T'&&s == 'H')
+		{
+			hum = b; t = a;
+			h = hum - t;
+			e = h / 0.5555 + 10;
+			d = 1 / (1 / 273.16 - (log(e / 6.11)) / 5417.753) - 273.16;
+		}
+		else if (sgn == 'H'&&s == 'T')
+		{
+			hum = a; t = b;
+			h = hum - t;
+			e = h / 0.5555 + 10;
+			d = 1 / (1 / 273.16 - (log(e / 6.11)) / 5417.753) - 273.16;
+		}
+		else if (sgn == 'H'&&s == 'D')
+		{
+			hum = a; d = b;
+			e = 6.11*pow(2.718281828, (5417.753*(1 / 273.16 - (1 / (d + 273.16)))));
+			h = 0.5555*(e - 10);
+			t = hum - h;
+		}
+		else if (sgn == 'D'&&s == 'H')
+		{
+			hum = b; d = a;
+			e = 6.11*pow(2.718281828, (5417.753*(1 / 273.16 - (1 / (d + 273.16)))));
+			h = 0.5555*(e - 10);
+			t = hum - h;
+		}
+		printf("T %.1f D %.1f H %.1f\n", t, d, hum);
+	}
+	system("pause");
+	return 0;
+}

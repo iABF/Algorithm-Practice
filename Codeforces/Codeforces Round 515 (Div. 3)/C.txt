@@ -1,0 +1,35 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 200005
+using namespace std;
+int n, a[MAXN * 2 + 1], num, l = MAXN, r = MAXN, t, minn;
+string c;
+vector<int>id[MAXN];
+int main()
+{
+	cin >> n;
+	cin >> c >> num;
+	a[l] = num;
+	id[num].push_back(l);
+	n--;
+	while (n--)
+	{
+		cin >> c >> num;
+		if (c[0] == 'L')a[--l] = num, id[num].push_back(l);
+		else if (c[0] == 'R')a[++r] = num, id[num].push_back(r);
+		else
+		{
+			t = id[num].size();
+			minn = INF;
+			for (int i = 0; i < t; i++)minn = min(min(r - id[num][i], id[num][i] - l), minn);
+			cout << minn << endl;
+		}
+	}
+}

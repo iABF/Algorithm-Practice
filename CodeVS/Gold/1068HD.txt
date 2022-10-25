@@ -1,0 +1,25 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+using namespace std;
+int n, m, a[355], b[125], f[45][45][45][45] = { 0 }, num[5] = { 0 }, cur[5];
+int main()
+{
+	cin >> n >> m;
+	for (int i = 1; i <= n; i++)cin >> a[i];
+	for (int i = 1; i <= m; i++)cin >> b[i], num[b[i]]++;
+	for (int i = 1; i < 5; i++)cur[i] = num[i];
+	f[0][0][0][0] = a[1];
+	for (cur[1] = 0; cur[1] <= num[1]; cur[1]++)for (cur[2] = 0; cur[2] <= num[2]; cur[2]++)for (cur[3] = 0; cur[3] <= num[3]; cur[3]++)for (cur[4] = 0; cur[4] <= num[4]; cur[4]++)
+	{
+		int summ = cur[1] + 2 * cur[2] + 3 * cur[3] + 4 * cur[4] + 1;
+		if (cur[1])f[cur[1]][cur[2]][cur[3]][cur[4]] = max(f[cur[1]][cur[2]][cur[3]][cur[4]], f[cur[1] - 1][cur[2]][cur[3]][cur[4]] + a[summ]);
+		if (cur[2])f[cur[1]][cur[2]][cur[3]][cur[4]] = max(f[cur[1]][cur[2]][cur[3]][cur[4]], f[cur[1]][cur[2] - 1][cur[3]][cur[4]] + a[summ]);
+		if (cur[3])f[cur[1]][cur[2]][cur[3]][cur[4]] = max(f[cur[1]][cur[2]][cur[3]][cur[4]], f[cur[1]][cur[2]][cur[3] - 1][cur[4]] + a[summ]);
+		if (cur[4])f[cur[1]][cur[2]][cur[3]][cur[4]] = max(f[cur[1]][cur[2]][cur[3]][cur[4]], f[cur[1]][cur[2]][cur[3]][cur[4] - 1] + a[summ]);
+	}
+	cout << f[num[1]][num[2]][num[3]][num[4]] << endl;
+}

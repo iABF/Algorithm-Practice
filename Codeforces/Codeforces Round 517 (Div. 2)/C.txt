@@ -1,0 +1,68 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 0x7f7f7f7f
+#define MAXN 1005
+#define MOD 1000000007
+#define _PI 3.14159265358979323846
+using namespace std;
+long long a, b, c;
+int nxt = 1, ansa = 0;
+bool fis[500000] = { false }, isfirst;
+int main() {
+	cin >> a >> b;
+	long long maxnum = (long long)sqrt((double)(2 * (a + b)));
+	if (maxnum*(maxnum + 1) > 2 * (a + b)) {
+		maxnum--;
+	}
+	c = a < b ? a : b;
+	isfirst = c == a;
+	while (c && nxt <= maxnum) {
+		if (c >= nxt) {
+			c -= nxt;
+			fis[nxt] = true;
+			ansa++;
+			nxt++;
+		}
+		else {
+			fis[nxt - c] = false;
+			c = 0;
+			fis[nxt] = true;
+		}
+	}
+	if (isfirst) {
+		cout << ansa << endl;
+		for (int i = 1; i <= maxnum; i++) {
+			if (fis[i]) {
+				cout << i << ' ';
+			}
+		}
+		cout << endl << maxnum - ansa << endl;
+		for (int i = 1; i <= maxnum; i++) {
+			if (!fis[i]) {
+				cout << i << ' ';
+			}
+		}
+		cout << endl;
+	}
+	else {
+		cout << maxnum - ansa << endl;
+		for (int i = 1; i <= maxnum; i++) {
+			if (!fis[i]) {
+				cout << i << ' ';
+			}
+		}
+		cout << endl << ansa << endl;
+		for (int i = 1; i <= maxnum; i++) {
+			if (fis[i]) {
+				cout << i << ' ';
+			}
+		}
+		cout << endl;
+	}
+}

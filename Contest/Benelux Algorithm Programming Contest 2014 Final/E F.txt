@@ -1,0 +1,44 @@
+#include<iostream>
+#include<cstdio>
+using namespace std;
+int cse;
+int n;
+int r1;
+struct
+{
+	int r2;
+	int r3;
+}p[100010];
+bool ok[100010];
+int main()
+{
+	scanf("%d", &cse);
+	while (cse--)
+	{
+		scanf("%d", &n);
+		for (int i = 1; i <= n; i++) 
+		{
+			scanf("%d", &r1);
+			scanf("%d %d", &p[r1].r2, &p[r1].r3);
+			ok[i] = true;
+		}
+		for (int i = 2; i <= n; i++)
+		{
+			for (int j = 1; j < i; j++)
+			{
+				if (ok[j])
+				{
+					if (p[j].r2 < p[i].r2&&p[j].r3 < p[i].r3)
+					{
+						ok[i] = false;
+						break;
+					}
+				}
+			}
+		}
+		int cnt = 0;
+		for (int i = 1; i <= n; i++)if (ok[i])cnt++;
+		printf("%d\n", cnt);
+	}
+	return 0;
+}

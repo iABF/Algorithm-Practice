@@ -1,0 +1,23 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<algorithm>
+#include<cmath>
+using namespace std;
+int x, y, t;
+int check(int a, int b)
+{
+	while (a) 
+	{ 
+		t = b%a;
+		b = a;
+		a = t;
+	}
+	return b;
+}
+int main()
+{
+	cin >> x >> y;
+	if (x > y)cout << check(y, x) << endl;
+	else cout << check(x, y) << endl;
+}

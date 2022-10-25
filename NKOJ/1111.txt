@@ -1,0 +1,90 @@
+#include<stdio.h>
+#include<Windows.h>
+#include<math.h>
+int main()
+{
+	int n, a[10000], i, i1, d, primeleft=0, primeright=0, i2, prime=0, k = 2, r, r1, r2;
+	scanf("%d", &n);
+	if (n >= 10001||n<=0)
+	{
+		printf("INCORRECT INPUT!\n");
+	}
+	else
+	{
+		for (i = 0; i <= n - 1; i++)
+		{
+			a[i] = 0;
+		}
+		for (i = 0; i <= n - 1; i++)
+		{
+			scanf("%d", &a[i]);
+			if (a[i] >= 1000000 || a[i] <= 0)
+			{
+				printf("INCORRECT INPUT!\n");
+				system("pause");
+				return 0;
+			}
+		}
+		for (i1 = 0; i1 <= i - 1; i1++)
+		{
+			r = sqrt((double(a[i1])));
+			if (a[i1] == 1)
+			{
+				primeright = 2;
+				primeleft = -1;
+			}
+			else
+			{
+				for (i2 = a[i1];; i2--)
+					{
+						r1 = sqrt((double(i2)));
+						for ( k = 2; k <= r1; k++)
+						{
+							if (i2%k == 0)
+							{
+								break;
+							}
+						}
+						if (k >= r1+1)
+						{
+							primeleft = i2;
+							break;
+						}
+					}
+				for (i2 = a[i1]+1;; i2++)
+					{
+						r2 = sqrt((double(i2)));
+						for (k = 2; k <=r2; k++)
+						{
+							if (i2%k == 0)
+							{
+								break;
+							}
+						}
+						if (k >= r2+1)
+						{
+							primeright = i2;
+							break;
+						}
+					}
+			}
+			if ((a[i1] - primeleft) <= (primeright - a[i1]))
+			{
+				prime = primeleft;
+				d = a[i1] - primeleft;
+			}
+			else
+			{
+				prime = primeright;
+				d = primeright - a[i1];
+			}
+			printf("%d %d\n", prime,d);
+			prime = 0;
+			primeleft = 0;
+			primeright = 0;
+			k = 2;
+		}
+	}
+	system("pause");
+	return 0;
+}

@@ -1,0 +1,52 @@
+#include<iostream>
+using namespace std;
+int w, h, sw, sh, mp[30][30], nxt[4][2] = { 0,-1,-1,0,0,1,1,0 }, ans;
+int ncheck(int x, int y)//1 fail 0 normal -1 block
+{
+	if (x > w || x < 1 || y > h || y < 1)return 1;
+	if (mp[y][x] == 1)return -1;
+	return 0;
+}
+void dfs(int step, int x, int y)
+{
+	if (step > 10)return;
+	for (int i = 0; i < 4; i++)
+	{
+		int nx = x, ny = y;
+		bool flag = false;
+		if (mp[ny + nxt[i][1]][nx + nxt[i][0]] == 1)continue;
+		while (!ncheck(nx + nxt[i][0], ny + nxt[i][1]))
+		{
+			if (mp[ny][nx] == 3)
+			{
+				ans = ans < step + 1 ? ans : step + 1;
+				return;
+			}
+			nx += nxt[i][0], ny += nxt[i][1];
+		}
+		if (mp[ny][nx] == 3)
+		{
+			ans = ans < step + 1 ? ans : step + 1;
+			return;
+		}
+		if (ncheck(nx + nxt[i][0], ny + nxt[i][1]) == 1)continue;
+		mp[ny + nxt[i][1]][nx + nxt[i][0]] = 0;
+		dfs(step + 1, nx, ny);
+		mp[ny + nxt[i][1]][nx + nxt[i][0]] = 1;
+	}
+}
+int main()
+{
+	while(cin >> w >> h, w || h)
+	{
+		for (int i = 1; i <= h; i++)for (int j = 1; j <= w; j++)
+		{
+			cin >> mp[i][j];
+			if (mp[i][j] == 2)sw = j, sh = i;
+		}
+		ans = 10000000;
+		dfs(0, sw, sh);
+		if (ans > 10)cout << -1 << endl;
+		else cout << ans << endl;
+	}
+}

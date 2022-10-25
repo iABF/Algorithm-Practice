@@ -1,0 +1,49 @@
+#include<iostream>
+#include<queue>
+#include<algorithm>
+#include<string>
+#include<cstdio>
+using namespace std;
+int n, a, b, f[205], ans;
+bool vis[205];
+struct A
+{
+	int num, d;
+	A(int nn, int dd) :num(nn), d(dd) {}
+};
+int bfs()
+{
+	queue<A>q;
+	q.push(A(a, 0));
+	bool flag = false;
+	while (!q.empty())
+	{
+		int c = q.front().num;
+		int dd = q.front().d;
+		vis[c] = true;
+		if (c == b)
+		{
+			flag = true;
+			break;
+		}
+		q.pop();
+		if (c + f[c] <= n && !vis[c + f[c]])q.push(A(c + f[c], ans = max(ans, dd + 1)));
+		if (c - f[c] > 0 && !vis[c - f[c]])q.push(A(c - f[c], ans = max(ans, dd + 1)));
+	}
+	if (flag)return ans;
+	else return -1;
+}
+int main()
+{
+	while (scanf("%d", &n) != EOF && n)
+	{
+		ans = 0;
+		cin >> a >> b;
+		for (int i = 1; i <= n; i++)
+		{
+			cin >> f[i];
+			vis[i] = false;
+		}
+		cout << bfs() << endl;
+	}
+}

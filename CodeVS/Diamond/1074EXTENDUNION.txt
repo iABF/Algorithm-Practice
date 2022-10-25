@@ -1,0 +1,54 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 5010
+using namespace std;
+int f[150020];
+int n, k, d, x, y;
+int findd(int x) { return f[x] == x ? x : f[x] = findd(f[x]); }
+int ans = 0;
+void Union(int x, int y)
+{
+	f[findd(x)] = findd(y);
+}
+int main()
+{
+	cin >> n >> k;
+	for (int i = 1; i <= 3*n; i++)f[i] = i;
+	for (int i = 0; i < k; i++)
+	{
+		cin >> d >> x >> y;
+		if (x > n || y > n)
+		{
+			ans++;
+			continue;
+		}
+		if (d == 1)
+		{
+			if (findd(x) == findd(y + n) || findd(x) == findd(y + n * 2))ans++;
+			else
+			{
+				Union(x, y);
+				Union(x + n, y + n);
+				Union(x + n * 2, y + n * 2);
+			}
+		}
+		else
+		{
+			if (findd(x) == findd(y) || findd(x) == findd(y + n * 2))ans++;
+			else
+			{
+				Union(x, y + n);
+				Union(x + n, y + n * 2);
+				Union(x + n * 2, y);
+			}
+		}
+	}
+	cout << ans << endl;
+}

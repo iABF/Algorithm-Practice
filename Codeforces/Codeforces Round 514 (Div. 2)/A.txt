@@ -1,0 +1,27 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 1000000000
+#define MAXN 100005
+using namespace std;
+int n, L, a;
+int t[MAXN], l[MAXN];
+int cur = 0;
+int ans = 0;
+int main()
+{
+	scanf("%d%d%d", &n, &L, &a);
+	for (int i = 0; i < n; i++)
+	{
+		scanf("%d%d", &t[i], &l[i]);
+		ans += (t[i] - cur) / a;
+		cur = t[i] + l[i];
+	}
+	ans += (L - cur) / a;
+	printf("%d\n", ans);
+}

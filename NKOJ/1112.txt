@@ -1,0 +1,26 @@
+#include<stdio.h>
+#include<Windows.h>
+int main()
+{
+	int n,a,b;
+	scanf("%d", &n);
+	for (int i = 1; i <= n; i++)
+	{
+		scanf("%d%d", &a, &b);
+		if (a <= 0 || b <= 0 || b >= a + 1)
+		{
+			printf("0\n");
+		}
+		else
+		{
+			int sum1=1, sum2=1;
+			for (int j = a - b + 1; j <= a - 1; j++)
+				sum1 *= j;
+			for (int k = 1; k <= b - 1; k++)
+				sum2 *= k;
+			printf("%d\n", sum1 / sum2);
+		}
+	}
+	system("pause");
+	return 0;
+}

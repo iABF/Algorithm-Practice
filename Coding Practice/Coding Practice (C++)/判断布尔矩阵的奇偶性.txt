@@ -1,0 +1,23 @@
+#include<iostream>
+#include<cstdio>
+using namespace std;
+#define MAXN 105
+int n, a[MAXN][MAXN], sumx[MAXN], sumy[MAXN], sum[2] = { 0 }, cur[2] = { -1,-1 };
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < n; i++)for (int j = 0; j < n; j++)
+	{
+		cin >> a[i][j];
+		sumx[i] += a[i][j];
+		sumy[j] += a[i][j];
+	}
+	for (int i = 0; i < n; i++)
+	{
+		if (sumx[i] % 2)sum[0]++, cur[0] = i;
+		if (sumy[i] % 2)sum[1]++, cur[1] = i;
+	}
+	if (sum[0] == 0 && sum[1] == 0)cout << "OK" << endl;
+	else if (sum[0] == 1 && sum[1] == 1)printf("Change bit (%d,%d)\n", cur[0] + 1, cur[1] + 1);
+	else cout << "Corrupt" << endl;
+}

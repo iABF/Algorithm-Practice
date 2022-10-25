@@ -1,0 +1,35 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+using namespace std;
+struct node { int l, r; }nde[20];
+int n;
+void lmr(int num)
+{
+	if (nde[num].l)lmr(nde[num].l);
+	cout << num << ' ';
+	if (nde[num].r)lmr(nde[num].r);
+}
+void mlr(int num)
+{
+	cout << num << ' ';
+	if (nde[num].l)mlr(nde[num].l);
+	if (nde[num].r)mlr(nde[num].r);
+}
+void lrm(int num)
+{
+	if (nde[num].l)lrm(nde[num].l);
+	if (nde[num].r)lrm(nde[num].r);
+	cout << num << ' ';
+}
+int main()
+{
+	cin >> n;
+	for (int i = 1; i <= n; i++)cin >> nde[i].l >> nde[i].r;
+	mlr(1); cout << endl;
+	lmr(1); cout << endl;
+	lrm(1); cout << endl;
+}

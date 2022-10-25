@@ -1,0 +1,34 @@
+#include<iostream>
+using namespace std;
+class Shape
+{
+	int length;
+	int width;
+public:
+	Shape(int a, int b) { length = a; width = b; }
+	int Area() { return length*width; }
+};
+class PaintCost
+{
+public:
+	int getCost(int area, int unit)const { return area*unit; }
+};
+class Rectangle :public Shape, public PaintCost
+{
+public:
+	int unit;
+	int area;
+	int cost;
+	Rectangle(int a,int b,int c):Shape(a,b)
+	{
+		unit = c;
+		cost = getCost(Area(), unit);
+	}
+};
+int main()
+{
+	int a, b, c;
+	cin >> a >> b >> c;
+	Rectangle r(a, b, c);
+	cout << r.cost;
+}

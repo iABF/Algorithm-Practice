@@ -1,0 +1,37 @@
+#include<stdio.h>
+#include<Windows.h>
+#include<string.h>
+#define s 1000
+int main()
+{
+	char haab[19][7] = { "pop", "no", "zip", "zotz", "tzec", "xul", "yoxkin", "mol", "chen", "yax", "zac", "ceh", "mac", "kankin", "muan", "pax", "koyab", "cumhu","uayet" };
+	char tzolkin[20][9] = { "imix","ik","akbal","kan","chicchan","cimi","manik","lamat","muluk","ok","chuen","eb","ben","ix","mem","cib","caban","eznab","canac","ahau" };
+	int n;
+	int hnum[s], hyear[s], hmonnum[s];
+	char hmon[7];
+	int day[s];
+	int tyear[s], tnum[s], tmonnum[s];
+	scanf("%d", &n);
+	for (int i = 1; i <= n; i++)
+	{
+		scanf("%d. %s %d", &hnum[i-1], hmon, &hyear[i - 1]);
+		for (int j = 0; j <= 18; j++)
+		{
+			if (strcmp(hmon, haab[j]) == 0)hmonnum[i - 1] = j + 1;
+		}
+		day[i - 1] = hyear[i - 1] * 365 + (hmonnum[i - 1] - 1) * 20 + hnum[i - 1] + 1;
+		if (day[i - 1] % 260 == 0)tyear[i - 1] = (day[i - 1] / 260) - 1;
+		else tyear[i - 1] = day[i - 1] / 260;
+		if (day[i - 1] % 13 == 0)tnum[i - 1] = 13;
+		else tnum[i - 1] = day[i - 1] % 13;
+		if (day[i - 1] % 20 == 0)tmonnum[i - 1] = 19;
+		else tmonnum[i - 1] = (day[i - 1] % 20) - 1;
+	}
+	printf("%d\n", n);
+	for (int i = 1; i <= n; i++)
+	{
+		printf("%d %s %d\n", tnum[i - 1], tzolkin[tmonnum[i - 1]], tyear[i - 1]);
+	}
+	system("pause");
+	return 0;
+}

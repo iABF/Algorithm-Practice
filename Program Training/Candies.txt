@@ -1,0 +1,37 @@
+#include<iostream>
+#include<queue>
+#include<algorithm>
+#include<string>
+#include<vector>
+#include<cstring>
+#include<cstdio>
+#define INF 9999999
+using namespace std;
+int n, m;
+int dis[30004] = { 0 };
+struct Edge
+{
+	int u, v, d;
+}e[150004];
+void bellman_ford()
+{
+	bool key = false;
+	for (int i = 1; i <= n - 1; i++)
+	{
+		key = false;
+		for (int j = 0; j < m; j++)if (dis[e[j].v] > dis[e[j].u] + e[j].d)key = true, dis[e[j].v] = dis[e[j].u] + e[j].d;
+		if (!key)break;
+	}
+}
+int main()
+{
+	cin >> n >> m;
+	for (int i = 0; i < m; i++)
+	{
+		cin >> e[i].u >> e[i].v >> e[i].d;
+	}
+	memset(dis, INF, sizeof(dis));
+	dis[1] = 0;
+	bellman_ford();
+	cout << dis[n] << endl;
+}

@@ -1,0 +1,56 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int m,a,b;
+struct road{
+    int from;
+    int to;
+    int cost;
+
+}r[200005];
+long long dis[10005];
+int tmp;
+int n;
+void bf(){
+    bool key;
+    for(int i=1;i<=n+1;++i){
+        key=false;
+        for(int j=0;j<2*m;++j){
+            if(dis[r[j].from]==-1)continue;
+            if((dis[r[j].to]>dis[r[j].from]+r[j].cost)||dis[r[j].to]==-1){
+                dis[r[j].to]=dis[r[j].from]+r[j].cost;
+                key=true;
+            }
+        }
+        if(!key)break;
+    }
+}
+int main() {
+    while(cin>>m>>a>>b){
+        n=0;
+        for(int i=0;i<m;++i){
+            cin>>r[i].from>>r[i].to>>r[i].cost;
+            r[i+m].from=r[i].from;
+            r[i+m].to=r[i].to;
+            r[i+m].cost=r[i].cost;
+            n=max(n,max(r[i].from,r[i].to));
+        }
+        for(int i=0;i<10005;++i)dis[i]=-1;
+        for(int i=0;i<a;++i){
+            cin>>tmp;
+            dis[tmp]=0;
+        }
+        bf();
+        long long ans;
+        cin>>tmp;
+        ans=dis[tmp];
+        for(int i=1;i<b;++i){
+            cin>>tmp;
+            ans=min(ans,dis[tmp]);
+        }
+        cout<<ans<<endl;
+
+    }
+
+}

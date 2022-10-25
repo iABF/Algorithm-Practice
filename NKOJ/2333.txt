@@ -1,0 +1,16 @@
+#include<stdio.h>
+#include<Windows.h>
+int main()
+{
+	int t, m, n;
+	scanf("%d", &t);
+	for (int i = 1; i <= t; i++)
+	{
+		scanf("%d%d", &n, &m);
+		int s = m + n - 2;
+		if (s % 3 == 0)printf("Too Peng!\n");
+		else printf("Don't worry!\n");
+	}
+	system("pause");
+	return 0;
+}

@@ -1,0 +1,53 @@
+#include<stdio.h>
+#include<string.h>
+#include<Windows.h>
+#define inf 9999999
+int m, n;
+int level[105];
+int f = 0;
+struct Road
+{
+	int d;
+	int sn, en;
+}r[10000];
+int dis[105];
+void bellman_ford(int min,int max)
+{
+	memset(dis, inf, sizeof(dis));
+	dis[0] = 0;
+	for (int i = 1; i <= n; i++)//(n+1)points
+	{
+		bool key = 0;
+		for (int j = 0; j < f; j++)
+		{
+			if ((r[j].sn != 0 && (level[r[j].sn]<min || level[r[j].sn]>max)) || (level[r[j].en]<min || level[r[j].en]>max))continue;
+			else if (dis[r[j].en] > dis[r[j].sn] + r[j].d)key = 1, dis[r[j].en] = dis[r[j].sn] + r[j].d;
+		}
+		if (!key)return;
+	}
+}
+int main()
+{
+	scanf("%d%d", &m, &n);
+	int x;
+	for (int i = 1; i <= n; i++)
+	{
+		scanf("%d%d%d", &r[f].d, &level[i], &x);
+		r[f].en = i;
+		r[f++].sn = 0;
+		while (x--)
+		{
+			scanf("%d%d", &r[f].sn,&r[f].d);
+			r[f++].en = i;
+		}
+	}
+	int maxm = inf;
+	for (int i = 0; i <= m; i++)
+	{
+		bellman_ford(level[1] - m + i, level[1] + i);
+		maxm = maxm < dis[1] ? maxm : dis[1];
+	}
+	printf("%d\n", maxm);
+	system("pause");
+	return 0;
+}

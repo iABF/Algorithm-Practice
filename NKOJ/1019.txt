@@ -1,0 +1,66 @@
+#include<stdio.h>
+#include<Windows.h>
+int main()
+{
+	char a[105], b[105], c[105], t;
+	int na, nb, nc;
+	for (int i = 0;; i++)
+	{
+		t = getchar();
+		if (t == ' ' || t == '\n')
+		{
+			na = i;
+			break;
+		}
+		else if (t >= '0' || t <= '9')
+		{
+			a[i] = t;
+		}
+	}
+	for (int i = 0;; i++)
+	{
+		t = getchar();
+		if (t == ' ' || t == '\n')
+		{
+			nb = i;
+			break;
+		}
+		else if (t >= '0' || t <= '9')
+		{
+			b[i] = t;
+		}
+	}
+	nc = na >= nb ? na : nb;
+	for (int i = nc - 1, j = 0; i >= 0; i--, j++)
+	{
+		if (i >= nc - na)a[i] = a[na - 1 - j];
+		else a[i] = '0';
+	}
+	for (int i = nc - 1, j = 0; i >= 0; i--, j++)
+	{
+		if (i >= nc - nb)b[i] = b[nb - 1 - j];
+		else b[i] = '0';
+	}
+	for (int i = 0; i <= nc; i++)c[i] = '0';
+	for (int i = nc; i >= 1; i--)
+	{
+		if (a[i - 1] + b[i - 1] + c[i] - 3 * '0' >= 10)
+		{
+			c[i - 1]++;
+			c[i] = c[i] + a[i - 1] - '0' + b[i - 1] - '0' - 10;
+		}
+		else c[i] = c[i] + a[i - 1] - '0' + b[i - 1] - '0';
+	}
+	if (c[0] != '0')
+	{
+		for (int i = 0; i <= nc; i++)printf("%c", c[i]);
+		printf("\n");
+	}
+	else
+	{
+		for (int i = 1; i <= nc; i++)printf("%c", c[i]);
+		printf("\n");
+	}
+	system("pause");
+	return 0;
+}

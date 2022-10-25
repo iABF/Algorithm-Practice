@@ -1,0 +1,13 @@
+#include<stdio.h>
+#include<Windows.h>
+#include<math.h>
+int main()
+{
+	double h, v, g;
+	scanf("%lf%lf%lf", &h, &v, &g);
+	double d;
+	d = v*sqrt(v*v + 2 * g*h) / g;
+	printf("%.4lf\n", d);
+	system("pause");
+	return 0;
+}

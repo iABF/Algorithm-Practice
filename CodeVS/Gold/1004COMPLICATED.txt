@@ -1,0 +1,210 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+using namespace std;
+char ss[7];
+struct QP
+{
+	char mp[7][7];
+	int x1, y1, x2, y2;
+	char color;
+	int step;
+}ori;
+bool vis[4000000];
+int MOD = 3733799;
+int gethash(QP m)
+{
+	int ans = 0;
+	for (int i = 1; i <= 4; i++)for (int j = 1; j <= 4; j++)
+	{
+		if (m.mp[i][j] == 'W')ans += 1;
+		else if (m.mp[i][j] == 'B')ans += 2;
+		ans *= 3;
+	}
+	ans %= MOD;
+	return ans;
+}
+bool check(QP m)
+{
+	if (m.mp[1][1] == m.mp[1][2] && m.mp[1][2] == m.mp[1][3] && m.mp[1][3] == m.mp[1][4])return true;
+	if (m.mp[2][1] == m.mp[2][2] && m.mp[2][2] == m.mp[2][3] && m.mp[2][3] == m.mp[2][4])return true;
+	if (m.mp[3][1] == m.mp[3][2] && m.mp[3][2] == m.mp[3][3] && m.mp[3][3] == m.mp[3][4])return true;
+	if (m.mp[4][1] == m.mp[4][2] && m.mp[4][2] == m.mp[4][3] && m.mp[4][3] == m.mp[4][4])return true;
+	if (m.mp[1][1] == m.mp[2][1] && m.mp[2][1] == m.mp[3][1] && m.mp[3][1] == m.mp[4][1])return true;
+	if (m.mp[1][2] == m.mp[2][2] && m.mp[2][2] == m.mp[3][2] && m.mp[3][2] == m.mp[4][2])return true;
+	if (m.mp[1][3] == m.mp[2][3] && m.mp[2][3] == m.mp[3][3] && m.mp[3][3] == m.mp[4][3])return true;
+	if (m.mp[1][4] == m.mp[2][4] && m.mp[2][4] == m.mp[3][4] && m.mp[3][4] == m.mp[4][4])return true;
+	if (m.mp[1][1] == m.mp[2][2] && m.mp[2][2] == m.mp[3][3] && m.mp[3][3] == m.mp[4][4])return true;
+	if (m.mp[1][4] == m.mp[2][3] && m.mp[2][3] == m.mp[3][2] && m.mp[3][2] == m.mp[4][1])return true;
+	return false;
+}
+int bfs(QP mm, char cc)
+{
+	queue<QP>q;
+	memset(vis, false, sizeof(vis));
+	mm.color = cc;
+	q.push(mm);
+	int k;
+	while (!q.empty())
+	{
+		QP m = q.front();
+		if (check(m))return m.step;
+		m.step++;
+		if (m.x1 + 1 <= 4 && m.color == m.mp[m.x1 + 1][m.y1])
+		{
+			m.mp[m.x1][m.y1] = m.mp[m.x1 + 1][m.y1];
+			m.mp[m.x1 + 1][m.y1] = 'O';
+			m.x1 += 1;
+			if (!vis[k = gethash(m)])
+			{
+				vis[k] = true;
+				m.color = 'B' + 'W' - m.color;
+				q.push(m);
+				m.color = 'B' + 'W' - m.color;
+			}
+			m.x1 -= 1;
+			m.mp[m.x1 + 1][m.y1] = m.mp[m.x1][m.y1];
+			m.mp[m.x1][m.y1] = 'O';
+		}
+		if (m.x1 - 1 >= 1 && m.color == m.mp[m.x1 - 1][m.y1])
+		{
+			m.mp[m.x1][m.y1] = m.mp[m.x1 - 1][m.y1];
+			m.mp[m.x1 - 1][m.y1] = 'O';
+			m.x1 -= 1;
+			if (!vis[k = gethash(m)])
+			{
+				vis[k] = true;
+				m.color = 'B' + 'W' - m.color;
+				q.push(m);
+				m.color = 'B' + 'W' - m.color;
+			}
+			m.x1 += 1;
+			m.mp[m.x1 - 1][m.y1] = m.mp[m.x1][m.y1];
+			m.mp[m.x1][m.y1] = 'O';
+		}
+		if (m.y1 + 1 <= 4 && m.color == m.mp[m.x1][m.y1 + 1])
+		{
+			m.mp[m.x1][m.y1] = m.mp[m.x1][m.y1 + 1];
+			m.mp[m.x1][m.y1 + 1] = 'O';
+			m.y1 += 1;
+			if (!vis[k = gethash(m)])
+			{
+				vis[k] = true;
+				m.color = 'B' + 'W' - m.color;
+				q.push(m);
+				m.color = 'B' + 'W' - m.color;
+			}
+			m.y1 -= 1;
+			m.mp[m.x1][m.y1 + 1] = m.mp[m.x1][m.y1];
+			m.mp[m.x1][m.y1] = 'O';
+		}
+		if (m.y1 - 1 >= 1 && m.color == m.mp[m.x1][m.y1 - 1])
+		{
+			m.mp[m.x1][m.y1] = m.mp[m.x1][m.y1 - 1];
+			m.mp[m.x1][m.y1 - 1] = 'O';
+			m.y1 -= 1;
+			if (!vis[k = gethash(m)])
+			{
+				vis[k] = true;
+				m.color = 'B' + 'W' - m.color;
+				q.push(m);
+				m.color = 'B' + 'W' - m.color;
+			}
+			m.y1 += 1;
+			m.mp[m.x1][m.y1 - 1] = m.mp[m.x1][m.y1];
+			m.mp[m.x1][m.y1] = 'O';
+		}
+		if (m.x2 + 1 <= 4 && m.color == m.mp[m.x2 + 1][m.y2])
+		{
+			m.mp[m.x2][m.y2] = m.mp[m.x2 + 1][m.y2];
+			m.mp[m.x2 + 1][m.y2] = 'O';
+			m.x2 += 1;
+			if (!vis[k = gethash(m)])
+			{
+				vis[k] = true;
+				m.color = 'B' + 'W' - m.color;
+				q.push(m);
+				m.color = 'B' + 'W' - m.color;
+			}
+			m.x2 -= 1;
+			m.mp[m.x2 + 1][m.y2] = m.mp[m.x2][m.y2];
+			m.mp[m.x2][m.y2] = 'O';
+		}
+		if (m.x2 - 1 >= 1 && m.color == m.mp[m.x2 - 1][m.y2])
+		{
+			m.mp[m.x2][m.y2] = m.mp[m.x2 - 1][m.y2];
+			m.mp[m.x2 - 1][m.y2] = 'O';
+			m.x2 -= 1;
+			if (!vis[k = gethash(m)])
+			{
+				vis[k] = true;
+				m.color = 'B' + 'W' - m.color;
+				q.push(m);
+				m.color = 'B' + 'W' - m.color;
+			}
+			m.x2 += 1;
+			m.mp[m.x2 - 1][m.y2] = m.mp[m.x2][m.y2];
+			m.mp[m.x2][m.y2] = 'O';
+		}
+		if (m.y2 + 1 <= 4 && m.color == m.mp[m.x2][m.y2 + 1])
+		{
+			m.mp[m.x2][m.y2] = m.mp[m.x2][m.y2 + 1];
+			m.mp[m.x2][m.y2 + 1] = 'O';
+			m.y2 += 1;
+			if (!vis[k = gethash(m)])
+			{
+				vis[k] = true;
+				m.color = 'B' + 'W' - m.color;
+				q.push(m);
+				m.color = 'B' + 'W' - m.color;
+			}
+			m.y2 -= 1;
+			m.mp[m.x2][m.y2 + 1] = m.mp[m.x2][m.y2];
+			m.mp[m.x2][m.y2] = 'O';
+		}
+		if (m.y2 - 1 >= 1 && m.color == m.mp[m.x2][m.y2 - 1])
+		{
+			m.mp[m.x2][m.y2] = m.mp[m.x2][m.y2 - 1];
+			m.mp[m.x2][m.y2 - 1] = 'O';
+			m.y2 -= 1;
+			if (!vis[k = gethash(m)])
+			{
+				vis[k] = true;
+				m.color = 'B' + 'W' - m.color;
+				q.push(m);
+				m.color = 'B' + 'W' - m.color;
+			}
+			m.y2 += 1;
+			m.mp[m.x2][m.y2 - 1] = m.mp[m.x2][m.y2];
+			m.mp[m.x2][m.y2] = 'O';
+		}
+		q.pop();
+	}
+	return 999999;
+}
+int main()
+{
+	ori.x1 = ori.x2 = ori.y1 = ori.y2 = 0;
+	for (int i = 1; i <= 4; i++)
+	{
+		scanf("%s", ss);
+		for (int j = 1; j <= 4; j++)
+		{
+			ori.mp[i][j] = ss[j - 1];
+			if (ori.mp[i][j] == 'O')
+			{
+				if (!ori.x1)ori.x1 = i, ori.y1 = j;
+				else ori.x2 = i, ori.y2 = j;
+			}
+		}
+	}
+	ori.step = 0;
+	int a, b;
+	b = bfs(ori, 'W');
+	a = bfs(ori, 'B');
+	cout << min(a,b) << endl;
+}

@@ -1,0 +1,101 @@
+#include<stdio.h>
+#include<Windows.h>
+typedef struct
+{
+	int x, y;
+	char direction;
+}ROBOT;
+ROBOT robot[500];
+char L[105],R[105];
+int a, b;
+int n, m;
+int move(int id, char act, int rep)
+{
+	char dir;
+	int returnnum = 0;
+	switch (act)
+	{
+	case'L':while (rep--)robot[id - 1].direction = L[robot[id - 1].direction]; break;
+	case'R':while (rep--)robot[id - 1].direction = R[robot[id - 1].direction]; break;
+	case'F':
+		dir = robot[id - 1].direction;
+		switch (dir)
+		{
+		case'W':while (rep--)
+		{
+			if (returnnum)break;
+			robot[id - 1].x--;
+			if (robot[id - 1].x < 1) { returnnum = -1; break; }
+			for (int i = 0; i <= n - 1; i++)if (id - 1 != i&&robot[id - 1].x == robot[i].x&&robot[id - 1].y == robot[i].y) { returnnum = i + 1; break; }
+		}break;
+		case'S':while (rep--)
+		{
+			if (returnnum)break;
+			robot[id - 1].y--;
+			if (robot[id - 1].y < 1) { returnnum = -1; break; }
+			for (int i = 0; i <= n - 1; i++)if (id - 1 != i&&robot[id - 1].x == robot[i].x&&robot[id - 1].y == robot[i].y) { returnnum = i + 1; break; }
+		}break;
+		case'E':while (rep--)
+		{
+			if (returnnum)break;
+			robot[id - 1].x++;
+			if (robot[id - 1].x > a) { returnnum = -1; break; }
+			for (int i = 0; i <= n - 1; i++)if (id - 1 != i&&robot[id - 1].x == robot[i].x&&robot[id - 1].y == robot[i].y) { returnnum = i + 1; break; }
+		}break;
+		case'N':while (rep--)
+		{
+			if (returnnum)break;
+			robot[id - 1].y++;
+			if (robot[id - 1].y > b) { returnnum = -1; break; }
+			for (int i = 0; i <= n - 1; i++)if (id - 1 != i&&robot[id - 1].x == robot[i].x&&robot[id - 1].y == robot[i].y) { returnnum = i + 1; break; }
+		}break;
+		}
+	}return returnnum;
+}
+int main()
+{
+	int k;
+	L['W'] = 'S';
+	L['S'] = 'E';
+	L['E'] = 'N';
+	L['N'] = 'W';
+	R['W'] = 'N';
+	R['S'] = 'W';
+	R['E'] = 'S';
+	R['N'] = 'E';
+	scanf("%d", &k);
+	while (k--)
+	{
+		int key = 1;
+		int keyid, keys;
+		scanf("%d%d", &a, &b);
+		scanf("%d%d", &n, &m);
+		for (int i = 0; i <= n - 1; i++)scanf("%d %d %c", &robot[i].x, &robot[i].y, &robot[i].direction);
+		while (m--)
+		{
+			int id, rep;
+			char act;
+			int s;
+			scanf("%d %c %d", &id, &act, &rep);
+			if (key != 1)continue;
+			if ((s = move(id, act, rep)) > 0) 
+			{
+				keyid = id;
+				keys = s;
+				key = 0;
+				continue;
+			}
+			else if (s == -1) 
+			{
+				keyid = id;
+				key = -1;
+				continue;
+			}
+		}
+		if (key == 1)printf("OK\n");
+		else if (key == -1)printf("Robot %d crashes into the wall\n", keyid);
+		else if (key == 0)printf("Robot %d crashes into robot %d\n", keyid, keys);
+	}
+	system("pause");
+	return 0;
+}

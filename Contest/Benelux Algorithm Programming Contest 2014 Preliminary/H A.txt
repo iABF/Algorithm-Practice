@@ -1,0 +1,21 @@
+#include<cstdio>
+#include<iostream>
+using namespace std;
+int main()
+{
+	int n;
+	int k;
+	scanf("%d", &n);
+	while (n--)
+	{
+		scanf("%d", &k);
+		if (k >= 185)k -= 180;
+		int t;
+		if (k % 10 <= 4)t = k / 10;
+		else t = k / 10 + 1;
+		if (t == 0)t = 18;
+		if (t < 10)printf("0%d\n", t);
+		else printf("%d\n", t);
+	}
+	return 0;
+}

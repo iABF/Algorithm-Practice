@@ -1,0 +1,46 @@
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+using namespace std;
+int n, to[30][30], targetnum[30], color[30], ans;
+bool clrchk[10], vis[30];
+char space, s[30];
+void dfs(int x)
+{
+	if (vis[x])return;
+	vis[x] = true;
+	for (int i = 0; i < targetnum[x]; i++)
+	{
+		if (vis[to[x][i]])continue;
+		vis[to[x][i]] = true;
+		for (int j = 0; j < 10; j++)clrchk[j] = false;
+		for (int j = 0; j < targetnum[to[x][i]]; j++)if (vis[to[to[x][i]][j]])clrchk[color[to[to[x][i]][j]]] = true;
+		for (int j = 1; j < 10; j++)if (!clrchk[j])
+		{
+			color[to[x][i]] = j;
+			if (j > ans)ans = j;
+			break;
+		}
+		dfs(to[x][i]);
+	}
+}
+int main()
+{
+	while (scanf("%d", &n), n)
+	{
+		memset(vis, false, sizeof(vis));
+		memset(color, 0, sizeof(color));
+		color[0] = ans = 1;
+		for (int i = 0; i < n; i++)
+		{
+			scanf("%c:", &space);
+			scanf("%s", s);
+			targetnum[i] = strlen(s);
+			for (int j = 0; j < targetnum[i]; j++)to[i][j] = s[j] - 'A';
+		}
+		for (int i = 0; i < n; i++)dfs(i);
+		if (ans == 1)printf("1 channel needed.\n");
+		else printf("%d channels needed.\n", ans);
+	}
+}

@@ -1,0 +1,125 @@
+#include<stdio.h>
+#include<Windows.h>
+#include<string.h>
+char a[100][100];
+char b[100][100];
+int main()
+{
+	int i, m;
+	scanf("%s", a[0]);
+	int l = strlen(a[0]);
+	getchar();
+	for (int k = 0, i = 1; i <= 99 && k == 0; i++)
+	{
+		for (int j = 0; j <= l; j++)
+		{
+			a[i][j] = getchar();
+		}
+		if (a[i][0]==' ')k++;
+		m = i;
+	}
+	for (i = 0; i <= m - 1; i++)
+	{
+		for (int j = 0; j <= l - 1; j++)
+		{
+			b[i][j] = a[m - 1 - i][l - 1 - j];
+			switch (b[i][j])
+			{
+			case'3':
+			{
+				b[i][j] = 'E';
+				break;
+			}
+			case'6':
+			{
+				b[i][j] = '9';
+				break;
+			}
+			case'7':
+			{
+				b[i][j] = 'L';
+				break;
+			}
+			case'9':
+			{
+				b[i][j] = '6';
+				break;
+			}
+			case'W':
+			{
+				b[i][j] = 'M';
+				break;
+			}
+			case'E':
+			{
+				b[i][j] = '3';
+				break;
+			}
+			case'P':
+			{
+				b[i][j] = 'd';
+				break;
+			}
+			case'L':
+			{
+				b[i][j] = '7';
+				break;
+			}
+			case'M':
+			{
+				b[i][j] = 'W';
+				break;
+			}
+			case'q':
+			{
+				b[i][j] = 'b';
+				break;
+			}
+			case'w':
+			{
+				b[i][j] = 'm';
+				break;
+			}
+			case'u':
+			{
+				b[i][j] = 'n';
+				break;
+			}
+			case'p':
+			{
+				b[i][j] = 'd';
+				break;
+			}
+			case'a':
+			{
+				b[i][j] = 'e';
+				break;
+			}
+			case'd':
+			{
+				b[i][j] = 'p';
+				break;
+			}
+			case'b':
+			{
+				b[i][j] = 'q';
+				break;
+			}
+			case'm':
+			{
+				b[i][j] = 'w';
+				break;
+			}
+			case'n':
+			{
+				b[i][j] = 'u';
+				break;
+			}
+			}
+		}
+	}
+	for (int i = 0; i <= m - 1; i++)
+		puts(b[i]);
+	system("pause");
+	return 0;
+}

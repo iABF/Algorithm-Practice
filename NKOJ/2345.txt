@@ -1,0 +1,38 @@
+#include<cstdio>
+#include<vector>
+#include<queue>
+using namespace std;
+int m, n;
+int u;
+vector<int>mp[90000];
+struct Point { int x, y; bool vis; Point(int a, int b); };
+Point::Point(int a, int b) { x = a; y = b; vis = true; }
+int searchmin(int ml)
+{
+	int min = 1e9;
+	for (int i = 1; i <= m; i++)
+		for (int j = 1; j <= n; j++)
+			if (mp[i][j] >= ml && mp[i][j] < min)
+				min = mp[i][j];
+	return min;
+}
+void bfs(int x, int y)
+{
+	queue<Point>q;
+	Point b1(x, y);
+	q.push(b1);
+
+}
+int main()
+{
+	scanf("%d %d", &m, &n);
+	for (int i = 0; i < 90000; i++)mp[i].push_back(0);
+	int min = 1e9;
+	for (int i = 1; i <= m; i++)for (int j = 1; j <= n; j++)
+	{
+		scanf("%d", &u);
+		mp[i].push_back(u);
+		if (u < min)min = u;
+	}
+
+}

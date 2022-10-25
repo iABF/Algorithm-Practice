@@ -1,0 +1,47 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 20010
+using namespace std;
+int n, m;
+struct road
+{
+	int a, b, v;
+}r[100010];
+int f[40010];
+int findd(int x)
+{
+	return f[x] == x ? x : f[x] = findd(f[x]);
+}
+bool cmp(const road&a, const road&b)
+{
+	return a.v > b.v;
+}
+int main()
+{
+	cin >> n >> m;
+	for (int i = 1; i <= 2 * n; i++)f[i] = i;
+	for (int i = 0; i < m; i++)cin >> r[i].a >> r[i].b >> r[i].v;
+	sort(r, r + m, cmp);
+	for (int i = 0; i < m; i++)
+	{
+		int x = findd(r[i].a), y = findd(r[i].b);
+		if (x != y)
+		{
+			f[x] = findd(r[i].b + n);
+			f[y] = findd(r[i].a + n);
+		}
+		else
+		{
+			cout << r[i].v << endl;
+			return 0;
+		}
+	}
+	cout << 0 << endl;
+}

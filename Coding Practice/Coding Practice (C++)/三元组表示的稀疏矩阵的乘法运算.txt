@@ -1,0 +1,46 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+int r[2], c[2], cnt[2], t[3], sum = 0;
+struct Matrix
+{
+	int a, b, num;
+	Matrix(int aa, int bb, int numm) :a(aa), b(bb), num(numm) {}
+};
+vector<Matrix>a, b, ans;
+int main()
+{
+	cin >> r[0] >> c[0] >> cnt[0];
+	for (int i = 0; i < cnt[0]; i++)
+	{
+		cin >> t[0] >> t[1] >> t[2];
+		a.push_back(Matrix(t[0], t[1], t[2]));
+	}
+	cin >> r[1] >> c[1] >> cnt[1];
+	for (int i = 0; i < cnt[1]; i++)
+	{
+		cin >> t[0] >> t[1] >> t[2];
+		b.push_back(Matrix(t[0], t[1], t[2]));
+	}
+	if (c[0] != r[1])cout << "ERROR" << endl;//这里判断ERROR
+	else
+	{
+		for (int i = 1; i <= r[0]; i++)for (int j = 1; j <= c[1]; j++)//首先确定最终矩阵的行列，这样保证了结果的顺序是正确的
+		{
+			sum = 0;
+			for (int x = 0, y = 0, k = 1; x < cnt[0] && y < cnt[1] && k <= c[0];)//求和部分，比较难懂（这里忽略k就行，k只对程序效率有优化，没啥用）
+			{
+				if (a[x].a < i)x++;//a是m1矩阵，b是m2矩阵，如果a的第x个三元组的行数小于i（当前行数）x就还得涨
+				else if (a[x].a > i)break;//如果x涨过头了就直接break
+				else if (b[y].b != j)y++;//如果b的第y个三元组的列数不等于j，y就得涨（等于j才能有机会相乘）
+				else if (a[x].b == b[y].a)sum += a[x].num*b[y].num, x++, y++, k++;
+				//↑如果a[x]的列数等于b[y]的行数（注意：此时是在else里，所以必有a[x]的行数是i且b[y]的列数是j）sum加上两个数的和，x和y都增加，k也增加（k其实没啥用忽略就行）
+				else if (a[x].b > b[y].a)y++;//如果a[x]的列数大于b[y]的行数，那么y就要增长，x不用变（y得追上x）
+				else x++;//反之亦然
+			}
+			if(sum)ans.push_back(Matrix(i, j, sum));//把求出的和放入新的vector（ans）里
+		}
+		if (ans.empty())cout << "The answer is a Zero Matrix" << endl;//如果ans是空的就是零矩阵
+		else for (int i = 0, d = ans.size(); i < d; i++)cout << ans[i].a << ' ' << ans[i].b << ' ' << ans[i].num << endl;
+	}
+}//这个方法的好处是不需要建立矩阵数组，非常精巧

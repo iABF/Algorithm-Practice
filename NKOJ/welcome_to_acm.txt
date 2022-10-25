@@ -1,0 +1,21 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+using namespace std;
+int n, a, b, ans = 1, maxx = 1;
+int main()
+{
+	scanf("%d %d", &n, &b);
+	for (int i = 1; i < n; i++)
+	{
+		scanf("%d", &a);
+		if (a <= 2 * b)
+		{
+			ans++;
+			maxx = max(ans, maxx);
+		}
+		else ans = 1;
+		b = a;
+	}
+	printf("%d\n", maxx);
+}

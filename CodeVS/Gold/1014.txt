@@ -1,0 +1,15 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+using namespace std;
+int f[20010] = { 0 }, n, v, s[35];
+int main()
+{
+	cin >> v >> n;
+	for (int i = 1; i <= n; i++)cin >> s[i];
+	for (int i = 1; i <= n; i++)for (int j = v; j >=s[i]; j--)if (f[j - s[i]] + s[i] <= v)f[j] = max(f[j], f[j - s[i]] + s[i]);
+	cout << v - f[v] << endl;
+}

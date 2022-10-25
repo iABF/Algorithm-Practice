@@ -1,0 +1,74 @@
+#include<iostream>
+#include<cstdio>
+using namespace std;
+#define MOD 1000000007
+int n;
+class mtx
+{
+public:
+	long long dat[2][2];
+	mtx(long long a = 0, long long b = 0, long long c = 0, long long d = 0)
+	{
+		dat[0][0] = a;
+		dat[0][1] = b;
+		dat[1][0] = c;
+		dat[1][1] = d;
+	}
+};
+mtx mtxcal(mtx x, mtx y)
+{
+	long long a, b, c, d;
+	a = (x.dat[0][0] * y.dat[0][0] + x.dat[0][1] * y.dat[1][0]) % MOD;
+	b = (x.dat[0][0] * y.dat[0][1] + x.dat[0][1] * y.dat[1][1]) % MOD;
+	c = (x.dat[1][0] * y.dat[0][0] + x.dat[1][1] * y.dat[1][0]) % MOD;
+	d = (x.dat[1][0] * y.dat[0][1] + x.dat[1][1] * y.dat[1][1]) % MOD;
+	return mtx(a, b, c, d);
+}
+mtx qmod(long long k,mtx bse)
+{
+	mtx d = bse;
+	while (k)
+	{
+		if (k % 2 == 1)d = mtxcal(d, bse);
+		bse = mtxcal(bse, bse);
+		k /= 2;
+	}
+	return d;
+}
+int mpow(int r,long long bse)
+{
+	long long ans=1;
+	while (r)
+	{
+		if (r % 2 == 1)ans = (ans*bse) % MOD;
+		bse = (bse*bse) % MOD;
+		r /= 2;
+	}
+	return ans;
+}
+int main()
+{
+	scanf("%d", &n);
+	mtx s1(1, 1, 1, 0);
+	long long f = 0;
+	long long g = 0;
+	if (n == 1) {
+		printf("0\n"); return 0;
+	}
+	if (n % 2 == 0)
+	{
+		s1 = qmod(n / 2-1, s1);
+		f = (2 * s1.dat[1][0] + s1.dat[1][1]) % MOD;
+		f = (f*f) % MOD;
+	}
+	else
+	{
+		s1 = qmod((n - 3) / 2, s1);
+		f = (2 * s1.dat[1][0] + s1.dat[1][1]) % MOD;
+		g = (2 * s1.dat[0][0] + s1.dat[0][1]) % MOD;
+		f = (f*g) % MOD;
+	}
+	long long l = mpow(n, 2)%MOD;
+	long long ans = (l - f+MOD) % MOD;
+	printf("%d\n", ans);
+}

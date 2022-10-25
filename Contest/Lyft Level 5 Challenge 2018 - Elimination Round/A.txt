@@ -1,0 +1,20 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<stack>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 1005
+#define MOD 998244353
+using namespace std;
+int n,ax,ay,bx,by,cx,cy;
+int main()
+{
+	cin>>n>>ax>>ay>>bx>>by>>cx>>cy;
+	if((bx-ax)*(cx-ax)>0&&(by-ay)*(cy-ay)>0)cout<<"YES"<<endl;
+	else cout<<"NO"<<endl;
+}

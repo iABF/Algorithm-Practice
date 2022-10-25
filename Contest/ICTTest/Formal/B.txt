@@ -1,0 +1,24 @@
+
+#include<bits/stdc++.h>
+
+using namespace std;
+
+int n;
+int a[10005];
+int b[10005];
+bool cmp(int &x,int &y){
+    return x>y;
+}
+int main() {
+    while (scanf("%d", &n), n) {
+        for(int i=0;i<n;i++)scanf("%d",a+i);
+        for(int i=0;i<n;i++)scanf("%d",b+i);
+        sort(a,a+n);
+        sort(b,b+n,cmp);
+        long long ans=0;
+        for(int i=0;i<n;i++){
+            ans+=a[i]*b[i];
+        }
+        printf("%lld\n", ans);
+    }
+}

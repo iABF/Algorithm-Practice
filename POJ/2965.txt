@@ -1,0 +1,66 @@
+#include<stdio.h>
+#include<Windows.h>
+int a[6][6];
+char s[10];
+int road[20][2] = { 0 };
+int key = 0;
+void chstate(int x,int y)
+{
+	for (int i = 0; i <= 3; i++)
+	{
+		a[x][i] = 1 - a[x][i];
+		a[i][y] = 1 - a[i][y];
+	}
+	a[x][y] = 1 - a[x][y];
+}
+int check()
+{
+	for (int i = 0; i <= 3; i++)for (int j = 0; j <= 3; j++)if (a[i][j] == 0)return 0;
+	return 1;
+}
+void dfs(int x, int y, int d, int fin)
+{
+	if (check())
+	{
+		key = 1;
+		return;
+	}
+	if (key || d > fin)return;
+	if (x == 4 || y == 4)return;
+	int ny = (y + 1) % 4;
+	int nx = x + (y + 1) / 4;
+	chstate(x, y);
+	road[d - 1][0] = x;
+	road[d - 1][1] = y;
+	dfs(nx, ny, d+1, fin);
+	chstate(x, y);
+	dfs(nx, ny, d, fin);
+}
+int main()
+{
+	int step;
+	for (int i = 0; i <= 3; i++)
+	{
+		scanf("%s", s);
+		for (int j = 0; j <= 3; j++)
+		{
+			a[i][j] = s[j] == '+' ? 0 : 1;//0->CLOSE   1->OPEN
+		}
+	}
+	for (int fin = 1; fin <= 16; fin++)
+	{
+		dfs(0, 0, 1, fin);
+		if (key)
+		{
+			step = fin;
+			break;
+		}
+	}
+	printf("%d\n", step);
+	for (int i = 0; i <= step - 1; i++)
+	{
+		printf("%d %d\n", road[i][0] + 1, road[i][1] + 1);
+	}
+	system("pause");
+	return 0;
+}

@@ -1,0 +1,54 @@
+#include<iostream>
+#include<cstring>
+using namespace std;
+int path[100][2];
+bool visit[30][30];
+bool flag;
+const int numnxt[8] = { -1,1,-2,2,-2,2,-1,1 };
+const int letnxt[8] = { -2,-2,-1,-1,1,1,2,2 };
+int n, mnum, mlet;
+void initialize()
+{
+	flag = false;
+	memset(visit, false, sizeof(visit));
+}
+void dfs(int depth, int num, int let)
+{
+	path[depth][0] = num;
+	path[depth][1] = let;
+	if (depth == mnum*mlet)
+	{
+		flag = true;
+		return;
+	}
+	for (int i = 0; i < 8; i++)
+	{
+		int nnum = num + numnxt[i];
+		int nlet = let + letnxt[i];
+		if (nnum >= 1 && nnum <= mnum&&nlet >= 1 && nlet <= mlet && !visit[nnum][nlet] && !flag)
+		{
+			visit[nnum][nlet] = true;
+			dfs(depth + 1, nnum, nlet);
+			visit[nnum][nlet] = false;
+		}
+	}
+}
+int main()
+{
+	cin >> n;
+	for (int i = 1; i <= n; i++)
+	{
+		initialize();
+		cin >> mnum >> mlet;
+		visit[1][1] = true;
+		dfs(1, 1, 1);
+		cout << "Scenario #" << i << ":" << endl;
+		if (flag)
+		{
+			for (int j = 1; j <= mnum*mlet; j++)cout << char(path[j][1] - 1 + 'A') << path[j][0];
+			cout << endl;
+		}
+		else cout << "impossible" << endl;
+		cout << endl;
+	}
+}

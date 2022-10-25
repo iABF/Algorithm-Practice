@@ -1,0 +1,26 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 200005
+#define MOD 998244353
+using namespace std;
+long long n, m, bag, d, ans;
+int main()
+{
+	cin >> n >> m;
+	d = m, bag = 1;
+	while (d > 0)
+	{
+		d -= min(d, bag);
+		bag++;
+	}
+	if (bag == 1)ans = n;
+	else ans = n - bag;
+	cout << max((long long)0, n - 2 * m) << ' ' << ans << endl;
+}

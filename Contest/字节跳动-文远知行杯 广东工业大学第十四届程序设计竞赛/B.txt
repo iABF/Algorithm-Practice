@@ -1,0 +1,59 @@
+#include<iostream>
+#define MOD 192600817
+using namespace std;
+int N, a, b, c, d;
+struct Matrix
+{
+	long long m[2][2];
+	Matrix() { m[0][0] = m[1][0] = m[1][1] = m[0][1] = 0; }
+	Matrix(int c)
+	{
+		if (c == 1)m[0][0] = m[1][1] = 1, m[1][0] = m[0][1] = 0;
+		else if (c == 2)m[0][0] = m[1][0] = m[0][1] = 1, m[1][1] = 0;
+		else Matrix();
+	}
+};
+Matrix mul(Matrix a, Matrix b)
+{
+	Matrix c;
+	for (int i = 0; i < 2; i++)
+		for (int j = 0; j < 2; j++)
+			for (int k = 0; k < 2; k++)
+				c.m[i][j] = (c.m[i][j] + (a.m[i][k] * b.m[k][j]) % MOD) % MOD;
+	return c;
+}
+Matrix fastpow(Matrix a, int x)
+{
+	Matrix b(1);
+	while (x)
+	{
+		if (x & 1)b = mul(b, a);
+		a = mul(a, a);
+		x >>= 1;
+	}
+	return b;
+}
+int main()
+{
+	while (cin >> N)
+	{
+		for (int i = 0; i < N; i++)
+		{
+			cin >> a >> b >> c >> d;
+			int m = 4 * a + b + 1, n = 4 * c + d + 1;
+			if (m > n)
+			{
+				int t = m;
+				m = n;
+				n = t;
+			}
+			Matrix base(2);
+			Matrix mm = fastpow(base, m - 1);
+			Matrix nn = fastpow(base, n);
+			long long ll = (mm.m[0][0] * mm.m[1][0]) % MOD;
+			long long rr = (nn.m[0][0] * nn.m[1][0]) % MOD;
+			long long ans = (rr - ll + MOD) % MOD;
+			cout << ans << endl;
+		}
+	}
+}

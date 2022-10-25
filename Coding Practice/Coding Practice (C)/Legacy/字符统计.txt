@@ -1,0 +1,32 @@
+#include<stdio.h>
+#include<Windows.h>
+int main()
+{
+	int letter = 0, number = 0, space = 0, others = 0;
+	char c;
+	c = getchar();
+	while (c != '\n')
+	{
+		if ((c >= 'A'&&c <= 'Z') || (c >= 'a'&&c <= 'z'))
+		{
+			letter++;
+		}
+		else if (c == 32)
+		{
+			space++;
+		}
+		else if (c >= '0'&&c <= '9')
+		{
+			number++;
+		}
+		else if (c >= 32&c <= 127)
+		{
+			others++;
+		}
+		else{}
+		c = getchar();
+	}
+	printf("letter:%d\nspace:%d\nnumber:%d\nothers:%d\n", letter, space, number, others);
+	system("pause");
+	return 0;
+}

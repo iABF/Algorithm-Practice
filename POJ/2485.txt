@@ -1,0 +1,40 @@
+#include<stdio.h>
+#include<Windows.h>
+#include<string.h>
+#define maxn 510
+#define inf 99999999
+int n;
+int mp[maxn][maxn];
+bool visit[maxn];
+int dis[maxn];
+int prim()
+{
+	memset(visit, false, sizeof(visit));
+	int cur = 1;
+	int min;
+	int ans = 0;
+	visit[1] = true;
+	for (int i = 1; i <= n; i++)dis[i] = mp[cur][i];
+	for (int i = 1; i < n; i++)
+	{
+		min = inf;
+		for (int j = 1; j <= n; j++)if (!visit[j] && min > dis[j])min = dis[cur = j];
+		ans = ans > min ? ans : min;
+		visit[cur] = true;
+		for (int j = 1; j <= n; j++)if (!visit[j] && dis[j] > mp[cur][j])dis[j] = mp[cur][j];
+	}
+	return ans;
+}
+int main()
+{
+	int m;
+	scanf("%d", &m);
+	while (m--)
+	{
+		scanf("%d", &n);
+		for (int i = 1; i <= n; i++)for (int j = 1; j <= n; j++)scanf("%d", &mp[i][j]);
+		printf("%d\n", prim());
+	}
+	system("pause");
+	return 0;
+}

@@ -1,0 +1,12 @@
+#include<stdio.h>
+#include<math.h>
+int main()
+{
+	double n, p;
+	while (scanf("%lf%lf", &n, &p) != EOF)
+	{
+		double k = exp(log(p) / n);
+		printf("%.0f\n", k);
+	}
+	return 0;
+}

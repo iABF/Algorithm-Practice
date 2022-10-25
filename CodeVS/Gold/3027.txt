@@ -1,0 +1,23 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+using namespace std;
+struct Line { int a, b, v; }l[1010];
+int f[1010] = { 0 }, n, ans = 0;
+bool cmp(const Line&aa, const Line&bb) { return aa.b < bb.b; }
+int main()
+{
+	cin >> n;
+	for (int i = 1; i <= n; i++)cin >> l[i].a >> l[i].b >> l[i].v;
+	sort(l + 1, l + n + 1, cmp);
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = i - 1; j > 0; j--)if (l[i].a >= l[j].b)f[i] = max(f[i], f[j] + l[i].v);
+		f[i] = max(f[i], l[i].v);
+	}
+	for (int i = 1; i <= n; i++)ans = max(f[i], ans);
+	cout << ans << endl;
+}

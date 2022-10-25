@@ -1,0 +1,23 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<stack>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 505
+#define MOD 998244353
+typedef long long LL;
+using namespace std;
+LL a=0,ans=0,n;
+int main()
+{
+    cin>>n;
+    while(a*10+9<=n){a=a*10+9,ans+=9;}
+    n-=a;
+    while(n){ans+=n%10,n/=10;}
+    cout<<ans<<endl;
+}

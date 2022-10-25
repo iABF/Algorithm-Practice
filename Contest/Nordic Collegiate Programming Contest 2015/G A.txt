@@ -1,0 +1,25 @@
+#include<cstdio>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+int g, m;
+int x, y, r, ans = 0;
+struct goblin {int x, y;}go[100010];
+bool danger[10005][10005] = { 0 };
+int main()
+{
+	scanf("%d", &g);
+	for (int i = 0; i < g; i++)scanf("%d%d", &go[i].x, &go[i].y);
+	scanf("%d", &m);
+	for (int i = 0; i < m; i++)
+	{
+		scanf("%d%d%d", &x, &y, &r);
+		int zuo = max(x - r, 0);
+		int you = min(x + r, 10000);
+		int xia = max(y - r, 0);
+		int shang = min(y + r, 10000);
+		for (int xx = zuo; xx <= you; xx++)for (int yy = xia; yy <= shang; yy++)if ((xx - x)*(xx - x) + (yy - y)*(yy - y) <= r*r)danger[xx][yy] = 1;
+	}
+	for (int i = 0; i < g; i++)if (!danger[go[i].x][go[i].y])ans++;
+	printf("%d\n", ans);
+}

@@ -1,0 +1,32 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 1000000000
+using namespace std;
+int n = 52, mp[105][105], Q, nn, maxx = INF, pt;
+char a, b;
+void floyd() { for (int k = 1; k <= n; k++)for (int i = 1; i <= n; i++)for (int j = 1; j <= n; j++)mp[i][j] = min(mp[i][k] + mp[k][j], mp[i][j]); }
+int main()
+{
+	scanf("%d", &nn);
+	for (int i = 0; i < 105; i++)for (int j = 0; j < 105; j++)mp[i][j] = INF;
+	for (int i = 1; i <= nn; i++)
+	{
+		cin >> a >> b >> Q;
+		if (a >= 'A'&&a <= 'Z')a -= 'A' - 1;
+		else a -= 'a' - 27;
+		if (b >= 'A'&&b <= 'Z')b -= 'A' - 1;
+		else b -= 'a' - 27;
+		if (Q < mp[(int)a][(int)b])mp[(int)a][(int)b] = mp[(int)b][(int)a] = Q;
+	}
+	floyd();
+	for (int i = 1; i < 26; i++)if (maxx > mp[i][26])maxx = mp[i][26], pt = i;
+	if (pt > 26)pt += 'a' - 27;
+	else pt += 'A' - 1;
+	printf("%c %d\n", (char)pt, maxx);
+}

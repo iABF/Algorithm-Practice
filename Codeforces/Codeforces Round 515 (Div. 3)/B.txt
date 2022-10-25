@@ -1,0 +1,39 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 1005
+using namespace std;
+int n, r, a[MAXN], cur = 1, ans = 0, flag = false, minn, maxx;
+int main()
+{
+	cin >> n >> r;
+	for (int i = 1; i <= n; i++)cin >> a[i];
+	while (cur <= n)
+	{
+		minn = max(cur - r + 1, 1);
+		maxx = min(n, cur + r - 1);
+		for (int i = maxx; i >= minn; i--)
+		{
+			if (a[i])
+			{
+				ans++;
+				cur = i + r;
+				break;
+			}
+			if (i == minn)
+			{
+				flag = true;
+				break;
+			}
+		}
+		if (flag)break;
+	}
+	if (flag)cout << -1 << endl;
+	else cout << ans << endl;
+}

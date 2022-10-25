@@ -1,0 +1,59 @@
+#include<iostream>
+#include<string>
+#include<cstring>
+#include<sstream>
+using namespace std;
+struct node {
+	const char* key;
+	const char* value;
+	node* next;
+};
+class hashtable {
+public:
+	node *nod[10];
+public:
+	hashtable() { for (int i = 0; i < 10; i++)nod[i] = NULL; }
+	int hash(const char* key) {
+		int h = 0; for (; *key; key++) { h = h * 33 + *key; return h % 10; }
+	}
+	node* find(const char* key) {
+		node* p; int index; index = hash(key);
+		for (p = nod[index]; p; p = p->next) { if (!strcmp(key, p->key))return p; } return 0;
+	}
+	bool insert(const char* key, const char* value) {
+		int index; node*p;
+		if (!(p = find(key))) {
+			index = hash(key);
+			p = (node*)malloc(sizeof(node));
+			p->key = key;
+			p->next = nod[index];
+			nod[index] = p;
+		}
+		p->value = value;
+		return true;
+	}
+};
+int main() {
+	hashtable hasht;
+	string key, s;
+	node *ans = NULL;
+	while (1) {
+		string v, k;
+		getline(cin, s);
+		if (s.size() == 0) break;
+		stringstream ss(s);
+		ss >> v >> k;
+		char a[12], b[12];
+		strcpy(a, k.c_str());
+		strcpy(b, v.c_str());
+		hasht.insert(a, b);
+	}
+	//cin.get();
+	cin >> key;
+	//cout << hasht.nod[1]->key<<hasht.nod[1]->value;
+	node*z = hasht.find(key.data());
+	cout << z->key << z->value;
+	if (ans = hasht.find(key.data()))cout << ans->value;
+	else cout << "eh";
+	system("pause");
+}

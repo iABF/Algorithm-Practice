@@ -1,0 +1,80 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 20010
+#define _PI 3.14159265358979323846
+using namespace std;
+int n, cnt = 0;
+double r[10], xx1, yy1, xx2, y2, minx, maxx, miny, maxy, d[10][10], ans = INF;
+bool v[10];
+struct xy
+{
+	double x, y;
+}p[10];
+void dfs(int cirnum, double area)
+{
+	if (cirnum == n)
+	{
+		ans = min(area, ans);
+		return;
+	}
+	for (int i = 0; i < n; i++)
+	{
+		if (!v[i])
+		{
+			v[i] = true;
+			bool flag = true;
+			for (int j = 0; j < n; j++)
+			{
+				if (j != i)if (d[i][j] <= r[j])
+				{
+					flag = false;
+					break;
+				}
+			}
+			if (!flag)dfs(cirnum + 1, area);
+			else
+			{
+				r[i] = min(min(p[i].y - miny, maxy - p[i].y), min(p[i].x - minx, maxx - p[i].x));
+				for (int j = 0; j < n; j++)if (j != i)if (r[j])r[i] = min(r[i], d[i][j] - r[j]);
+				dfs(cirnum + 1, area - _PI * r[i] * r[i]);
+				r[i] = 0;
+			}
+			v[i] = false;
+		}
+	}
+}
+int main()
+{
+	cin >> n;
+	cin >> xx1 >> yy1 >> xx2 >> y2;
+	xx1 += 1000;
+	yy1 += 1000;
+	xx2 += 1000;
+	y2 += 1000;
+	minx = min(xx1, xx2);
+	miny = min(yy1, y2);
+	maxx = max(xx1, xx2);
+	maxy = max(yy1, y2);
+	for (int i = 0; i < n; i++)
+	{
+		cin >> p[i].x >> p[i].y;
+		p[i].x += 1000;
+		p[i].y += 1000;
+		r[i] = 0;
+		v[i] = false;
+	}
+	for (int i = 0; i < n; i++)for (int j = 0; j < n; j++)
+	{
+		if (i == j)d[i][j] = 0;
+		else d[i][j] = sqrt((p[i].x - p[j].x)*(p[i].x - p[j].x) + (p[i].y - p[j].y)*(p[i].y - p[j].y));
+	}
+	dfs(0, (maxy - miny)*(maxx - minx));
+	cout << (int)(ans + 0.5) << endl;
+}

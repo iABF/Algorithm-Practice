@@ -1,0 +1,26 @@
+#include<iostream>
+#include<string>
+using namespace std;
+string s,ansstr;
+int ans;
+int main()
+{
+	while (cin >> s)
+	{
+		ans = 0;
+		for (int i = 0; i < s.size(); i++)for (int j = i; j < s.size(); j++)
+		{
+			int count = 0, p = i;
+			string t;
+			while (s.find(s.substr(i, j - i + 1), p) != s.npos&&s.find(s.substr(i, j - i + 1), p) == p)
+			{
+				p += j - i + 1;
+				count++;
+				t += s.substr(i, j - i + 1);
+			}
+			if (ans < count)ans = count, ansstr = t;
+			else if (ans == count)if (ansstr > t)ansstr = t;
+		}
+		cout << ansstr << endl;
+	}
+}

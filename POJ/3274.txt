@@ -1,0 +1,69 @@
+#include<stdio.h>
+#include<string.h>
+#include<Windows.h>
+int mp[120010][50];
+struct HS
+{
+	int num;
+	bool occ;
+}hush[12000][1000];
+int n, k;
+int t;
+int ans = 0;
+int key;
+bool check(int x, int y)
+{
+	if (k == 1)return true;
+	for (int i = 0; i < k; i++)if (mp[x][i] != mp[y][i])return false;
+	return true;
+}
+int hushkey(int h)
+{
+	int key = 0;
+	for (int j = 0; j < k; j++)key = (key + mp[h][j] * (j + 1)) % 10007;
+	key = (key + 10007) % 10007;
+	if (key > 0)return key;
+	else return -key;
+}
+void fhush()
+{
+	for (int i = 0; i <= n; i++)
+	{
+		int j;
+		int f;
+		key = hushkey(i);
+		for (j = 0; hush[key][j].occ; j++)
+		{
+			f = ((hush[key][j].num - i > 0) ? (hush[key][j].num - i) : (i - hush[key][j].num));
+			if (check(i, hush[key][j].num))if (ans < f)ans = f;
+		}
+		hush[key][j].num = i;
+		hush[key][j].occ = true;
+	}
+}
+int main()
+{
+	scanf("%d%d", &n, &k);
+	for (int i = 1; i <= n; i++)
+	{
+		scanf("%d", &t);
+		for (int j = 0; j < k; j++)
+		{
+			mp[i][k - 1 - j] = (t & 1);
+			t >>= 1;
+		}
+	}
+	for (int j = 0; j < k; j++)mp[0][j] = 0;
+	for (int i = 2; i <= n; i++)for (int j = 0; j < k; j++)mp[i][j] += mp[i - 1][j];
+	int zero;
+	for (int i = 1; i <= n; i++)
+	{
+		zero = mp[i][0];
+		for (int j = 0; j < k; j++)mp[i][j] -= zero;
+	}
+	if (n == 1)ans = 1;
+	fhush();
+	printf("%d\n", ans);
+	system("pause");
+	return 0;
+}

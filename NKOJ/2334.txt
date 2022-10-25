@@ -1,0 +1,43 @@
+#include<stdio.h>
+#include<Windows.h>
+#include<string.h>
+char a[100][500];
+void array(int n)
+{
+	for (int num = 1; num <= n; num++)
+	{
+		gets_s(a[num - 1]);
+	}
+}
+int main()
+{
+	for(int k=0;k<=99;k++)
+	for (int i = 0; i < 500; i++)a[k][i] = '\0';
+	int n;
+	scanf("%d", &n);
+	getchar();
+	array(n);
+	for (int num = 1; num <= n; num++)
+	{
+		int he = 0, she = 0;
+		for (int j = 1; j <= strlen(a[num - 1]); j++)
+		{
+			if (a[num - 1][j - 1] == ' '&&a[num - 1][j] == 'h' && a[num - 1][j + 1] == 'e' && (a[num - 1][j + 2] == '\0' || a[num - 1][j + 2] == ',' || a[num - 1][j + 2] == '.' || a[num - 1][j + 2] == ' '))
+			{
+				he++;
+			}
+			else if (a[num - 1][j - 1] == ' '&&a[num - 1][j] == 's' && a[num - 1][j + 1] == 'h' && a[num - 1][j + 2] == 'e' && (a[num - 1][j + 3] == '\0' || a[num - 1][j + 3] == ',' || a[num - 1][j + 3] == '.' || a[num - 1][j + 3] == ' '))
+			{
+				she++;
+			}
+		}
+		if (he != 0 && she == 0)printf("Gay");
+		else if (she != 0 && he == 0)printf("Girl");
+		else printf("Cute boy");
+		he = 0;
+		she = 0;
+		if (num <= n - 1)printf("\n");
+	}
+	system("pause");
+	return 0;
+}

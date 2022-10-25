@@ -1,0 +1,25 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#include<cstdio>
+#include<map>
+#include<cstring>
+using namespace std;
+#define MAXN 1003
+#define MOD 1003
+string x, y;
+map<string, string>a;
+char s1[11], s2[11], s[24];
+int main()
+{
+	while (gets(s), s[0])
+	{
+		sscanf(s, "%s %s", s1, s2);
+		x = s1, y = s2, a[y] = x;
+	}
+	while (scanf("%s", s1) != EOF)
+	{
+		if (x = s1, a.find(x) == a.end())cout << "eh\n";
+		else cout << a[x] << endl;
+	}
+}

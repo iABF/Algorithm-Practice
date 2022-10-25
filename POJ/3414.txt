@@ -1,0 +1,69 @@
+#include<iostream>
+#include<algorithm>
+#include<queue>
+using namespace std;
+int a, b, c, ops[105][105], erer[20000];
+char op[6][10] = { "FILL(1)","FILL(2)","DROP(1)","DROP(2)","POUR(1,2)","POUR(2,1)" };
+bool vis[105][105];
+struct cup { int a, b, s; }sta, t, nt, father[105][105], e, te;
+int bfs()
+{
+	sta.a = sta.b = sta.s = 0;
+	queue<cup>q;
+	q.push(sta);
+	vis[sta.a][sta.b] = true;
+	while (!q.empty())
+	{
+		t.a = q.front().a;
+		t.b = q.front().b;
+		t.s = q.front().s;
+		if (t.a == c || t.b == c)
+		{
+			e.a = t.a;
+			e.b = t.b;
+			return t.s;
+		}
+		q.pop();
+		for (int i = 1; i < 7; i++)
+		{
+			switch (i)
+			{
+			case 1:nt.a = a; nt.b = t.b; nt.s = t.s + 1; break;
+			case 2:nt.b = b; nt.a = t.a; nt.s = t.s + 1; break;
+			case 3:nt.a = 0; nt.b = t.b; nt.s = t.s + 1; break;
+			case 4:nt.b = 0; nt.a = t.a; nt.s = t.s + 1; break;
+			case 5:nt.a = max(t.a + t.b - b, 0); nt.b = min(t.a + t.b, b); nt.s = t.s + 1; break;
+			case 6:nt.b = max(t.a + t.b - a, 0); nt.a = min(t.a + t.b, a); nt.s = t.s + 1; break;
+			}
+			if (!vis[nt.a][nt.b])
+			{
+				q.push(nt);
+				vis[nt.a][nt.b] = true;
+				father[nt.a][nt.b].a = t.a;
+				father[nt.a][nt.b].b = t.b;
+				father[nt.a][nt.b].s = t.s;
+				ops[nt.a][nt.b] = i;
+			}
+		}
+	}
+	return 0;
+}
+int main()
+{
+	cin >> a >> b >> c;
+	int ans = bfs();
+	if (ans == 0)
+	{
+		cout << "impossible" << endl;
+		return 0;
+	}
+	cout << ans << endl;
+	for (int i = 1; i <= ans; i++)
+	{
+		erer[i] = ops[e.a][e.b] - 1;
+		te = e;
+		e.a = father[te.a][te.b].a;
+		e.b = father[te.a][te.b].b;
+	}
+	for (int i = ans; i >= 1; i--)cout << op[erer[i]] << endl;
+}

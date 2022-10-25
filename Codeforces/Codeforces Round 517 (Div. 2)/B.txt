@@ -1,0 +1,48 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 0x7f7f7f7f
+#define MAXN 1005
+#define MOD 1000000007
+#define _PI 3.14159265358979323846
+using namespace std;
+int n, a[100005], b[100005], t[100005];
+bool flag;
+int main() {
+	cin >> n;
+	for (int i = 0; i < n - 1; i++) {
+		cin >> a[i];
+	}
+	for (int i = 0; i < n - 1; i++) {
+		cin >> b[i];
+	}
+	for (int i = 0; i < 4; i++) {
+		t[0] = i;
+		int j;
+		for (j = 0; j < n - 1; j++) {
+			flag = false;
+			for (int k = 0; k < 4; k++) {
+				if (((t[j] | k) == a[j]) && ((t[j] & k) == b[j])) {
+					flag = true;
+					t[j + 1] = k;
+				}
+			}
+			if (!flag) {
+				break;
+			}
+		}
+		if (j == n - 1) {
+			cout << "YES" << endl;
+			for (int k = 0; k < n; k++) {
+				cout << t[k] << ' ';
+			}
+			return 0;
+		}
+	}
+	cout << "NO" << endl;
+}

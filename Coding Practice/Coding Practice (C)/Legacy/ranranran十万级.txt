@@ -1,0 +1,33 @@
+#include<Windows.h>
+#include<stdlib.h>
+#include<time.h>
+#include<stdio.h>
+#include<math.h>
+int main()
+{
+	int i, j, k;
+	for (i = 0; i <= 9; i++)
+		for (j = 0; j <= 9; j++)
+			for (k = 0; k <= 9; k++)
+			{
+				if (i*i*i + j*j*j + k*k*k == 100 * i + 10 * j + k)
+					printf("%d\n", 100 * i + 10 * j + k);
+			}
+
+
+	srand((unsigned)time(NULL));
+	int i23, ra1, ra2, ra3, fn;
+	for (i23 = 1; i23 <= 1000000000; i23++)
+	{
+		ra1 = 1 + rand() % 1000;
+		ra2 = 1 + rand() % 1000;
+		ra3 = 1 + rand() % 1000;
+		fn = ra1*ra2*ra3;
+		if ((fn >= 999000000))
+			printf("%d\t%d\n", i23, fn);
+		else if ((fn <= 10))
+			printf("%d\t\t\t%d\n", i23, fn);
+	}
+	system("pause");
+	return 0;
+}

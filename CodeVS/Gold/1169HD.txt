@@ -1,0 +1,26 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+using namespace std;
+int n, m, mp[55][55], f[55][55][110], k = 0;
+int main()
+{
+	cin >> m >> n;
+	for (int i = 1; i <= m; i++)for (int j = 1; j <= n; j++)cin >> mp[i][j];
+	f[1][1][0] = 0;
+	f[1][2][1] = mp[1][2] + mp[2][1];
+	for (int step = 2; step < m + n - 2; step++)for (int x1 = 1; x1 <= n - 1 && x1 < step + 2; x1++)for (int x2 = x1 + 1; x2 <= n && x2 < step + 2; x2++)
+	{
+		k = 0;
+		if (x2 - 1 > x1&&x1 <= step)k = max(k, f[x1][x2 - 1][step - 1]);
+		if (x1 <= step&&x2 <= step)k = max(k, f[x1][x2][step - 1]);
+		if (x1 - 1 >= 1 && x2 <= step)k = max(k, f[x1 - 1][x2][step - 1]);
+		if (x1 - 1 >= 1)k = max(k, f[x1 - 1][x2 - 1][step - 1]);
+		f[x1][x2][step] = k + mp[step + 2 - x1][x1] + mp[step + 2 - x2][x2];
+	}
+	f[n][n][m + n - 2] = f[n - 1][n][m + n - 3];
+	cout << f[n][n][m + n - 2] << endl;
+}

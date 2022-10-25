@@ -1,0 +1,17 @@
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+using namespace std;
+int c, g;
+int cc[25], gg[25];
+int dp[25][16000];//+7500
+int main()
+{
+	scanf("%d %d", &c, &g);
+	for (int i = 0; i < c; i++)scanf("%d", &cc[i]);
+	for (int i = 1; i <= g; i++)scanf("%d", &gg[i]);
+	memset(dp, 0, sizeof(dp));
+	dp[0][7500] = 1;
+	for (int i = 1; i <= g; i++)for (int j = 0; j < 15005; j++)for (int k = 0; k < c; k++)dp[i][j] += dp[i - 1][j - gg[i] * cc[k]];
+	printf("%d\n", dp[g][7500]);
+}

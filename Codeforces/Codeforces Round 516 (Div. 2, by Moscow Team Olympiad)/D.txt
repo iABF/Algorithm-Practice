@@ -1,0 +1,68 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<stack>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 2005
+#define MOD 998244353
+using namespace std;
+int n, m, r, c, x, y, nx, ny, nl, nr, ans = 1;
+bool mp[MAXN][MAXN], vis[MAXN][MAXN] = { false };
+struct XY
+{
+	int x, y, l, r;
+	XY(int xx, int yy, int ll, int rr) :x(xx), y(yy), l(ll), r(rr) {}
+	bool operator<(XY e)const { return l + r > e.l + e.r; }
+};
+string s;
+void bfs()
+{
+	priority_queue<XY>q;
+	q.push(XY(r, c, 0, 0));
+	while (!q.empty())
+	{
+		nx = q.top().x, ny = q.top().y, nl = q.top().l, nr = q.top().r;
+		if (nx + 1 <= n && !mp[nx + 1][ny] && !vis[nx + 1][ny])
+		{
+			vis[nx + 1][ny] = true;
+			ans++;
+			q.push(XY(nx + 1, ny, nl, nr));
+		}
+		if (nx - 1 > 0 && !mp[nx - 1][ny] && !vis[nx - 1][ny])
+		{
+			vis[nx - 1][ny] = true;
+			ans++;
+			q.push(XY(nx - 1, ny, nl, nr));
+		}
+		if (ny + 1 <= m && !mp[nx][ny + 1] && !vis[nx][ny + 1] && nr + 1 <= y)
+		{
+			vis[nx][ny + 1] = true;
+			ans++;
+			q.push(XY(nx, ny + 1, nl, nr + 1));
+		}
+		if (ny - 1 > 0 && !mp[nx][ny - 1] && !vis[nx][ny - 1] && nl + 1 <= x)
+		{
+			vis[nx][ny - 1] = true;
+			ans++;
+			q.push(XY(nx, ny - 1, nl + 1, nr));
+		}
+		q.pop();
+	}
+}
+int main()
+{
+	cin >> n >> m >> r >> c >> x >> y;
+	for (int i = 1; i <= n; i++)
+	{
+		cin >> s;
+		for (int j = 1; j <= m; j++)mp[i][j] = s[j - 1] == '.' ? 0 : 1;
+	}
+	vis[r][c] = true;
+	bfs();
+	cout << ans << endl;
+}

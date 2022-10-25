@@ -1,0 +1,22 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<stack>
+#include<queue>
+#include<map>
+#define INF 0x7fffffff
+#define MAXN 100005
+#define MOD 998244353
+using namespace std;
+int n, a[29] = { 0 };
+string s;
+int main()
+{
+	cin >> n >> s;
+	for (int i = 0; i < n; i++)a[s[i] - 'a']++;
+	for (int i = 0; i < 26; i++)for (int j = 0; j < a[i]; j++)printf("%c", i + 'a');
+	cout << endl;
+}

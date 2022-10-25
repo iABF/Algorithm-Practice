@@ -1,0 +1,139 @@
+#include<stdio.h>
+#include<Windows.h>
+#include<string.h>
+#define inf 999999
+int m, n;
+int l;
+char map[60][60];
+char teee[200];
+int mp[105][105];
+struct Point
+{
+	int m, n;
+}p[105];
+typedef struct Queue
+{
+	int front;
+	int rear;
+	struct Point pic[3000];
+}Queue;
+bool bfsvisit[60][60];
+int bfsdis[60][60];
+bool primvisit[105];
+int dis[105];
+int prim()
+{
+	memset(primvisit, 0, sizeof(primvisit));
+	primvisit[0] = true;
+	int cur = 0;
+	int ans = 0;
+	int min;
+	for (int i = 0; i < l; i++)dis[i] = mp[0][i];
+	for (int i = 1; i < l; i++)
+	{
+		min = inf;
+		for (int j = 0; j < l; j++)if (!primvisit[j] && min > dis[j])min = dis[cur = j];
+		ans += min;
+		primvisit[cur] = true;
+		for (int j = 0; j < l; j++)if (!primvisit[j] && dis[j] > mp[cur][j])dis[j] = mp[cur][j];
+	}
+	return ans;
+}
+int bfs(int f, int t)
+{
+	Queue q;
+	memset(bfsvisit, false, sizeof(bfsvisit));
+	memset(bfsdis, 0, sizeof(bfsdis));
+	int d = 0;
+	q.front = 0;
+	q.rear = 1;
+	q.pic[0].m = p[f].m;
+	q.pic[0].n = p[f].n;
+	bfsvisit[p[f].m][p[f].n] = true;
+	int h = 1;
+	while (q.front != q.rear)
+	{
+		int M = q.pic[q.front].m;
+		int N = q.pic[q.front].n;
+		if (M == p[t].m&&N == p[t].n)
+		{
+			d = bfsdis[M][N];
+			break;
+		}
+		else
+		{
+			q.front++;
+			if (map[M - 1][N] != '#' && !bfsvisit[M - 1][N])
+			{
+				q.rear++;
+				q.pic[h].m = M - 1;
+				q.pic[h++].n = N;
+				bfsvisit[M - 1][N] = true;
+				bfsdis[M - 1][N] = bfsdis[M][N] + 1;
+			}
+			if (map[M][N - 1] != '#' && !bfsvisit[M][N - 1])
+			{
+				q.rear++;
+				q.pic[h].m = M;
+				q.pic[h++].n = N - 1;
+				bfsvisit[M][N - 1] = true;
+				bfsdis[M][N - 1] = bfsdis[M][N] + 1;
+			}
+			if (map[M + 1][N] != '#' && !bfsvisit[M + 1][N])
+			{
+				q.rear++;
+				q.pic[h].m = M + 1;
+				q.pic[h++].n = N;
+				bfsvisit[M + 1][N] = true;
+				bfsdis[M + 1][N] = bfsdis[M][N] + 1;
+			}
+			if (map[M][N + 1] != '#' && !bfsvisit[M][N + 1])
+			{
+				q.rear++;
+				q.pic[h].m = M;
+				q.pic[h++].n = N + 1;
+				bfsvisit[M][N + 1] = true;
+				bfsdis[M][N + 1] = bfsdis[M][N] + 1;
+			}
+		}
+	}
+	return d;
+}
+int main()
+{
+	int N;
+	scanf("%d", &N);
+	while (N--)
+	{
+		memset(mp, 0, sizeof(mp));
+		l = 1;
+		scanf("%d%d", &n, &m);
+		gets_s(teee);
+		for (int i = 0; i < m; i++)
+		{
+			gets_s(teee);
+			for (int j = 0; j < n; j++)
+			{
+				map[i][j] = teee[j];
+				if (map[i][j] == 'S')
+				{
+					p[0].m = i;
+					p[0].n = j;
+				}
+				else if (map[i][j] == 'A')
+				{
+					p[l].m = i;
+					p[l++].n = j;
+				}
+			}
+		}
+		for (int i = 0; i < l; i++)for (int j = i + 1; j < l; j++)
+		{
+			int distance = bfs(i, j);
+			mp[i][j] = mp[j][i] = distance;
+		}
+		printf("%d\n", prim());
+	}
+	system("pause");
+	return 0;
+}

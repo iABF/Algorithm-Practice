@@ -1,0 +1,59 @@
+#include<stdio.h>
+#include<string.h>
+#include<Windows.h>
+int main()
+{
+	char a[100000]="\0";
+	for (; ;)
+	{
+		gets_s(a);
+		if (strlen(a) >= 51)
+		{
+			printf("OUT\n");
+		}
+		else if (a[0] == 'E'&&a[1]=='N'&&a[2]=='D'&&a[3]=='\0')
+		{
+			return 0;
+		}
+		else
+		{
+			char a1[55]="";
+			int b = strlen(a);
+			for (int m = b - 1; m >= 0; m--)
+			{
+				a1[b - 1 - m] = a[m];
+			}
+			for (int m1 = 0; m1 <= b - 1; m1++)
+			{
+				a[m1] = a1[m1];
+			}
+			for (int i = 0; i <= b-2; i++)
+			{
+				for (int j = i+1; j <= b-1; j++)
+				{
+					if (a[i] == a[j])
+					{
+						for (int k = j + 1; k <= b - 1;k++)
+						{
+							a[k - 1] = a[k];
+						}
+						a[b - 1] = '\0';
+						j = j - 1;
+						b = strlen(a);
+					}
+				}
+			}
+			b = strlen(a);
+			for (int m = 0; m <= b-1; m++)
+			{
+				printf("%c", a[m]);
+				if (m == b-1)
+				{
+					printf("\n");
+				}
+			}
+		}
+	}
+	system("pause");
+	return 0;
+}

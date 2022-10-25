@@ -1,0 +1,21 @@
+#include<iostream>
+#include<cstdio>
+#include<string>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<queue>
+#include<map>
+#define INF 0x7f7f7f7f
+#define MAXN 1005
+#define MOD 1000000007
+#define _PI 3.14159265358979323846
+using namespace std;
+long long n, m, k, l;
+int main() {
+	cin >> n >> m >> k >> l;
+	long long ans = 0;
+	ans = (k + l - 1) / m + 1;
+	if (ans*m > n)ans = -1;
+	cout << ans << endl;
+}

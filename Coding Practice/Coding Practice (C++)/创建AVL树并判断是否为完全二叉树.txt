@@ -1,0 +1,119 @@
+#include<iostream>
+#include<algorithm>
+#include<queue>
+#include<cstdio>
+using namespace std;
+template<class T>
+class AVLTree
+{
+private:
+	int size;
+	struct Node
+	{
+		T key;
+		Node* left;
+		Node* right;
+		int height;
+		Node() : key(0), left(NULL), right(NULL), height(0) {}
+		Node(T val) : key(val), left(NULL), right(NULL), height(0) {}
+		Node(Node& n) : key(n.key), left(n.left), right(n.right), height(n.height) {}
+	};
+	int getheight(Node* node) { return node ? node->height : -1; }
+	void LLrotate(Node* &node)
+	{
+		Node* orileft = node->left;
+		node->left = orileft->right;
+		orileft->right = node;
+		orileft->height = max(getheight(orileft->left), getheight(orileft->right)) + 1;
+		node->height = max(getheight(node->left), getheight(node->right)) + 1;
+		node = orileft;
+	}
+	void RRrotate(Node* &node)
+	{
+		Node* oriright = node->right;
+		node->right = oriright->left;
+		oriright->left = node;
+		oriright->height = max(getheight(oriright->left), getheight(oriright->right)) + 1;
+		node->height = max(getheight(node->left), getheight(node->right)) + 1;
+		node = oriright;
+	}
+	void LRrotate(Node* &node)
+	{
+		RRrotate(node->left);
+		LLrotate(node);
+	}
+	void RLrotate(Node* &node)
+	{
+		LLrotate(node->right);
+		RRrotate(node);
+	}
+	void insert(Node* &node, T val)
+	{
+		if (!node)size++, node = new Node(val);
+		else if (val < node->key)
+		{
+			insert(node->left, val);
+			if (getheight(node->left) - getheight(node->right) == 2)
+			{
+				if (!node->left || val < node->left->key)LLrotate(node);
+				else LRrotate(node);
+			}
+		}
+		else if (val > node->key)
+		{
+			insert(node->right, val);
+			if (getheight(node->left) - getheight(node->right) == -2)
+			{
+				if (!node->right || val > node->right->key)RRrotate(node);
+				else RLrotate(node);
+			}
+		}
+		else return;
+		node->height = max(getheight(node->left), getheight(node->right)) + 1;
+	}
+	bool BFS(Node* node)
+	{
+		bool flag = false, NOCBT = false;
+		if (node == NULL)return false;
+		queue<Node*>q;
+		q.push(node);
+		while (!q.empty())
+		{
+			Node* tmp = q.front();
+			if (!tmp->left)flag = true;
+			else
+			{
+				q.push(tmp->left);
+				if (flag)NOCBT = true;
+			}
+			if (!tmp->right)flag = true;
+			else
+			{
+				q.push(tmp->right);
+				if (flag)NOCBT = true;
+			}
+			cout << tmp->key;
+			printf("%c", q.size() == 1 ? '\n' : ' ');
+			q.pop();
+		}
+		return NOCBT;
+	}
+	Node* root;
+public:
+	AVLTree() : root(NULL), size(0) {}
+	void insert(T val) { insert(root, val); }
+	int getsize() { return size; }
+	bool BFS() { return BFS(root); }
+};
+int main()
+{
+	int n, a;
+	AVLTree<int> r;
+	cin >> n;
+	while (n--)
+	{
+		cin >> a;
+		r.insert(a);
+	}
+	printf(r.BFS() ? "No\n" : "Yes\n");
+}

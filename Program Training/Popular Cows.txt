@@ -1,0 +1,63 @@
+#include<iostream>
+#include<queue>
+#include<algorithm>
+#include<string>
+#include<vector>
+#include<stack>
+#include<cstdio>
+using namespace std;
+int n, m, a, b, vis[10005] = { 0 }, cnt = 1, dfn[10005], low[10005];
+vector<int>mp[10005];
+int color[10005];//缩点染色
+stack<int>ss;
+int mpcnt = 0;//number of graph
+int deg[10005] = { 0 };//出度
+int numm[10005] = { 0 };//每个分量的数目
+void tarjan(int x)
+{
+	vis[x] = true;
+	dfn[x] = low[x] = cnt++;
+	ss.push(x);
+	for (int k, i = 0; i < mp[x].size(); i++)
+	{
+		if (vis[k = mp[x][i]] == 0)tarjan(k);//k is the next node.
+		if (vis[k] == 1)low[x] = min(low[k], low[x]);
+	}
+	if (dfn[x] == low[x])
+	{
+		mpcnt++;
+		int kk;
+		while ((kk = ss.top()) != x)
+		{
+			color[kk] = mpcnt;
+			vis[kk] = -1;
+			numm[mpcnt]++;
+			ss.pop();
+		}
+		color[kk] = mpcnt;
+		vis[kk] = -1;
+		numm[mpcnt]++;
+		ss.pop();
+	}
+}
+
+int main()
+{
+	cin >> n >> m;
+	for (int i = 0; i < m; i++)
+	{
+		cin >> a >> b;
+		mp[a].push_back(b);
+	}
+	for (int i = 1; i <= n; i++)if (vis[i] == 0)tarjan(i);
+	for (int i = 1; i <= n; i++)for (int j = 0; j < mp[i].size(); j++)
+	{
+		int k = mp[i][j];
+		if (color[i] != color[k])deg[color[i]]++;//i所在的连通分量出度加一
+	}
+	int num = 0, ans = 0;
+	for (int i = 1; i <= mpcnt; i++)if (!deg[i])num++, ans = i;
+	if (num != 1)ans = 0;
+	else ans = numm[ans];
+	cout << ans << endl;
+}

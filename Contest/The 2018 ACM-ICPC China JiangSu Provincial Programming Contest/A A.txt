@@ -1,0 +1,67 @@
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+#include<queue>
+#include<vector>
+#include<cstdlib> 
+#include<algorithm>
+using namespace std;
+typedef pair<int, int> xy;
+int n, m;
+int k;
+bool vis[2005][2005];
+int c[4][2] = { 1,0,-1,0,0,1,0,-1 };
+int x, y;
+int tx, ty;
+vector<xy>q;
+vector<xy>q2;
+bool inside(xy p)
+{
+	if (p.first<1 || p.first>n)return false;
+	if (p.second<1 || p.second>m)return false;
+	return true;
+}
+void bfs()
+{
+	while (1)
+	{
+		for(int j=0;j<q.size();j++)
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				xy nxy(q[j].first + c[i][0], q[j].second+c[i][1]);
+				if (inside(nxy) && !vis[nxy.first][nxy.second])
+				{
+					vis[nxy.first][nxy.second] = true;
+					q2.push_back(nxy);
+				}
+			}
+		}
+		if (!q2.empty())
+		{
+			q = q2;
+			q2.clear();
+		}
+		else break;
+	}
+}
+int main()
+{
+	while (scanf("%d%d", &n, &m) != EOF)
+	{
+		tx = n; ty = m;
+		memset(vis, false, sizeof(vis));
+		scanf("%d", &k);
+		q.clear();
+		q2.clear();
+		for (int i = 0; i < k; i++)
+		{
+			scanf("%d%d", &x, &y);
+			vis[x][y] = true;
+			q.push_back(xy(x, y));
+		}
+		bfs();
+		sort(q.begin(),q.end());
+		printf("%d %d\n", q[0].first, q[0].second);
+	}
+}

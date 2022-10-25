@@ -1,0 +1,103 @@
+#include<iostream>
+using namespace std;
+class Node
+{
+public:
+	Node() { previous = next = NULL; }
+	int Data;
+	Node* previous;
+	Node* next;
+};
+class list
+{
+
+protected:list() { Head = Tail = new Node; }
+	Node* Head;
+	Node* Tail;
+	void Build_HT(int Data)
+	{
+		Tail->next = new Node;
+		Tail->next->previous = Tail;
+		Tail->Data = Data;
+		Tail = Tail->next;
+	}
+	void Build_TH(int Data)
+	{
+		Head->previous = new Node;
+		Head->previous->next = Head;
+		Head = Head->previous;
+		Head->Data = Data;
+	}
+	int getTop()
+	{
+		int dat = Head->Data;
+		Head = Head->next;
+		delete Head->previous;
+		return dat;
+	}
+	virtual void print()
+	{
+		for (Node*p = Head;; p = p->next)
+		{
+			cout << p->Data;
+			if (p->next == Tail)
+			{
+				cout << endl;
+				break;
+			}
+			else cout << " ";
+		}
+	}
+};
+class Mstack :public list
+{
+public:
+	Mstack() { Head = Tail = new Node; }
+	void push(int newData) { Build_TH(newData); }
+	void print()
+	{
+		for (Node*p = Head;; p = p->next)
+		{
+			cout << p->Data;
+			if (p->next == Tail)
+			{
+				cout << endl;
+				break;
+			}
+			else cout << " ";
+		}
+	}
+};
+class Mqueue :public list
+{
+public:
+	Mqueue(){Head = Tail = new Node; }
+	void enQueue(int newData) { Build_HT(newData); }
+	void print()
+	{
+		for (Node*p = Head; p; p = p->next)
+		{
+			cout << p->Data;
+			if (p->next == Tail)
+			{
+				cout << endl;
+				break;
+			}
+			else cout << " ";
+		}
+	}
+};
+int main()
+{
+	int a[5];
+	Mstack s;
+	Mqueue q;
+	for (int i = 0; i < 5; i++)
+	{
+		cin >> a[i];
+		s.push(a[i]);
+		q.enQueue(a[i]);
+	}
+	s.print();
+	q.print();
+}

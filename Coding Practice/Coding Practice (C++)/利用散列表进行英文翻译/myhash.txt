@@ -1,0 +1,31 @@
+#include<iostream>
+#include<vector>
+#include<string>
+#include<cstdio>
+#include<cstring>
+using namespace std;
+#define MAXN 1003
+#define MOD 1003
+struct SC { char dic[10]; SC(char*r) { strcpy(dic, r); } };
+vector<SC>hashh[MAXN];
+char s1[11], s2[11], s[24];
+int myhash(char*l, int d)
+{
+	long long sum = 0;
+	for (int i = 0; i < d; i++)sum = (sum + (l[i] << (i * 7)) % MOD) % MOD;
+	if (sum < 0)sum += MOD;
+	return sum;
+}
+int main()
+{
+	while (gets_s(s), s[0])
+	{
+		sscanf(s, "%s %s", s1, s2);
+		hashh[myhash(s2, strlen(s2))].push_back(SC(s1));
+	}
+	while (scanf("%s", s1))
+	{
+		if (hashh[myhash(s1, strlen(s1))].empty())cout << "eh\n";
+		else printf("%s\n", hashh[myhash(s1, strlen(s1))][0].dic);
+	}
+}

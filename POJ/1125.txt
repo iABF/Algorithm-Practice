@@ -1,0 +1,57 @@
+#include<stdio.h>
+#include<string.h>
+#define inf 9999999
+int n;
+int f;
+struct RoAD
+{
+	int s;
+	int e;
+	int d;
+}r[6000];
+int dis[105];
+int bellman_ford(int startnum)
+{
+	int k;
+	memset(dis, inf, sizeof(dis));
+	dis[startnum] = 0;
+	for (int i = 1; i < n; i++)
+	{
+		k = 0;
+		for (int j = 0; j < f; j++)if (dis[r[j].e] > dis[r[j].s] + r[j].d)k = 1, dis[r[j].e] = dis[r[j].s] + r[j].d;
+		if (!k)break;
+	}
+	int max = 0;
+	for (int i = 1; i <= n; i++)max = max > dis[i] ? max : dis[i];
+	return max;
+}
+int main()
+{
+	while (scanf("%d", &n), n)
+	{
+		f = 0;
+		for (int i = 1; i <= n; i++)
+		{
+			int m;
+			scanf("%d", &m);
+			while (m--)
+			{
+				scanf("%d%d", &r[f].e, &r[f].d);
+				r[f++].s = i;
+			}
+		}
+		int min = inf;
+		int minnum;
+		for (int i = 1; i <= n; i++)
+		{
+			int t = bellman_ford(i);
+			if (min > t)
+			{
+				min = t;
+				minnum = i;
+			}
+		}
+		printf("%d %d\n", minnum, min);
+	}
+	return 0;
+}

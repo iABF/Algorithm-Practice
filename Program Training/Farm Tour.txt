@@ -1,0 +1,82 @@
+#include<iostream>
+#include<cstring>
+#include<queue>
+#include<algorithm>
+#define INF 0x7f7f7f7f
+using namespace std;
+int n, m, dis[1005], st, ed, di, updtime[1005], pre[1005],inq[1005];
+struct Road
+{
+	int cost;
+	int limit;
+}mp[1005][1005];
+bool spfa()
+{
+	memset(updtime, 0, sizeof(updtime));
+	memset(pre, INF, sizeof(pre));
+	memset(dis, INF, sizeof(dis));
+	memset(inq, 0, sizeof(inq));
+	queue<int>q;
+	q.push(st);
+	updtime[st]++;
+	dis[st] = 0;
+	inq[st] = 1;
+	while (!q.empty())
+	{
+		int t = q.front();
+		q.pop();
+		inq[t] = false;
+		for (int i = 0; i < n; i++)
+		{
+			if (mp[t][i].cost != INF && dis[i] > dis[t] + mp[t][i].cost &&mp[t][i].limit > 0)
+			{
+				dis[i] = dis[t] + mp[t][i].cost;
+				pre[i] = t;
+				updtime[i]++;
+				q.push(i);
+				if (updtime[i] >= n)return dis[ed] != INF;
+			}
+		}
+	}
+	return dis[ed] != INF;
+}
+int MCMF()
+{
+	int ans = 0;
+	while (spfa())
+	{
+		int cur = ed;
+		int minn = INF;
+		while (pre[cur] != INF && cur != st)
+		{
+			minn = min(minn, mp[pre[cur]][cur].limit);
+			cur = pre[cur];
+		}
+		if (minn < 0)break;
+		if (cur != st)break;
+		cur = ed;
+		while (cur != st)
+		{
+			mp[pre[cur]][cur].limit -= minn;
+			mp[cur][pre[cur]].limit += minn;
+			cur = pre[cur];
+		}
+		ans += minn * dis[ed];
+	}
+	return ans;
+}
+int main()
+{
+	cin >> n >> m;
+	for (int i = 0; i <= n + 1; i++)for (int j = 0; j <= n + 1; j++)mp[i][j].cost = INF;
+	for (int i = 0; i < m; i++)
+	{
+		cin >> st >> ed >> di;
+		mp[st][ed].cost = mp[ed][st].cost = di;
+		mp[st][ed].limit = mp[ed][st].limit = 1;
+	}
+	mp[st = 0][1].cost = mp[n][ed = n + 1].cost = 0;
+	mp[st][1].limit = mp[n][ed].limit = 2;
+	n += 2;
+	cout << MCMF() << endl;
+}

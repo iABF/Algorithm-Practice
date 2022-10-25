@@ -1,0 +1,51 @@
+#include<iostream>
+#include<queue>
+#include<algorithm>
+#include<cstring>
+#include<vector>
+#include<stack>
+#include<cstdio>
+using namespace std;
+int n, m, a, b, vis[10005] = { 0 }, cnt = 1, dfn[10005], low[10005], ans = 0;
+vector<int>mp[10005];
+bool iscut[10005] = { false };
+void tarjan(int x)
+{
+	vis[x] = true;
+	dfn[x] = low[x] = cnt++;
+	int child = 0;
+	for (int k, i = 0; i < mp[x].size(); i++)
+	{
+		if (!vis[k = mp[x][i]])
+		{
+			child++;
+			tarjan(k);
+			low[x] = min(low[k], low[x]);
+			if ((x == 1 && child >= 2) || (x != 1 && dfn[x] <= low[k]))iscut[x] = true;//根节点只记录一次
+		}
+	}
+	if (iscut[x])ans++;
+}
+
+int main()
+{
+	while (scanf("%d", &n), n)
+	{
+		memset(vis, 0, sizeof(vis));
+		for (int i = 1; i <= n; i++)mp[i].clear();
+		memset(iscut, 0, sizeof(iscut));
+		ans = 0;
+		while (scanf("%d", &m), m)
+		{
+			while (getchar() != '\n')
+			{
+				int x;
+				cin >> x;
+				mp[m].push_back(x);
+				mp[x].push_back(m);
+			}
+		}
+		tarjan(1);
+		cout << ans << endl;
+	}
+}

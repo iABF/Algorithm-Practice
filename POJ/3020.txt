@@ -1,0 +1,67 @@
+#include<stdio.h>
+#include<Windows.h>
+#include<string.h>
+int n, m, f;
+int map[45][15];
+bool imp[500][500];
+bool visit[500];
+int rel[500];
+void ini()
+{
+	memset(map, 0, sizeof(map));
+	memset(imp, 0, sizeof(imp));
+	memset(rel, 0, sizeof(rel));
+	f = 1;
+}
+bool find(int start)
+{
+	for (int i = 1; i < f; i++)
+	{
+		if (imp[start][i] && !visit[i])
+		{
+			visit[i] = true;
+			if (!rel[i] || find(rel[i]))
+			{
+				rel[i] = start;
+				return true;
+			}
+		}
+	}
+	return false;
+}
+int hungry()
+{
+	int result = 0;
+	for (int i = 1; i < f; i++)
+	{
+		memset(visit, false, sizeof(visit));
+		if (find(i))result++;
+	}
+	return result;
+}
+int main()
+{
+	int cas;
+	scanf("%d", &cas);
+	while (cas--)
+	{
+		ini();
+		scanf("%d%d", &n, &m);
+		char s[15];
+		for (int i = 1; i <= n; i++)
+		{
+			scanf("%s", s);
+			for (int j = 0; j < m; j++)if (s[j] == '*')map[i][j + 1] = f++;
+		}
+		for (int i = 1; i <= n; i++)for (int j = 1; j <= m; j++)if (map[i][j])
+		{
+			if (map[i - 1][j])imp[map[i][j]][map[i - 1][j]] = true;
+			if (map[i + 1][j])imp[map[i][j]][map[i + 1][j]] = true;
+			if (map[i][j - 1])imp[map[i][j]][map[i][j - 1]] = true;
+			if (map[i][j + 1])imp[map[i][j]][map[i][j + 1]] = true;
+		}
+		printf("%d\n", f - 1 - hungry() / 2);
+	}
+	system("pause");
+	return 0;
+}

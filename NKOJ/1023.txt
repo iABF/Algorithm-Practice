@@ -1,0 +1,89 @@
+#include<stdio.h>
+#include<Windows.h>
+#define LOCAL2
+#ifdef LOCAL1
+#define cond()((c = getchar()) >= '0' && c <= '9')
+int sgn=0;
+char c;
+int input()
+{
+	int n = 0;
+	int inputnum = 0;
+	while (!cond())
+	{
+		if (c == '\n')
+		{
+			sgn = 1;
+			return -1;
+		}
+	}
+	inputnum = c & 15;
+	while (cond())
+	{
+		inputnum = inputnum * 10 + (c & 15);
+	}
+	if (c == '\n')sgn = 1;
+	return inputnum;
+}
+int main()
+{
+	int t = 0;
+	while((t=input())!=-1)
+	{
+		int sum = t;
+		while (sgn==0)
+		{
+			t = input();
+			if (t  != -1)sum += t;
+		}
+		printf("%d\n", sum);
+		sgn = 0;
+	}
+	system("pause");
+	return 0;
+}
+#endif
+#ifdef LOCAL2
+int main()
+{
+	char c;
+	int a = 0, sum = 0;
+	while ((c = getchar() )!= EOF)
+	{
+		if (c >= '0' && c <= '9')
+		{
+			a = a * 10 + c - '0';
+		}
+		if (c == ' ')
+		{
+			sum += a;
+			a = 0;
+		}
+		if (c == '\n')
+		{
+			sum += a;
+			printf("%d\n", sum);
+			sum = 0;
+			a = 0;
+		}
+	}
+	return 0;
+}
+#endif
+//int oldmain()
+//{
+//	int a = 0, sum = 0, n = 0;
+//	while (scanf("%d", &a) != -1)
+//	{
+//		while (getchar() != '\n')
+//		{
+//			sum = sum + a;
+//			scanf("%d", &a);
+//		}
+//		sum = sum + a;
+//		printf("%d\n", sum);
+//		sum = 0;
+//		a = 0;
+//	}
+//	return 0;
+//}

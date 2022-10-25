@@ -1,0 +1,62 @@
+#include<stdio.h>
+#include<math.h>
+#include<stdlib.h>
+#include<Windows.h>
+struct ues
+{
+	double l;
+	double r;
+}isl[1005];
+int cmp(const void*a,const void*b)
+{
+	return (*(ues*)a).l > (*(ues*)b).l ? 1 : -1;
+}
+int main()
+{
+	int a, d, n = 1;
+	while (scanf("%d %d", &a, &d), a || d)
+	{
+		int key = 1;
+		if (a <= 0)key = 0;
+		for (int i = 0; i <= a - 1; i++)
+		{
+			double x, y;
+			scanf("%lf %lf", &x, &y);
+			if (d - y < 0 || d <= 0 || y < 0)
+			{
+				key = 0;
+			}
+			double distance = sqrt(d*d - y*y);
+			isl[i].l = x - distance;
+			isl[i].r = x + distance;
+		}
+		if (!key)
+		{
+			printf("Case %d: -1\n",n++);
+			continue;
+		}
+		qsort(isl, a, sizeof(isl[0]), cmp);
+		if (a == 1)
+		{
+			printf("Case %d: 1\n", n++);
+			continue;
+		}
+		int radarnum = 1;
+		double cur = isl[0].r;
+		for (int i = 1; i < a; i++)
+		{
+			if (isl[i].l > cur)
+			{
+				radarnum++;
+				cur = isl[i].r;
+			}
+			else if (isl[i].r < cur)
+			{
+				cur = isl[i].r;
+			}
+		}
+		printf("Case %d: %d\n", n++, radarnum);
+	}
+	system("pause");
+	return 0;
+}

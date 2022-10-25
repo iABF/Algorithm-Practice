@@ -1,0 +1,117 @@
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <pwd.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <fcntl.h>
+#include <sys/wait.h>
+
+
+int getuserdir(char *aoUserDir) {
+    char *LoginId;
+    struct passwd *pwdinfo;
+    if (aoUserDir == NULL)
+        return -9;
+    if ((LoginId = getlogin()) == NULL) {
+        perror("getlogin");
+        aoUserDir[0] = '\0';
+        return -8;
+    }
+    if ((pwdinfo = getpwnam(LoginId)) == NULL) {
+        perror("getpwnam");
+        return -7;
+    }
+    strcpy(aoUserDir, pwdinfo->pw_dir);
+}
+
+void execute(char *tmp) {
+    char *ptr = tmp;
+    int redirect_flag = 0;
+    char *redirect_file = NULL;
+    while (*ptr != '\0') {
+        if (*ptr == '>') {
+            *ptr = '\0';
+            ptr++;
+            redirect_flag = 1;
+            if (*ptr == '>') {
+                *ptr = '\0';
+                ptr++;
+                redirect_flag = 2;
+            }
+            while (isspace(*ptr) && *ptr != '\0') ptr++;
+            redirect_file = ptr;
+            while (!isspace(*ptr) && *ptr != '\0') ptr++;
+            *ptr = '\0';
+        }
+        ptr++;
+    }
+    ptr = tmp;
+    int argc = 0;
+    char *argv[32] = {NULL};
+    while (*ptr != '\0') {
+        if (!isspace(*ptr)) {
+            argv[argc] = ptr;
+            argc++;
+            while (!isspace(*ptr) && *ptr != '\0') ptr++;
+            *ptr = '\0';
+            ptr++;
+            continue;
+        }
+        ptr++;
+    }
+    argv[argc] = NULL;
+    if (!strcmp(argv[0], "exit")) {
+        printf("****************** mini shell exit******************\n");
+        exit(0);
+    } else if (!strcmp(argv[0], "cd")) {
+        chdir(argv[1]);
+        return;
+    }
+    int pid = fork();
+    if (pid == 0) {
+        int fd = 1;
+        if (redirect_flag == 1) {
+            fd = open(redirect_file, O_CREAT | O_WRONLY | O_TRUNC, 0664);
+        } else if (redirect_flag == 2) {
+            fd = open(redirect_file, O_CREAT | O_WRONLY | O_APPEND, 0664);
+        }
+        dup2(fd, 1);
+        execvp(argv[0], argv);
+        exit(0);
+    }
+    wait(NULL);
+
+}
+
+int main() {
+    printf("**************welcome to mini shell**************\n");
+    char *username = getenv("USER");
+    char oripwd[1024];
+    getuserdir(oripwd);
+    chdir(oripwd);
+    while (1) {
+        char newpwd[1024];
+        getcwd(newpwd, 1024);
+        printf("[%s@MINI SHELL %s]$ ", username, newpwd);
+        fflush(stdout);
+        char tmp[1024] = {0};
+        scanf("%[^\n]%*c", tmp);
+        int p = 0;
+        char str[1024] = {0};
+        int q = 0;
+        while (tmp[p] != '\0') {
+            if (tmp[p] == ';') {
+                for (int i = q; i < p; i++) {
+                    str[i - q] = tmp[i];
+                }
+                str[p - q] = '\0';
+                q = p + 1;
+                execute(str);
+            }
+            p++;
+        }
+        if (q < p)execute(tmp + q);
+    }
+    return 0;
+}

@@ -1,0 +1,46 @@
+#include<iostream>
+#include<queue>
+using namespace std;
+int n, a;
+queue<int>q, x, y;
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> a;
+		q.push(a);
+	}
+	a = 0;
+	for (int i = 0; i < n; i++)
+	{
+		int d = q.front();
+		if (d % 2)x.push(d);
+		else y.push(d);
+		q.pop();
+	}
+	while (!x.empty() || !y.empty())
+	{
+		if (!x.empty())
+		{
+			cout << x.front();
+			if (++a == n)cout << endl;
+			else cout << ' ';
+			x.pop();
+		}
+		if (!x.empty())
+		{
+			cout << x.front();
+			if (++a == n)cout << endl;
+			else cout << ' ';
+			x.pop();
+		}
+		if (!y.empty())
+		{
+			cout << y.front();
+			if (++a == n)cout << endl;
+			else cout << ' ';
+			y.pop();
+		}
+	}
+}
