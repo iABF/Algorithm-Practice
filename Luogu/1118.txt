@@ -14,15 +14,15 @@ using namespace std;
 int n, sum;
 int C[13][13];
 int f[15] = { 0 };
-bool endd = false;
+bool end_count = false;
 bool vis[15] = { false };
 void dfs(int cur, int ans) {
-	if (endd)return;
+	if (end_count)return;
 	if (cur == n + 1) {
 		if (sum == ans) {
 			for (int i = 1; i <= n; i++)cout << f[i] << ' ';
 			cout << endl;
-			endd = true;
+			end_count = true;
 		}
 	}
 	for (int i = 1; i <= n; i++) {
