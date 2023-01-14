@@ -1,47 +1,35 @@
 #include <bits/stdc++.h>
 
 #define INF 0x7f7f7f7f
-#define MAXN 10005
+#define MAXN 47000
 #define MOD 1000000007
 #define ll long long
 using namespace std;
 
-int N, m1, m2, S, cur = 2;
-double p[30005] = {0};
+int n, a0, a1, b0, b1, i, A, B, C;
 
-double check(int a) {
-    double ans = 0;
-    for (int i = 2; i < cur; ++i) {
-        if (p[i] > 0) {
-            int num = 0;
-            while (a % i == 0) {
-                a /= i;
-                num++;
-            }
-            if (num > 0)ans = max(ans, p[i] / num);
-            else return -1;
-        }
-    }
-    return ans;
+int gcd(int m, int e) {
+    if (m == 0)return e;
+    return gcd(e % m, m);
+}
+
+bool check(int u, int v) {
+    return (gcd(u, A) == 1) && (gcd(B, v) == 1);
 }
 
 int main() {
-    cin >> N >> m1 >> m2;
-    while (m1 > 1) {
-        while (m1 % cur == 0) {
-            m1 /= cur;
-            p[cur]++;
+    cin >> n;
+    while (n--) {
+        cin >> a0 >> a1 >> b0 >> b1;
+        A = a0 / a1, B = b1 / b0, C = b1 / a1;
+        int ans = 0;
+        for (i = 1; i * i < C; ++i) {
+            if (C % i == 0) {
+                ans += check(i, C / i);
+                ans += check(C / i, i);
+            }
         }
-        cur++;
+        if (C == i * i)ans += check(i, C / i);
+        cout << ans << endl;
     }
-    double ans = -1;
-    for (int i = 2; i < cur; ++i)p[i] *= m2;
-    for (int i = 0; i < N; ++i) {
-        cin >> S;
-        double tmp = check(S);
-        if (tmp == -1)continue;
-        else if (ans == -1)ans = tmp;
-        else ans = min(ans, tmp);
-    }
-    cout << ceil(ans) << endl;
 }
