@@ -1,0 +1,62 @@
+#include <bits/stdc++.h>
+
+#define INF 0x7f7f7f7f
+#define MAXN 10005
+#define MOD 1000000007
+#define ll long long
+
+using namespace std;
+
+pair<double, double> node[105];
+struct edge {
+    int s;
+    int e;
+    double len;
+} e[MAXN];
+
+int n, f[105];
+
+bool cmp(const edge &x, const edge &y) {
+    return x.len < y.len;
+}
+
+double cal(int a, int b) {
+    return pow(pow(node[a].first - node[b].first, 2) + pow(node[a].second - node[b].second, 2), 0.5);
+}
+
+int find(int x) {
+    return f[x] == x ? x : f[x] = find(f[x]);
+}
+
+void merge(int x, int y) {
+    f[find(y)] = find(x);
+}
+
+int main() {
+    while (cin >> n) {
+        int edge_cnt = 0;
+        int sel = 0;
+        double ans = 0;
+        for (int i = 1; i <= n; ++i) {
+            f[i] = i;
+            cin >> node[i].first >> node[i].second;
+            for (int j = 1; j < i; ++j, ++edge_cnt) {
+                e[edge_cnt].s = i;
+                e[edge_cnt].e = j;
+                e[edge_cnt].len = cal(i, j);
+            }
+        }
+        sort(e, e + edge_cnt, cmp);
+        for (int i = 0; i < edge_cnt; ++i) {
+            if (find(e[i].s) != find(e[i].e)) {
+                merge(e[i].s, e[i].e);
+                ans += e[i].len;
+                sel++;
+                if (sel == n - 1) {
+                    printf("%.2lf\n", ans);
+                    break;
+                }
+            }
+        }
+    }
+}

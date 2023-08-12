@@ -1,0 +1,33 @@
+#include <bits/stdc++.h>
+
+#define INF 0x7f7f7f7f
+#define MAXN 505
+#define MOD 1000000007
+#define ll long long
+#define VPRINT(a, n) for(int i = 0; i < n - 1; ++i) cout << a[i] <<' '; cout << a[n - 1] << endl
+#define PRINT(a) cout << a << endl
+using namespace std;
+
+string s;
+
+int A(int x, int y) {
+    int ans = 1;
+    for (int i = 0; i < y; ++i)ans *= x - i;
+    for (int i = 0; i < y; ++i)ans /= y - i;
+    return ans;
+}
+
+int main() {
+    cin >> s;
+    int n = s.length(), maxx = -1, ans = 0;
+    for (int i = 1; i < n; ++i)ans += A(26, i);
+    for (int i = 0; i < n; ++i) {
+        if (maxx >= s[i] - 'a') {
+            cout << 0 << endl;
+            return 0;
+        }
+        for (int j = maxx + 1; j < s[i] - 'a'; ++j)ans += A(25 - j, n - i - 1);
+        maxx = max(maxx, s[i] - 'a');
+    }
+    cout << ans + 1 << endl;
+}

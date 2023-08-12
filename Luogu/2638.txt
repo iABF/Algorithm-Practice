@@ -1,0 +1,4 @@
+import math
+
+n, a, b = [int(u) for u in input().split()]
+print(math.comb(n + a, n) * math.comb(n + b, n))

@@ -1,0 +1,46 @@
+#include <bits/stdc++.h>
+
+#define INF 0x7f7f7f7f
+#define MAXN 100005
+#define MOD 1000000007
+#define ll long long
+using namespace std;
+
+int n, s, t;
+double a[MAXN];
+double T[MAXN] = {0};
+double TT[MAXN];
+int q[MAXN];
+
+bool check(double k) {
+    for (int i = 1; i <= n; ++i)TT[i] = T[i] - k * i;
+    int l = 1, r = 0;
+    for (int i = 1; i <= n; ++i) {
+        if (i >= s) {
+            while (r >= l && TT[q[r]] > TT[i - s])r--;
+            q[++r] = i - s;
+        }
+        if (r >= l && i - q[l] > t)l++;
+        if (r >= l && TT[i] - TT[q[l]] >= 0)return true;
+    }
+    return false;
+}
+
+
+double bs(double l, double r) {
+    while (r - l > 1e-6) {
+        double m = (r + l) / 2;
+        if (check(m))l = m;
+        else r = m;
+    }
+    return r;
+}
+
+int main() {
+    cin >> n >> s >> t;
+    for (int i = 1; i <= n; ++i) {
+        cin >> a[i];
+        T[i] = T[i - 1] + a[i];
+    }
+    printf("%.3lf\n", bs(-10000, 10000));
+}

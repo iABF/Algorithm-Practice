@@ -1,0 +1,31 @@
+#include <bits/stdc++.h>
+
+#define INF 0x7f7f7f7f
+#define MAXN 100005
+#define MOD 1000000007
+#define ll long long
+using namespace std;
+
+int n, a[MAXN], S[MAXN] = {0}, minn[MAXN];
+double score = 0;
+vector<int> ans;
+
+int main() {
+    cin >> n;
+    minn[n + 1] = INF;
+    for (int i = 1; i <= n; ++i) {
+        cin >> a[i];
+        S[i] = a[i] + S[i - 1];
+    }
+    for (int i = n; i; --i)minn[i] = min(minn[i + 1], a[i]);
+    for (int k = 1; k <= n - 2; ++k) {
+        double tmp = (S[n] - S[k] - minn[k + 1]) / (double) (n - k - 1);
+        if (tmp > score) {
+            score = tmp;
+            ans.clear();
+            ans.push_back(k);
+        } else if (tmp == score)ans.push_back(k);
+    }
+    sort(ans.begin(), ans.end());
+    for (int an : ans)cout << an << endl;
+}

@@ -1,0 +1,72 @@
+#include <bits/stdc++.h>
+
+#define INF 0x7f7f7f7f
+#define MAXN 100005
+#define MOD 1000000007
+#define ll long long
+
+using namespace std;
+
+/*
+int n, r, ans, tbl[11][11] = {0}, a[11], b[11];
+
+bool check() {
+    for (int i = 0; i < r; ++i)if (!b[i])return false;
+    return true;
+}
+
+bool cut(int cur_ball) {
+    int cnt = 0;
+    for (int i = 0; i < r; ++i)if (b[i])cnt++;
+    if (n - cur_ball + 1 < r - cnt)return true;
+    return false;
+}
+
+void dfs(int cur_ball) {
+    if (cur_ball == n) {
+        ans += check();
+        return;
+    }
+    if (cut(cur_ball))return;
+    for (int next_box = 0; next_box < r; ++next_box) {
+        a[cur_ball] = next_box;
+        b[next_box]++;
+        dfs(cur_ball + 1);
+        b[next_box]--;
+        a[cur_ball] = -1;
+    }
+}
+
+int main() {
+    for (n = 1; n < 11; ++n) {
+        for (r = 1; r <= n; ++r) {
+            memset(a, -1, sizeof(a));
+            memset(b, 0, sizeof(b));
+            ans = 0;
+            dfs(0);
+            tbl[n][r] = ans;
+        }
+    }
+    for (n = 1; n < 11; ++n) {
+        printf("{");
+        for (r = 1; r < n; ++r)printf("%d,", tbl[n][r]);
+        printf("%d},", tbl[n][n]);
+    }
+}*/
+
+int ans[11][11] = {{1},
+                   {1, 2},
+                   {1, 6,    6},
+                   {1, 14,   36,    24},
+                   {1, 30,   150,   240,    120},
+                   {1, 62,   540,   1560,   1800,    720},
+                   {1, 126,  1806,  8400,   16800,   15120,    5040},
+                   {1, 254,  5796,  40824,  126000,  191520,   141120,   40320},
+                   {1, 510,  18150, 186480, 834120,  1905120,  2328480,  1451520,  362880},
+                   {1, 1022, 55980, 818520, 5103000, 16435440, 29635200, 30240000, 16329600, 3628800}};
+
+int main() {
+    int n, r;
+    cin >> n >> r;
+    cout << ans[n - 1][r - 1] << endl;
+}

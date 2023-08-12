@@ -1,0 +1,31 @@
+#include <bits/stdc++.h>
+
+#define INF 0x7f7f7f7f
+#define MAXN 1000005
+#define MAXM 2005
+#define MOD 1000000007
+#define ll long long
+using namespace std;
+
+int n, m, a[MAXN], paint[MAXM] = {0}, cnt = 0, l = 0, r = -1, ans = MAXN, ansL, ansR;
+
+int main() {
+    cin >> n >> m;
+    for (int i = 0; i < n; ++i)cin >> a[i];
+    while (true) {
+        if (r + 1 < n) {
+            r++;
+            if (paint[a[r]] == 0)cnt++;
+            paint[a[r]]++;
+        } else break;
+        while (cnt == m) {
+            if (r - l < ans)ans = r - l, ansL = l, ansR = r;
+            if (l + 1 <= r) {
+                if (paint[a[l]] == 1)cnt--;
+                paint[a[l]]--;
+                l++;
+            }
+        }
+    }
+    cout << ansL + 1 << ' ' << ansR + 1 << endl;
+}

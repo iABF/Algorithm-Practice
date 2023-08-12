@@ -1,0 +1,20 @@
+#include <bits/stdc++.h>
+
+#define INF 0x7f7f7f7f
+#define MAXN 1000005
+#define MOD 1000000007
+#define ll long long
+using namespace std;
+
+int n, k;
+ll a[MAXN], S[MAXN] = {0}, ans = 0;
+
+int main() {
+    cin >> n >> k;
+    for (int i = 1; i < n; ++i) {
+        cin >> a[i];
+        S[i + 1] = S[i] + a[i];
+    }
+    for (int i = 1; i < n; ++i)ans = max(ans, S[min(i + k, n)] - S[i]);
+    cout << S[n] - ans << endl;
+}
