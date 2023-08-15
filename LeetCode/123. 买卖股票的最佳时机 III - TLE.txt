@@ -1,0 +1,30 @@
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int f[100005] = {0};
+        int g[100005] = {0};
+        int min_p = prices[0];
+        int min_index = 0;
+        int g_max = 0;
+        vector<int>low_list;
+        if(prices.size() > 1 && prices[0] < prices[1])low_list.push_back(0);
+        for(int i = 1; i < prices.size(); ++i) {
+            int n_end = min_p < prices[i] ? prices[i] - min_p : 0;
+            f[i] = max(f[i - 1], n_end);
+            g[i] = g_max;
+            if(min_p < prices[i]) {
+                for(auto j : low_list){
+                    if(j > 0) g[i] = max(g[i], f[j - 1] + max(prices[i] - prices[j], 0));
+                }
+            }
+            g[i] = max(g[i], f[i]);
+            g_max = max(g_max, g[i]);
+            if(min_p >= prices[i]){
+                min_p = prices[i];
+                min_index = i;
+            }
+            if(i < prices.size() - 1 && prices[i] <= prices[i - 1] && prices[i] < prices[i + 1])low_list.push_back(i);
+        }
+        return g[prices.size() - 1];
+    }
+};

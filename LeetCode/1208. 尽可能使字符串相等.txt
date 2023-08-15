@@ -1,0 +1,27 @@
+class Solution {
+public:
+    int equalSubstring(string s, string t, int maxCost) {
+        int n = s.length();
+        int a[100005], f[100005] = {0}, S[100005] = {0};
+        int m_min = INT_MAX;
+        for(int i = 1; i <= n; ++i) {
+            a[i] = abs(s[i - 1] - t[i - 1]);
+            S[i] = S[i - 1] + a[i];
+            m_min = min(m_min, a[i]);
+        }
+        if(m_min > maxCost) return 0;
+        for(int i = 1; i <= n; ++i) {
+            f[i] = max(f[i - 1], i - m_find(i, maxCost, S) + 1);
+        }
+        return f[n];
+    }
+    int m_find(int ed, int tot, int* S) {
+        int l = 1, r = ed;
+        while(l < r) {
+            int m = (l + r) >> 1;
+            if(S[ed] - S[m - 1] <= tot)r = m;
+            else l = m + 1;
+        }
+        return l;
+    }
+};

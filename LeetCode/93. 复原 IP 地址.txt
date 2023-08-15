@@ -1,0 +1,23 @@
+class Solution {
+public:
+    vector<string> restoreIpAddresses(string s) {
+        vector<string>ans;
+        dfs(0, "", 0, ans, s);
+        return ans;
+    }
+    bool check(int l, int cnt, string s) {
+        if(s[l] == '0' && cnt > 1)return false;
+        int num = 0;
+        while(cnt--)num = num * 10 + s[l++] - '0';
+        if(num < 256) return true;
+        return false;
+    }
+    void dfs(int pos, string cur, int num, vector<string>&ans, string s) {
+        if(num == 4) {
+            if(pos == s.length())ans.push_back(cur.substr(1, cur.length() - 1));
+            else return;
+        }
+        for(int i = 1; i <= 3; ++i)
+            if(pos + i <= s.length() && check(pos, i, s))dfs(pos + i, cur + '.' + s.substr(pos, i), num + 1, ans, s);
+    }
+};

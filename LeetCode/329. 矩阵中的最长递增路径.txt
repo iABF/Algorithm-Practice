@@ -1,0 +1,54 @@
+class Solution {
+    struct Point{
+        int in_degree = 0;
+        int dist = 1;
+        vector<int>next;
+        friend bool operator <(const Point&x, const Point&y){
+            return x.in_degree < y.in_degree;
+        }
+    }p[40005];
+public:
+    int longestIncreasingPath(vector<vector<int>>& matrix) {
+        int m = matrix.size();
+        int n = matrix[0].size();
+        int ans = 1;
+        for(int i = 0; i < m; ++i) {
+            for(int j = 0; j < n; ++j) {
+                int idx = i * n + j;
+                if(i + 1 < m && matrix[i][j] < matrix[i + 1][j]){
+                    p[idx + n].in_degree++;
+                    p[idx].next.push_back(idx + n);
+                }
+                if(j + 1 < n && matrix[i][j] < matrix[i][j + 1]){
+                    p[idx + 1].in_degree++;
+                    p[idx].next.push_back(idx + 1);
+                }
+                if(i - 1 >= 0 && matrix[i][j] < matrix[i - 1][j]){
+                    p[idx - n].in_degree++;
+                    p[idx].next.push_back(idx - n);
+                }
+                if(j - 1 >= 0 && matrix[i][j] < matrix[i][j - 1]){
+                    p[idx - 1].in_degree++;
+                    p[idx].next.push_back(idx - 1);
+                }
+            }
+        }
+        priority_queue<Point>q;
+        for(int i = 0; i < m; ++i)
+            for(int j = 0; j < n; ++j)
+                if(p[i * n + j].in_degree == 0){
+                    q.push(p[i * n + j]);
+                }
+        while(!q.empty()) {
+            Point r = q.top();
+            q.pop();
+            for (auto k : r.next) {
+                p[k].in_degree--;
+                p[k].dist = max(r.dist + 1, p[k].dist);
+                ans = max(ans, p[k].dist);
+                if(p[k].in_degree == 0)q.push(p[k]);
+            }
+        }
+        return ans;
+    }
+};
