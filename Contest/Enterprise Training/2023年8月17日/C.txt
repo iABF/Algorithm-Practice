@@ -1,0 +1,31 @@
+#include <bits/stdc++.h>
+
+#define INF 0x7f7f7f7f
+#define MAXN 50005
+#define MOD 1000000007
+#define ll long long
+
+using namespace std;
+
+int n, m;
+ll a[MAXN], q, S[MAXN];
+
+int main() {
+    cin >> n >> m;
+    for (int i = 1; i <= n; ++i)cin >> a[i];
+    sort(a + 1, a + n + 1);
+    for (int i = 1; i <= n; ++i)S[i] = S[i - 1] + a[i] * a[i];
+    while (m--) {
+        cin >> q;
+        auto idx = upper_bound(S + 1, S + n + 1, q);
+        cout << idx - 1 - S << ' ';
+    }
+    cout << endl;
+}
+
+
+// 开始时间：2023-8-17 20:32:34
+// 完成时间：2023-8-17 20:40:41
+// 耗时：8:07
+
+// 思路：数组排序后求前缀和，二分查找，时间复杂度 O((n+m)logn)。

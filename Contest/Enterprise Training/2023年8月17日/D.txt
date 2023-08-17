@@ -1,0 +1,21 @@
+s = input().split(';')[:-1]
+q = int(input())
+mp = dict()
+
+for kv in s:
+    lst = kv.split('=')
+    mp[lst[0]] = lst[1]
+
+for _ in range(q):
+    s = input()
+    if s in mp:
+        print(mp[s])
+    else:
+        print('EMPTY')
+
+
+// 开始时间：2023-8-17 20:40:41
+// 完成时间：2023-8-17 20:54:23
+// 耗时：13:42
+
+// 思路：Python dict。

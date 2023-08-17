@@ -1,0 +1,31 @@
+#include <bits/stdc++.h>
+
+#define INF 0x7f7f7f7f
+#define MAXN 1005
+#define MOD 1000000007
+#define ll long long
+
+using namespace std;
+
+int n;
+int a[MAXN];
+int g[MAXN] = {0};
+
+int dpg(int idx) {
+    if (idx >= 0)return g[idx];
+    else return 0;
+}
+
+int main() {
+    cin >> n;
+    for (int i = 0; i < n; ++i)cin >> a[i];
+    for (int i = 0; i < n; ++i)g[i] = max(a[i] + dpg(i - 3), dpg(i - 1));
+    cout << g[n - 1] << endl;
+}
+
+// 完成E-1后过一段时间才看到此题
+// 开始时间：2023-8-17 21:16:40
+// 完成时间：2023-8-17 21:25:07
+// 耗时：8:27
+
+// 思路：dp，时间复杂度 O(n)。

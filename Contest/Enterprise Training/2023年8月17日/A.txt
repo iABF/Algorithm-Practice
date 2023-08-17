@@ -1,0 +1,42 @@
+#include <bits/stdc++.h>
+
+#define INF 0x7f7f7f7f
+#define MAXN 50005
+#define MOD 1000000007
+#define ll long long
+
+using namespace std;
+
+int T, n;
+int a[MAXN], b[MAXN];
+int pb[MAXN];
+
+bool match(int la, int ra, int lb, int rb) {
+    if (la == ra) {
+        if (a[la] == b[lb])return true;
+        else return false;
+    }
+    int pos = pb[a[la]];
+    if (pos == lb)return match(la + 1, ra, lb + 1, rb);
+    if (pos == rb)return match(la + 1, ra, lb, rb - 1);
+    return match(la + 1, la - lb + pos, lb, pos - 1) && match(la - lb + pos + 1, ra, pos + 1, rb);
+}
+
+int main() {
+    cin >> T;
+    while (T--) {
+        cin >> n;
+        for (int i = 0; i < n; ++i) cin >> a[i];
+        for (int i = 0; i < n; ++i) {
+            cin >> b[i];
+            pb[b[i]] = i;
+        }
+        cout << (match(0, n - 1, 0, n - 1) ? "Yes" : "No") << endl;
+    }
+}
+
+// 开始时间：20:00
+// 完成时间：2023-8-17 20:32:34
+// 耗时：32:34
+
+// 思路：递归，每轮假设匹配的数组为数组a和数组b，从数组b中寻找数组a开头数字所在位置，将数组b从该位置左右分开，左边对应数组a的前面对应长度，右边对应数组a的后面对应长度，依次递归，时间复杂度为 O(n)。
