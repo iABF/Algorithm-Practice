@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+
+#define INF 0x7f7f7f7f
+#define MAXN 50005
+#define MOD 1000000007
+#define ll long long
+
+using namespace std;
+
+int N, m;
+bool op[MAXN];
+int xx[MAXN], yy[MAXN];
+
+vector<int> tree(MAXN, 0);
+
+int lowbit(int x) {
+    return x & (-x);
+}
+
+inline void update(int i, int x) {
+    for (int pos = i; pos < MAXN; pos += lowbit(pos))
+        tree[pos] += x;
+}
+
+inline int query(int n) {
+    int ans = 0;
+    for (int pos = n; pos; pos -= lowbit(pos))
+        ans += tree[pos];
+    return ans;
+}
+
+inline int query(int a, int b) {
+    return query(b) - query(a - 1);
+}
+
+int main() {
+    cin >> N >> m;
+    for (int i = 0; i < m; ++i)cin >> op[i];
+    for (int i = 0; i < m; ++i)cin >> xx[i];
+    for (int i = 0; i < m; ++i)cin >> yy[i];
+    for (int i = 0; i < m; ++i) {
+        if (op[i])cout << query(xx[i], yy[i]) << ' ';
+        else update(xx[i], yy[i]);
+    }
+}
+
+
+// 开始时间：2023年8月21日20:55:32
+// 完成时间：2023年8月21日21:07:26
+// 耗时：11:54
+
+// 思路：树状数组模板题

@@ -1,0 +1,29 @@
+#include <bits/stdc++.h>
+
+#define INF 0x7f7f7f7f
+#define MAXN 50005
+#define MOD 1000000007
+#define ll long long
+
+using namespace std;
+
+int n, a;
+int minn = INT_MAX, maxx = -1;
+
+int main() {
+    cin >> n;
+    while (n--) {
+        cin >> a;
+        minn = min(a, minn);
+        maxx = max(a, maxx);
+    }
+    cout << maxx - minn << endl;
+
+}
+
+
+// 开始时间：2023年8月21日20:52:18
+// 完成时间：2023年8月21日20:55:32
+// 耗时：3:14
+
+// 思路：最大减最小

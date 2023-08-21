@@ -1,0 +1,41 @@
+#include <bits/stdc++.h>
+
+#define INF 0x7f7f7f7f
+#define MAXN 3005
+#define MOD 1000000007
+#define ll long long
+
+using namespace std;
+
+int n, m;
+int x[MAXN], y, z[MAXN], q[MAXN];
+int f[MAXN][MAXN] = {0};
+int g[MAXN];
+
+int main() {
+    cin >> n;
+    memset(g,0x7f7f7f7f, sizeof(g));
+    for (int i = 1; i <= n; ++i)cin >> x[i];
+    for (int i = 1; i <= n; ++i){
+        cin >> y;
+        x[i] -= y;
+    }
+    for (int i = 1; i <= n; ++i)cin >> z[i];
+    cin >> m;
+    for (int i = 1; i <= m; ++i)cin >> q[i];
+    for (int i = 1; i <= n; ++i)
+        for (int k = 1; k <= i; ++k)
+        {
+            f[i][k] = f[i - 1][k] + x[i] * z[k];
+            g[i] = min(g[i], f[i][k]);
+        }
+    for (int i = 1; i <= m; ++i)cout << g[q[i]] << ' ';
+}
+
+
+// 开始时间：2023年8月21日21:07:26
+// 完成时间：2023年8月21日21:30:27
+// 耗时：23:01
+
+// 思路：DP，f[i][k]表示为倒满第i杯水，通过倒第k杯水的开销。转移方程：f[i][k] = f[i - 1][k] + (x[i] - y[i]) * z[k];
+// 不知道对不对
