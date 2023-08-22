@@ -1,0 +1,35 @@
+#include <bits/stdc++.h>
+
+#define INF 0x7f7f7f7f
+#define MAXN 205
+#define MOD 1000000007
+#define ll long long
+
+using namespace std;
+
+int n, m, a, ans = 0;
+bool mp[MAXN][MAXN][6];
+string s;
+
+
+int main() {
+    cin >> n >> m >> a;
+    for (int i = 0; i < n; ++i)
+        for (int j = 0; j < m; ++j) {
+            cin >> s;
+            for (int k = 0; k < a; ++k)
+                mp[i][j][k] = s[k] - '0';
+        }
+    for (int i = 0; i < n; ++i)
+        for (int j = 0; j < m; ++j)
+            for (int k = 0; k < a; ++k)
+                ans += mp[i][j][k] ^ mp[(i + 1) % n][(j + 1) % m][k];
+    cout << ans << endl;
+}
+
+
+// 开始时间：2023年8月22日15:30:04
+// 完成时间：2023年8月22日15:37:53
+// 耗时：7:49
+
+// 思路：模拟，异或

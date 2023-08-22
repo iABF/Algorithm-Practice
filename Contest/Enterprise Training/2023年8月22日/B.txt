@@ -1,0 +1,41 @@
+#include <bits/stdc++.h>
+
+#define INF 0x7f7f7f7f
+#define MAXN 100005
+#define MOD 1000000007
+#define ll long long
+
+using namespace std;
+
+int n, a, b;
+vector<int> conn[MAXN];
+bool vis[MAXN] = {false};
+
+int dfs(int cur, int dep) {
+    if (conn[cur].size() == 1)return dep;
+    int ret = 0;
+    for (auto nxt: conn[cur])
+        if (!vis[nxt])
+            vis[nxt] = true, ret = max(ret, dfs(nxt, dep + 1));
+    return ret;
+}
+
+int main() {
+    cin >> n;
+    for (int i = 2; i <= n; ++i) {
+        cin >> a;
+        conn[i].push_back(a);
+        conn[a].push_back(i);
+    }
+    cin >> a >> b;
+    vis[a] = true;
+    vis[b] = true;
+    cout << dfs(a, 0) + dfs(b, 0) + 1 << endl;
+}
+
+
+// 开始时间：2023年8月22日15:37:53
+// 完成时间：2023年8月22日15:50:13
+// 耗时：12:20
+
+// 思路：从边的两端向树的两侧DFS，结果相加

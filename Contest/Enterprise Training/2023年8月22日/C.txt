@@ -1,0 +1,39 @@
+#include <bits/stdc++.h>
+
+#define INF 0x7f7f7f7f
+#define MAXN 10005
+#define MOD 1000000007
+#define ll long long
+
+using namespace std;
+
+int n, m, s;
+int a[MAXN];
+int f[MAXN];
+
+int main() {
+    cin >> n >> m >> s;
+    for (int i = 0; i < n; ++i) {
+        cin >> a[i];
+        if (i == 0) {
+            f[0] = a[0] + s;
+            continue;
+        }
+        f[i] = INT_MAX;
+        for (int t = i - 1, maxx = a[i], minn = a[i]; t >= -1 && i - t <= m; --t) {
+            maxx = max(maxx, a[t + 1]);
+            minn = min(minn, a[t + 1]);
+            if (t == -1)f[i] = min(f[i], (i - t) * ((maxx + minn) / 2) + s);
+            else f[i] = min(f[i], f[t] + (i - t) * ((maxx + minn) / 2) + s);
+        }
+
+    }
+    cout << f[n - 1] << endl;
+}
+
+
+// 开始时间：2023年8月22日15:50:13
+// 完成时间：2023年8月22日16:11:10
+// 耗时：20:57
+
+// 思路：DP，f[i]表示到编号i为止的最小花费，枚举最后一个果篮中水果的数量，时间复杂度O(nm)。
