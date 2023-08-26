@@ -1,0 +1,32 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+
+vector<pair<int, int>> p;
+int a, b, ans = INT_MAX;
+map<int, bool> vis;
+
+
+int cal(int x, int y) {
+    return x * 50005 + y;
+}
+
+bool check(int x, int y, int xx, int yy) {
+    if (x == xx || y == yy)return false;
+    return vis[cal(x, yy)] && vis[cal(xx, y)];
+}
+
+
+int main() {
+    while (scanf("%d%d", &a, &b) != EOF) {
+        if (!p.empty())
+            for (auto k: p)
+                if (check(k.first, k.second, a, b))
+                    ans = min(ans, abs(a - k.first) * abs(b - k.second));
+        p.emplace_back(a, b);
+        vis[cal(a, b)] = true;
+    }
+    if (ans == INT_MAX)cout << 0 << endl;
+    else cout << ans << endl;
+}
