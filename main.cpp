@@ -7,59 +7,6 @@
 
 using namespace std;
 
-int n, a;
-vector<int> conn[MAXN];
-bool vis[MAXN] = {false};
-int clr[MAXN];
-string s;
-vector<pair<int, int>> edge;
-int fa[MAXN] = {0};
-int R = 0, G = 0, B = 0;
-
-int rgb[MAXN][3] = {0};
-
-void dfs(int cur) {
-    rgb[cur][clr[cur]] = 1;
-    if (conn[cur].size() == 1) return;
-    for (auto nxt: conn[cur])
-        if (!vis[nxt]) {
-            vis[nxt] = true;
-            fa[nxt] = cur;
-            dfs(nxt);
-            for (int i = 0; i < 3; ++i)rgb[cur][i] += rgb[nxt][i];
-        }
-}
-
-bool check(int r, int g, int b) {
-    return r && g && b && (R - r) && (G - g) && (B - b);
-}
-
 int main() {
-    cin >> n;
-    for (int i = 2; i <= n; ++i) {
-        cin >> a;
-        conn[i].push_back(a);
-        conn[a].push_back(i);
-        edge.emplace_back(i, a);
-    }
-    cin >> s;
-    for (int i = 1; i <= n; ++i) {
-        if (s[i - 1] == 'R')clr[i] = 0, R++;
-        else if (s[i - 1] == 'G')clr[i] = 1, G++;
-        else clr[i] = 2, B++;
-    }
-    vis[1] = true;
-    dfs(1);
-    int ans = 0;
-    for (auto e: edge)
-        if (fa[e.first] == e.second)
-            if (check(rgb[e.first][0], rgb[e.first][1], rgb[e.first][2]))ans++;
-    cout << ans << endl;
+    int a;
 }
-
-
-// 开始时间：2023年8月22日17:06:47
-// 完成时间：2023年8月22日17:39:53
-// 耗时：
-
-// 思路：
