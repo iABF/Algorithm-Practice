@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define MAXN 50005
+
+int T, n, m, b;
+int a[MAXN], cnt[MAXN];
+
+int main() {
+    cin >> T;
+    while (T--) {
+        cin >> n;
+        bool ans = true;
+        cnt[1] = 0;
+        for (int i = 2; i <= n; ++i) {
+            cin >> a[i];
+            cnt[i] = 0;
+        }
+        cin >> m;
+        for (int i = 2; i <= m; ++i) {
+            cin >> b;
+            if (i > n) {
+                if (b > n)ans = false;
+                if (++cnt[b] > 1)ans = false;
+            }
+        }
+        printf(ans ? "yes\n" : "no\n");
+    }
+}
+
+// 开始时间：2023年8月29日16:29:16
+// 完成时间：2023年8月29日16:38:14
+// 第二段开始时间：2023年8月29日17:07:14
+// 第二段完成时间：2023年8月29日17:20:01
+// 耗时：21:45
+
+// 思路：没看懂题，直接判断第二棵树的非第一棵树的所有节点是否父亲都是第一棵树节点，且每个第一棵树的节点至多有一个儿子

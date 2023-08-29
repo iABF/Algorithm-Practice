@@ -1,0 +1,26 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+
+int T;
+
+
+int main() {
+    cin >> T;
+    while (T--) {
+        string x;
+        char y;
+        cin >> x >> y;
+        int i = 0;
+        while (i < x.length() && x[i] > y)i++;
+        if (i == x.length())cout << x + y << endl;
+        else cout << x.substr(0, i) << y << x.substr(i)<<endl;
+    }
+}
+
+// 开始时间：2023年8月29日15:18:17
+// 完成时间：2023年8月29日15:24:20
+// 耗时：6:03
+
+// 思路：从最高位一位一位找比第二个数字小的，然后插入。

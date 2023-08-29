@@ -1,0 +1,50 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define MAXN 50005
+
+int T;
+string s;
+int folder_count, file_count;
+int cur, ans;
+
+int father[MAXN];
+int file[MAXN];
+
+int main() {
+    cin >> T;
+    while (T--) {
+        folder_count = 0;
+        file_count = 0;
+        ans = 0;
+        memset(file, 0, sizeof(file));
+        cur = -1;
+        cin >> s;
+        while (true) {
+            auto pos = s.find('>');
+            string name = s.substr(0, s.find('>'));
+            if (name[1] == '\\') {
+                if (file_count || file[cur]) {
+                    file[cur] += file_count;
+                    file[father[cur]] += file[cur];
+                } else ans++;
+                cur = father[cur];
+            } else if (name[2] == 'o') {
+                father[folder_count] = cur;
+                file[folder_count] = 0;
+                cur = folder_count++;
+            } else file_count++;
+            if (pos == s.size() - 1)break;
+            s = s.substr(pos + 1);
+        }
+        cout << ans << endl;
+    }
+}
+
+// 开始时间：2023年8月29日16:38:14
+// 完成时间：2023年8月29日17:07:14
+// 耗时：29:00
+
+// 思路：造一棵树，当读到一个folder时在当前节点加一个新儿子，当读到一个file时增加一次文件计数，当读到\folder时如果文件计数+当前节点儿子文件数为0
+// 则ans++然后把当前节点转移到父节点，否则父节点的节点儿子文件数增加文件计数+当前节点儿子文件数，然后当前节点转移到父节点

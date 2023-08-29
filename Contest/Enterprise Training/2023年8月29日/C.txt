@@ -1,0 +1,44 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define MAXN 50005
+
+int n, a;
+int pos[MAXN];
+int lbound[MAXN];
+
+int f(int l, int r) {
+    if (l == r)return 0;
+    if (l == r - 1) {
+        if (pos[l] < pos[r])return 0;
+        return 1;
+    }
+    if (lbound[l] == pos[l] && lbound[r] == pos[r])return f(l + 1, r - 1);
+    return f(l + 1, r - 1) + 1;
+}
+
+int main() {
+    cin >> n;
+    for (int i = 1; i <= n; ++i) {
+        cin >> a;
+        pos[a] = i;
+    }
+    for (int i = (n + 1) >> 1; i >= 1; --i) {
+        if (i == n + 1 - i)lbound[i] = pos[i];
+        else {
+            lbound[i] = min(lbound[i + 1], pos[i]);
+            lbound[n + 1 - i] = max(lbound[n - i], pos[n + 1 - i]);
+        }
+    }
+    cout << f(1, n) << endl;
+}
+
+// 开始时间：2023年8月29日15:49:56
+// 完成时间：2023年8月29日16:29:16
+// 耗时：39:20
+
+// 思路：首先计算 lbound。
+// 当 k<=n/2 时，lbound[k] 表示从 k 到 n+1-k 范围内所有数字的最小位置；当 k>=n/2 时，lbound[k] 表示从 k 到 n+1-k 范围内所有数字的最大位置。
+// lbound 的计算可以从 n/2 开始，向两边 dp。对 i < n/2，lbound[i] = min(lbound[i + 1], pos[i])，lbound[n + 1 - i] = max(lbound[n - i], pos[n + 1 - i])
+// 得到 lbound 之后，递归计算 f(l, r)，即从 l 到 r 排好序需要多少次操作，递推式为 f(l, r) = f(l+1, r-1) + <l和r是否在从l到r所有数字的最两端，如果是为0，如果不是为1>
