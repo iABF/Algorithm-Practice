@@ -1,0 +1,48 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define MAXN 100005
+#define ll long long
+
+int n, K, a, s;
+vector<int> nums;
+vector<int> S;
+
+vector<int> solve(int k) {
+    vector<int> res(nums.size() - k + 1); //存储长长度为k的每一个区间的最值
+    deque<int> queue;
+    for (int i = 0; i < nums.size(); i++) {
+        if (!queue.empty() && i - k + 1 > queue.front()) queue.pop_front();
+        while (!queue.empty() && nums[queue.back()] > nums[i]) queue.pop_back();
+        queue.push_back(i);
+        if (i >= k - 1) res[i - k + 1] = nums[queue.front()];
+    }
+    return res;
+}
+
+int main() {
+    cin >> n >> K;
+    K++;
+    for (int i = 0; i < K; ++i) {
+        cin >> a;
+        nums.push_back(a);
+        s += a;
+    }
+    S.push_back(s);
+    for (int i = K; i < n; ++i) {
+        cin >> a;
+        nums.push_back(a);
+        S.push_back(s - nums[i - K] + a);
+    }
+    auto c = solve(K);
+    int ans = INT_MIN;
+    for (int i = 0; i < c.size(); ++i)ans = max(ans, S[i] - c[i]);
+    cout << ans << endl;
+}
+
+// 开始时间：2023年8月30日11:59:04
+// 完成时间：2023年8月30日12:14:57
+// 耗时：15:53
+
+// 思路：单调队列模板题，找每段k+1长度的区间内的最小值，用所有k+1长度区间和减去最小值并比较最大值得到结果。

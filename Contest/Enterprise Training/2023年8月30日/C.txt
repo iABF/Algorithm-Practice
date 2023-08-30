@@ -1,0 +1,44 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define MAXN 100005
+#define ll long long
+
+int n;
+vector<int> node[MAXN];
+bool vis[MAXN];
+char color[MAXN];
+
+int dfs(int cur) {
+    int cnt = 0;
+    for (auto k: node[cur]) {
+        if (!vis[k]) {
+            vis[k] = true;
+            cnt += dfs(k);
+        }
+    }
+    if (cnt % 2)color[cur] = 'R';
+    else color[cur] = 'B', cnt++;
+    return cnt;
+}
+
+int main() {
+    cin >> n;
+    int x, y;
+    for (int i = 1; i < n; ++i) {
+        cin >> x >> y;
+        node[x].push_back(y);
+        node[y].push_back(x);
+    }
+    vis[1] = true;
+    dfs(1);
+    for (int i = 1; i <= n; ++i)cout << color[i];
+    cout << endl;
+}
+
+// 开始时间：2023年8月30日12:14:57
+// 完成时间：2023年8月30日12:29:48
+// 耗时：14:51
+
+// 思路：遍历一遍就好了，叶节点必定染蓝色，整棵树的染色方案是确定的

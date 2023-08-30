@@ -1,0 +1,72 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define MAXN 100005
+
+#define ll long long
+
+int n, m, nxt[4][2] = {0, 1, 0, -1, -1, 0, 1, 0};
+int start;
+map<int, char> mp;
+map<int, bool> vis;
+string s;
+int ans;
+
+bool inside(int x, int y) {
+    return x >= 1 && x <= n && y >= 1 && y <= m;
+}
+
+int encode(int x, int y) {
+    return x * MAXN + y;
+}
+
+int decodex(int hash) {
+    return hash / MAXN;
+}
+
+int decodey(int hash) {
+    return hash % MAXN;
+}
+
+
+void dfs(int x, int y) {
+    for (int i = 0; i < 4; ++i) {
+        int nx = x + nxt[i][0];
+        int ny = y + nxt[i][1];
+        int hash = encode(nx, ny);
+        if (inside(nx, ny) && !vis[hash]) {
+            if (mp[hash] == '.') {
+                ans -= vis[hash] = true;
+                dfs(nx, ny);
+            } else if ((mp[hash] == 'L' && i == 0)
+                       || (mp[hash] == 'R' && i == 1)
+                       || (mp[hash] == 'D' && i == 2)
+                       || (mp[hash] == 'U' && i == 3)) {
+                ans -= vis[hash] = true;
+                dfs(decodex(hash), decodey(hash));
+            }
+        }
+    }
+}
+
+int main() {
+    cin >> n >> m;
+    ans = n * m - 1;
+    for (int i = 1; i <= n; ++i) {
+        cin >> s;
+        for (int j = 0; j < s.length(); ++j) {
+            mp[encode(i, j + 1)] = s[j];
+            if (s[j] == 'O')start = encode(i, j + 1);
+        }
+    }
+    vis[start] = true;
+    dfs(decodex(start), decodey(start));
+    cout << ans << endl;
+}
+
+// 开始时间：2023年8月30日10:49:32
+// 完成时间：2023年8月30日11:59:04
+// 耗时：1:09:32
+
+// 思路：简单模拟，从终点往回走，遇到传送带就只能顺着方向搜索。读错题+想错方法- -做了太久，也没有用堆内存（思维僵化）导致用了hash
