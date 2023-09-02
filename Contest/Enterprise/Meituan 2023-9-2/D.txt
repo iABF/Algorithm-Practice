@@ -30,3 +30,7 @@ int main() {
     for (int i = 1; i <= n; ++i)ans = (ans + dp[i][k]) % MOD;
     cout << ans << endl;
 }
+
+// 思路：首先将数组从小到大排序，然后用yueshu[i]这个vector容器记录所有a[i]约数的index，该过程时间复杂度为 O(nlogn+n^2)；
+// 随后用dp[i][j]表示以第i个数字结尾的长度为j的两两有倍数关系的子数组个数，dp[i][j]为所有dp[i的约数索引][j-1]之和，该过程时间复杂度最大为 O(n(n-k)*(平均约数个数))；
+// 最后的答案就是所有dp[i][n-k]之和。

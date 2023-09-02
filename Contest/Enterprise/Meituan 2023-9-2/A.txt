@@ -23,3 +23,5 @@ int main() {
     }
     cout << (check ? "Yes" : "No") << endl;
 }
+
+// 思路：签到题。
