@@ -1,0 +1,25 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define MAXN 100005
+
+int n, a[MAXN] = {0}, b[MAXN];
+
+bool check = true;
+
+int main() {
+    cin >> n;
+    for (int i = 1; i <= n; ++i) {
+        cin >> a[i];
+        if (a[i] <= a[i - 1])check = false;
+        b[i - 1] = a[i] - a[i - 1];
+    }
+    for (int i = 1; i < n - 1; ++i) {
+        if (b[i] <= b[i + 1]) {
+            check = false;
+            break;
+        }
+    }
+    cout << (check ? "Yes" : "No") << endl;
+}

@@ -1,0 +1,55 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define MAXN 1005
+
+int n, m, t;
+string s;
+bool ext[7][MAXN] = {false};
+
+bool dp[MAXN][7] = {false};
+
+int decode(char c) {
+    switch (c) {
+        case 'm':
+            return 0;
+        case 'e':
+            return 1;
+        case 'i':
+            return 2;
+        case 't':
+            return 3;
+        case 'u':
+            return 4;
+        case 'a':
+            return 5;
+        case 'n':
+            return 6;
+    }
+    return -1;
+}
+
+int main() {
+    cin >> n >> m;
+    for (int i = 1; i <= n; ++i) {
+        cin >> s;
+        for (int j = 1; j <= m; ++j)
+            if ((t = decode(s[j - 1])) >= 0)
+                ext[t][i] = true;
+    }
+    for (int i = 1; i <= n; ++i) {
+        for (int j = 0; j < 7; ++j) {
+            if (j == 0) {
+                if (ext[j][i])dp[i][j] = true;
+                else dp[i][j] = false;
+                continue;
+            }
+            dp[i][j] = dp[i - 1][j];
+            if (ext[j][i])
+                dp[i][j] = dp[i][j] || dp[i - 1][j - 1];
+
+        }
+    }
+    cout << (dp[n][6] ? "YES\n" : "NO\n");
+}
