@@ -1,0 +1,47 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define MAXN 1000005
+
+int T, ans;
+string a, b;
+
+int sub(char x, char y) {
+    if (x >= '0' && x <= '9')x -= '0';
+    else x -= 'A';
+    if (y >= '0' && y <= '9')y -= '0';
+    else y -= 'A';
+    return y > x ? y - x : y - x + 16;
+}
+
+void dfs(int cur, int dir, int cnt) {
+    if (cur >= a.length()) {
+        ans = min(ans, cnt);
+        return;
+    }
+    int diff = sub(a[cur], b[cur]);
+    if (dir >= 0) {
+        dfs(cur + 1, diff, cnt + max(diff - dir, 0));
+        dfs(cur + 1, diff - 16, cnt + 16 - diff);
+    } else {
+        dfs(cur + 1, diff, cnt + diff);
+        dfs(cur + 1, diff - 16, cnt + max(0, dir - diff + 16));
+    }
+}
+
+int main() {
+    cin >> T;
+    while (T--) {
+        cin >> a >> b;
+        ans = INT_MAX;
+        dfs(0, 0, 0);
+        cout << ans << endl;
+    }
+}
+
+// 开始时间：2023年9月2日13:21:45
+// 完成时间：2023年9月2日14:14:42
+// 耗时：52:57
+
+// 思路：暴力搜索，每位可以变大可以变小，再根据前一位的翻转决定是否要跟着前一位组成一串。最后写得头大，弃之

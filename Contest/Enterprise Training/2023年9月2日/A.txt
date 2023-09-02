@@ -1,0 +1,50 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define MAXN 1000005
+
+int T, l, r, f[MAXN] = {0}, g[MAXN] = {0}, h[MAXN] = {0};
+
+bool check5(int x) {
+    while (x) {
+        if (x % 10 == 5)return true;
+        x /= 10;
+    }
+    return false;
+}
+
+bool check20(int x) {
+    while (x) {
+        if (x % 100 == 20)return true;
+        x /= 10;
+    }
+    return false;
+}
+
+bool check520(int x) {
+    while (x) {
+        if (x % 1000 == 520)return true;
+        x /= 10;
+    }
+    return false;
+}
+
+int main() {
+    cin >> T;
+    for (int i = 5; i < MAXN; ++i) {
+        f[i] = f[i - 1] + check5(i);
+        g[i] = g[i - 1] + check20(i);
+        h[i] = h[i - 1] + check520(i);
+    }
+    while (T--) {
+        cin >> l >> r;
+        printf("%d %d %d\n", f[r] - f[l - 1], g[r] - g[l - 1], h[r] - h[l - 1]);
+    }
+}
+
+// 开始时间：2023年9月2日12:32:30
+// 完成时间：2023年9月2日12:47:06
+// 耗时：14:36
+
+// 思路：排序后一个一个数，复杂度 O(nlogn)

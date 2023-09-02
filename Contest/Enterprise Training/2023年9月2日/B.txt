@@ -1,0 +1,46 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define MAXN 1000005
+
+int n, m, a, b;
+int h[MAXN];
+
+bool check(int x) {
+    int rest = x;
+    double tmp;
+    for (int i = 0; i < n; ++i) {
+        if ((tmp = h[i] - x * b) <= 0)return true;
+        rest -= ceil(tmp / a);
+        if (rest < 0)return false;
+    }
+    return true;
+}
+
+bool cmp(int x, int y) {
+    return x > y;
+}
+
+int main() {
+    cin >> n >> m >> a >> b;
+    a -= b;
+    for (int i = 0; i < n; ++i) {
+        cin >> h[i];
+        h[i] = m - h[i];
+    }
+    sort(h, h + n, cmp);
+    int l = 0, r = ceil(double(m) / b);
+    while (l < r) {
+        int mid = (l + r) >> 1;
+        if (check(mid))r = mid;
+        else l = mid + 1;
+    }
+    cout << r << endl;
+}
+
+// 开始时间：2023年9月2日12:47:06
+// 完成时间：2023年9月2日13:21:45
+// 耗时：34:39
+
+// 思路：排序后二分查找浇水次数，在指定一个浇水次数x时，浇水策略是贪心的，每棵树间接浇水x次后再补上直接浇水，时间复杂度 O(nlogm)
