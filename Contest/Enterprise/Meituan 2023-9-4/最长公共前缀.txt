@@ -1,0 +1,26 @@
+class Solution {
+public:
+    /**
+     * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+     *
+     *
+     * @param strs string字符串vector
+     * @return string字符串
+     */
+    bool check(int pos, vector<string>& strs) {
+        char c = 0;
+        for(auto s:strs){
+            if(pos>=s.length())return false;
+            if(!c)c=s[pos];
+            else if(s[pos]!=c)return false;
+        }
+        return true;
+    }
+
+    string longestCommonPrefix(vector<string>& strs) {
+        if(strs.size()==0)return "";
+        int pos = 0;
+        while(check(pos, strs))pos++;
+        return strs[0].substr(0, pos);
+    }
+};
