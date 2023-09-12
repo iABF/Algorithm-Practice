@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define MAXN 100005
+#define ll long long
+
+int n, m;
+int a[MAXN];
+int diff[MAXN] = {0};
+int lll[MAXN], rrr[MAXN];
+
+
+void update(int l, int r) {
+    diff[l]++;
+    if (r < n)diff[r + 1]--;
+}
+
+// if x-th proposal satisfies
+bool check(int x) {
+    memset(diff, 0, sizeof(diff));
+    for (int i = 0; i <= x; ++i) {
+        update(lll[i], rrr[i]);
+    }
+    int sum = 0;
+    for (int i = 1; i <= n; ++i) {
+        sum += diff[i];
+        if (sum > a[i])return true;
+    }
+    return false;
+}
+
+int main() {
+    cin >> n >> m;
+    for (int i = 1; i <= n; ++i)cin >> a[i];
+    int l, r;
+    bool flag = true;
+    for (int i = 0; i < m; ++i) {
+        cin >> lll[i] >> rrr[i];
+    }
+    if (!check(m - 1)) {
+        cout << m << endl;
+        return 0;
+    }
+    int llll = 0, rrrr = m - 1;
+    while (llll < rrrr) {
+        int mid = (llll + rrrr) >> 1;
+        if (check(mid))rrrr = mid;
+        else llll = mid + 1;
+    }
+    cout << rrrr << endl;
+}

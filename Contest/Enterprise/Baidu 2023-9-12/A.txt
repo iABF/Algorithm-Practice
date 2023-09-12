@@ -1,0 +1,13 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+    int a, b;
+    int t;
+    cin>>t;
+    while (t--) { // 注意 while 处理多个 case
+        cin>>a>>b;
+        cout << (((a%2)==(b%2))?"No":"Yes") << endl;
+    }
+}
+// 64 位输出请用 printf("%lld")
