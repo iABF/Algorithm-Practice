@@ -1,0 +1,136 @@
+import re
+
+mp = dict()
+
+
+def let(assignment):
+    if not is_var(assignment[0]):
+        print('<syntax-error>')
+    else:
+        c = cal(assignment[2:])
+        if is_err(c):
+            if c in ['<underflow>', '<overflow>']:
+                mp[assignment[0]] = c
+            else:
+                print(c)
+        else:
+            if int(c) > 2147483647:
+                mp[assignment[0]] = '<overflow>'
+            elif int(c) < -2147483648:
+                mp[assignment[0]] = '<underflow>'
+            else:
+                mp[assignment[0]] = c
+
+
+def is_digit(x):
+    if x == '0':
+        return True
+    return re.match(r'[123456789]+[1234567890]*', x) is not None
+
+
+def is_var(x):
+    return re.match(r'[_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ]+['
+                    r'0123456789_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ]*', x) is not None
+
+
+def is_err(x):
+    return x in ['<undefined>', '<underflow>', '<overflow>', '<syntax-error>']
+
+
+def cal(expression):
+    if len(expression) == 1:
+        if is_var(expression[0]):
+            if expression[0] in mp:
+                return mp[expression[0]]
+            else:
+                return '<undefined>'
+        if is_digit(expression[0]):
+            return int(expression[0])
+        return expression[0]
+    if len(expression) == 2:
+        return '<syntax-error>'
+    if expression[1] not in ['+', '-', '*', '/']:
+        return '<syntax-error>'
+    elif expression[1] == '+':
+        c = cal(expression[0])
+        if is_err(c):
+            return c
+        s = cal(expression[2:])
+        if is_err(s):
+            return s
+        return cal(expression[0]) + cal(expression[2:])
+    elif expression[1] == '-':
+        c = cal(expression[0])
+        if is_err(c):
+            return c
+        s = cal(expression[2:])
+        if is_err(s):
+            return s
+        return cal(expression[0]) - cal(expression[2:])
+    elif expression[1] == '*':
+        if len(expression) == 3:
+            c = cal(expression[0])
+            if is_err(c):
+                return c
+            s = cal(expression[2:])
+            if is_err(s):
+                return s
+            return cal(expression[0]) * cal(expression[2:])
+        c = cal(expression[0])
+        if is_err(c):
+            return c
+        s = cal(expression[2])
+        if is_err(s):
+            return s
+        return cal([c * s] + expression[3:])
+    elif expression[1] == '/':
+        if len(expression) == 3:
+            c = cal(expression[0])
+            if is_err(c):
+                return c
+            s = cal(expression[2:])
+            if is_err(s):
+                return s
+            return cal(expression[0]) // cal(expression[2:])
+        c = cal(expression[0])
+        if is_err(c):
+            return c
+        s = cal(expression[2])
+        if is_err(s):
+            return s
+        return cal([c // s] + expression[3:])
+
+
+def out(var):
+    if var in mp:
+        print(mp[var])
+    else:
+        print('<undefined>')
+
+
+def func():
+    while True:
+        try:
+            s = input().split()
+            if s[0][:3] not in ['let', 'out']:
+                print('<syntax-error>')
+                continue
+            if s[0][:3] == 'let':
+                if s[2] != '=':
+                    print('<syntax-error>')
+                else:
+                    let(s[1:])
+            else:
+                if len(s) > 1:
+                    print('<syntax-error>')
+                else:
+                    if s[0][3] != '(' or s[0][-1] != ')':
+                        print('<syntax-error>')
+                    else:
+                        out(s[0][4:-1])
+        except EOFError:
+            break
+
+
+if __name__ == "__main__":
+    func()

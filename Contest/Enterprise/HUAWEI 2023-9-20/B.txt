@@ -1,0 +1,56 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define MAXN 35
+
+bool mp[MAXN][MAXN] = {false};
+bool vis[MAXN][MAXN] = {false};
+int dir[4][2] = {1, 0, 0, 1, -1, 0, 0, -1};
+int n, m;
+
+bool inside(int x, int y) {
+    return x > 0 && y > 0 && x <= m && y <= n;
+}
+
+struct P {
+    int x;
+    int y;
+    int cnt;
+
+    P(int xx, int yy, int cc) : x(xx), y(yy), cnt(cc) {}
+};
+
+int bfs(int start_row) {
+    memset(vis, false, sizeof(vis));
+    queue<P> q;
+    q.emplace(start_row, 1, 0);
+    vis[start_row][1] = true;
+    while (!q.empty()) {
+        auto p = q.front();
+        q.pop();
+        if (p.y == n)return p.cnt;
+        for (int i = 0; i < 4; ++i) {
+            int nx = p.x + dir[i][0];
+            int ny = p.y + dir[i][1];
+            if (inside(nx, ny) && mp[nx][ny] && !vis[nx][ny]) {
+                vis[nx][ny] = true;
+                q.emplace(nx, ny, p.cnt + 1);
+            }
+        }
+    }
+    return -1;
+}
+
+int main() {
+    cin >> m >> n;
+    for (int i = 1; i <= m; ++i)for (int j = 1; j <= n; ++j)cin >> mp[i][j];
+    int ans = INT_MAX;
+    for (int i = 1; i <= m; ++i)
+        if (mp[i][1]) {
+            int cur = bfs(i);
+            if (cur >= 0)ans = min(ans, cur);
+        }
+    if (ans == INT_MAX)cout << -1 << endl;
+    else cout << ans << endl;
+}
