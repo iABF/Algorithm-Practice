@@ -1,0 +1,44 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+#define MAXN 100005
+
+int n, m, xx, yy;
+char c1, c2;
+string s;
+struct {
+    bool isMonster;
+    int level;
+} unit[MAXN];
+bool death[MAXN] = {false};
+
+void fight(int x, int y) {
+    if (death[x] || death[y])return;
+    if (unit[x].level > unit[y].level)death[y] = true;
+    else if (unit[x].level < unit[y].level)death[x] = true;
+    else death[x] = true, death[y] = true;
+}
+
+
+int main() {
+    cin >> n >> m;
+    for (int i = 1; i <= n; ++i) {
+        cin >> s >> unit[i].level;
+        if (s[0] == 'm')unit[i].isMonster = true;
+        else unit[i].isMonster = false;
+    }
+    while (m--) {
+        cin >> xx >> yy >> c1 >> c2;
+        if (unit[xx].isMonster == unit[yy].isMonster)continue;
+        if (c1 == 'N' && c2 == 'N')continue;
+        if (unit[xx].isMonster) {
+            if (c2 == 'Y')fight(xx, yy);
+            else if (unit[xx].level < unit[yy].level)fight(xx, yy);
+        } else {
+            if (c1 == 'Y')fight(xx, yy);
+            else if (unit[xx].level > unit[yy].level)fight(xx, yy);
+        }
+    }
+    for (int i = 1; i <= n; ++i)cout << (death[i] ? 'N' : 'Y');
+}

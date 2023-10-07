@@ -1,0 +1,39 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+char mp[3][3];
+
+bool inside(int x, int y) {
+    return x >= 0 && x < 3 && y >= 0 && y < 3;
+}
+
+bool check(int x, int y) {
+    if (inside(x - 1, y) && inside(x + 1, y))
+        if (('o' + '*' - mp[x][y] == mp[x - 1][y]) && mp[x + 1][y] == mp[x - 1][y])return true;
+    if (inside(x, y - 1) && inside(x, y + 1))
+        if (('o' + '*' - mp[x][y] == mp[x][y - 1]) && mp[x][y + 1] == mp[x][y - 1])return true;
+    return false;
+}
+
+int main() {
+    int t;
+    cin >> t;
+    while (t--) {
+        string s;
+        for (auto &i: mp) {
+            cin >> s;
+            for (int j = 0; j < 3; ++j)i[j] = s[j];
+        }
+        int yukari = 0, kou = 0;
+        for (int i = 0; i < 3; ++i)
+            for (int j = 0; j < 3; ++j) {
+                if (mp[i][j] == 'o')yukari += check(i, j);
+                else if (mp[i][j] == '*')kou += check(i, j);
+            }
+        if (yukari && kou)cout << "draw" << endl;
+        else if (yukari)cout << "kou" << endl;
+        else if (kou)cout << "yukari" << endl;
+        else cout << "draw" << endl;
+    }
+}

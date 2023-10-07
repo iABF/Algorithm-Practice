@@ -1,0 +1,31 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+#define MAXN 2005
+
+int n, t;
+int best_time[MAXN], best_score[MAXN], force_time[MAXN], force_score[MAXN];
+int f[MAXN][MAXN] = {0};
+char c[MAXN][MAXN];
+char ans[MAXN];
+
+int main() {
+    cin >> n >> t;
+    for (int i = 1; i <= n; ++i)cin >> best_time[i] >> best_score[i] >> force_time[i] >> force_score[i];
+    for (int i = 1; i <= n; ++i)
+        for (int j = 0; j <= t; ++j) {
+            f[i][j] = f[i - 1][j];
+            c[i][j] = 'F';
+            if (j >= best_time[i] && f[i - 1][j - best_time[i]] + best_score[i] > f[i][j])
+                f[i][j] = f[i - 1][j - best_time[i]] + best_score[i], c[i][j] = 'A';
+            if (j >= force_time[i] && f[i - 1][j - force_time[i]] + force_score[i] > f[i][j])
+                f[i][j] = f[i - 1][j - force_time[i]] + force_score[i], c[i][j] = 'B';
+        }
+    for (int i = n; i; --i) {
+        ans[i] = c[i][t];
+        if (ans[i] == 'A')t -= best_time[i];
+        else if (ans[i] == 'B')t -= force_time[i];
+    }
+    for (int i = 1; i <= n; ++i)cout << ans[i];
+}
