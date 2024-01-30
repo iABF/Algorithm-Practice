@@ -1,0 +1,50 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define MAXN 1000
+#define MAXNUM 100000
+
+int n, a[MAXN], k;
+
+bool check(int mid) {
+    int less = 0;
+    int bigger = 0;
+    for(int i=0;i<n;++i){
+        if(a[i]<mid){
+            less++;
+            if (less > (n - k)) {
+                return true;
+            }
+        }
+        else {
+            bigger++;
+            if(bigger >= k)return false;
+        }
+    }
+    if (bigger >= k)return false;
+    return true;
+}
+
+void topk() {
+    int l = 1;
+    int r = MAXNUM;
+    while(l < r) {
+        int mid = (l + r) >> 1;
+        if(check(mid))r = mid;
+        else l = mid + 1;
+    }
+    for(int i = 0; i < n; ++i) {
+        if(a[i] > r)cout<<a[i]<<' ';
+    }
+}
+
+
+int main()
+{
+    cin >> n >> k;
+    for (int i = 0; i < n; ++i)
+    {
+        cin >> a[i];
+    }
+    topk();
+}

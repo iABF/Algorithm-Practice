@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define MAXN 1000
+
+int n, a[MAXN];
+int b[MAXN], c[MAXN];
+
+void qs()
+{
+    queue<pair<int, int>> q;
+    q.push(make_pair(0, n - 1));
+    while (!q.empty())
+    {
+        auto tmp = q.front();
+        q.pop();
+        int left = tmp.first, right = tmp.second;
+        cout<<left<<' '<<right<<endl;
+        if (left >= right)
+            continue;
+        memset(b, 0, sizeof(b));
+        memset(c, 0, sizeof(c));
+        int x = a[left];
+        int l = 0, r = 0;
+        for (int i = left + 1; i <= right; ++i)
+        {
+            if (a[i] < x)
+                b[l++] = a[i];
+            else
+                c[r++] = a[i];
+        }
+        for (int i = left; i < left + l; ++i)
+            a[i] = b[i - left];
+        a[left + l] = x;
+        for (int i = left + l + 1; i <= right; ++i)
+            a[i] = c[i - left - l - 1];
+        q.push(make_pair(left, left+l-1));
+        q.push(make_pair(left+l+1,right));
+    }
+}
+
+int main()
+{
+    cin >> n;
+    for (int i = 0; i < n; ++i)
+    {
+        cin >> a[i];
+    }
+    qs();
+    for (int i = 0; i < n; ++i)
+        cout << a[i] << ' ';
+}
