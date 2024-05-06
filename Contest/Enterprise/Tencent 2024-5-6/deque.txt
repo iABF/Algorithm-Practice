@@ -1,0 +1,136 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int value;
+    Node * left;
+    Node * right;
+    Node(int k) {
+        this->value = k;
+        this->left = nullptr;
+        this->right = nullptr;
+    }
+};
+
+class Deque {
+    int maxLength;
+    int len;
+    Node * head;
+    Node * tail;
+public:
+    Deque(int k);
+    bool InsertFront(int val);
+    bool InsertLast(int val);
+    bool DeleteFront();
+    bool DeleteLast();
+    int GetFront();
+    int GetRear();
+    bool IsEmpty();
+    bool IsFull();
+    void Print();
+};
+
+Deque::Deque(int k) {
+    this->maxLength = k;
+    this->len = 0;
+    this->head = nullptr;
+    this->tail = nullptr;
+}
+
+bool Deque::IsEmpty() {
+    return this->len == 0;
+}
+
+bool Deque::IsFull() {
+    return this->maxLength == this->len;
+}
+
+void Deque::Print() {
+    auto c = this->head;
+    while(c){
+        cout<<c->value<<' ';
+        c = c->right;
+    }
+    cout << endl;
+}
+
+bool Deque::InsertFront(int val) {
+    if (this->IsFull())return false;
+    if (this->IsEmpty()) {
+        this->head = new Node(val);
+        this->tail = this->head;
+        this->len++;
+    } else {
+        auto n = new Node(val);
+        n->right = this->head;
+        this->head->left = n;
+        this->head = n;
+        this->len++;
+    }
+    return true;
+}
+
+bool Deque::InsertLast(int val) {
+    if (this->IsFull())return false;
+    if (this->IsEmpty()) {
+        this->head = new Node(val);
+        this->tail = this->head;
+        this->len++;
+    } else {
+        auto n = new Node(val);
+        n->left = this->tail;
+        this->tail->right = n;
+        this->tail = n;
+        this->len++;
+    }
+    return true;
+}
+
+bool Deque::DeleteFront() {
+    if (this->IsEmpty()) return false;
+    if (this->len == 1) {
+        this->head = this->tail = nullptr;
+    } else {
+        this->head->right->left = nullptr;
+        this->head = this->head->right;
+    }
+    return true;
+}
+
+bool Deque::DeleteLast() {
+    if (this->IsEmpty()) return false;
+    if (this->len == 1) {
+        this->head = this->tail = nullptr;
+    } else {
+        this->tail->left->right = nullptr;
+        this->tail = this->tail->left;
+    }
+    return true;
+}
+
+int Deque::GetFront() {
+    return this->head->value;
+}
+
+int Deque::GetRear() {
+    return this->tail->value;
+}
+
+int main() {
+    auto q = new Deque(5);
+    q->InsertFront(1);
+    q->Print();
+    q->InsertLast(2);
+    q->Print();
+    q->InsertFront(3);
+    q->Print();
+    q->DeleteFront();
+    q->Print();
+    q->InsertLast(4);
+    q->Print();
+    q->DeleteLast();
+    q->Print();
+    cout << (q->GetFront()) << endl;
+    cout << (q->GetRear()) << endl;
+}
