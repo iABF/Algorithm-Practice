@@ -1,0 +1,26 @@
+#include <bits/stdc++.h>
+
+#define INF 0x7f7f7f7f
+#define MAXN 1005
+#define MOD 1000000007
+#define ll long long
+
+using namespace std;
+
+int a[1005] = {0}, c[1005] = {0};
+int b[1005];
+
+int main() {
+    int n;
+    cin >> n;
+    for (int i = 1; i <= n; ++i) {
+        for (int j = 1; j <= i; ++j) {
+            cin >> b[j];
+            c[j] = b[j] + max(a[j - 1], a[j]);
+        }
+        for (int j = 1; j <= i; ++j)a[j] = c[j];
+    }
+    int ans = 0;
+    for (int i = 1; i <= n; ++i)ans = max(ans, a[i]);
+    cout << ans << endl;
+}
